@@ -9,7 +9,7 @@ import javax.swing.SwingUtilities;
  * The main class for the RimpleX application. This is where the process begins.
  * 
  * General structure taken from Dr. Bernstein's Serialization Lab:
- * (https://w3.cs.jmu.edu/bernstdh/web/common/labs/experience_serialization/tempz/index.php) 
+ * (https://w3.cs.jmu.edu/bernstdh/web/common/labs/experience_serialization/tempz/index.php)
  * 
  * This work complies with JMU Honor Code.
  */
@@ -27,7 +27,7 @@ public class RimpleX implements Runnable
     // TODO Auto-generated method stub
     RimpleXController controller = new RimpleXController();
     RimpleXWindow window = new RimpleXWindow(controller);
-    
+
     window.setVisible(true);
   }
 

@@ -17,7 +17,7 @@ import javax.swing.event.DocumentListener;
 public class RimpleXController implements ActionListener
 {
   private RimpleXWindow window;
-  
+
   public RimpleXController()
   {
     super();
@@ -27,20 +27,25 @@ public class RimpleXController implements ActionListener
   /**
    * Action handler when buttons or clicked.
    * 
-   * @param ae The ActionEvent that generated the message.
+   * @param ae
+   *          The ActionEvent that generated the message.
    */
   public void actionPerformed(ActionEvent ae)
   {
     String ac = ae.getActionCommand();
-    
+
     // General structure of handling actions:
     // if (ac.equals(NAME_OF_BUTTON)) { do stuff...}.
+
+    // For testing if buttons are linked with actions.
+    System.out.println(ac + " was pressed.");
   }
 
   /**
-   * Set the TempzWindow that this object is controlling.
+   * Set the RimpleXWindow that this object is controlling.
    * 
-   * @param window The window
+   * @param window
+   *          The window
    */
   public void setWindow(RimpleXWindow window)
   {
