@@ -16,6 +16,8 @@ import javax.swing.event.DocumentListener;
  */
 public class RimpleXController implements ActionListener
 {
+  private RimpleXWindow window;
+  
   public RimpleXController()
   {
     super();
@@ -35,4 +37,13 @@ public class RimpleXController implements ActionListener
     // if (ac.equals(NAME_OF_BUTTON)) { do stuff...}.
   }
 
+  /**
+   * Set the TempzWindow that this object is controlling.
+   * 
+   * @param window The window
+   */
+  public void setWindow(RimpleXWindow window)
+  {
+    this.window = window;
+  }
 }

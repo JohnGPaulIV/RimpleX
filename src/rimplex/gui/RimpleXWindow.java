@@ -14,6 +14,8 @@ public class RimpleXWindow extends JFrame
 {
   private static final long serialVersionUID = 1L;
   
+  private RimpleXController controller;
+  
   /**
    * Explicit window constructor.
    * 
@@ -22,6 +24,11 @@ public class RimpleXWindow extends JFrame
   public RimpleXWindow(RimpleXController controller)
   {
     super();
+    
+    // Set the controller to refer to this instance.
+    this.controller = controller;
+    this.controller.setWindow(this);
+   
     // TODO: Add Java GUI Components to the main window here
     // TODO: Set size, layout, all those goodies. Helper functions can be utilized.
   }
