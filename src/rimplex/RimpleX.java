@@ -1,6 +1,7 @@
 package rimplex;
 
 import java.lang.reflect.InvocationTargetException;
+import rimplex.gui.*;
 
 import javax.swing.SwingUtilities;
 
@@ -24,7 +25,10 @@ public class RimpleX implements Runnable
   public void run()
   {
     // TODO Auto-generated method stub
+    RimpleXController controller = new RimpleXController();
+    RimpleXWindow window = new RimpleXWindow(controller);
     
+    window.setVisible(true);
   }
 
 }

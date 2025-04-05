@@ -28,7 +28,9 @@ public class RimpleXWindow extends JFrame
     // Set the controller to refer to this instance.
     this.controller = controller;
     this.controller.setWindow(this);
-   
+    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
+    this.setSize(400,400);
     // TODO: Add Java GUI Components to the main window here
     // TODO: Set size, layout, all those goodies. Helper functions can be utilized.
   }
