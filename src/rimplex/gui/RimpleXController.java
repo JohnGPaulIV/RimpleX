@@ -14,7 +14,7 @@ import javax.swing.event.DocumentListener;
  * 
  * This work complies with JMU Honor Code.
  */
-public class RimpleXController implements ActionListener, DocumentListener
+public class RimpleXController implements ActionListener
 {
   public RimpleXController()
   {
@@ -33,27 +33,6 @@ public class RimpleXController implements ActionListener, DocumentListener
     
     // General structure of handling actions:
     // if (ac.equals(NAME_OF_BUTTON)) { do stuff...}.
-  }
-
-  @Override
-  public void changedUpdate(DocumentEvent e)
-  {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void insertUpdate(DocumentEvent e)
-  {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void removeUpdate(DocumentEvent e)
-  {
-    // TODO Auto-generated method stub
-    
   }
 
 }
