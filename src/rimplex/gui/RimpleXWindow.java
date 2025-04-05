@@ -55,16 +55,18 @@ public class RimpleXWindow extends JFrame
    */
   private void setupNumberPad()
   {
-    getContentPane().add(new RimpleXButton("SEVEN", "7", controller, 10, 60, 40, 40));
-    getContentPane().add(new RimpleXButton("EIGHT", "8", controller, 60, 60, 40, 40));
-    getContentPane().add(new RimpleXButton("NINE", "9", controller, 110, 60, 40, 40));
-    getContentPane().add(new RimpleXButton("FOUR", "4", controller, 10, 110, 40, 40));
-    getContentPane().add(new RimpleXButton("FIVE", "5", controller, 60, 110, 40, 40));
-    getContentPane().add(new RimpleXButton("SIX", "6", controller, 110, 110, 40, 40));
-    getContentPane().add(new RimpleXButton("ONE", "1", controller, 10, 160, 40, 40));
-    getContentPane().add(new RimpleXButton("TWO", "2", controller, 60, 160, 40, 40));
-    getContentPane().add(new RimpleXButton("THREE", "3", controller, 110, 160, 40, 40));
-    getContentPane().add(new RimpleXButton("ZERO", "0", controller, 10, 210, 90, 40));
+    getContentPane().add(new RimpleXButton("SEVEN", "7", controller, 10, 110, 40, 40));
+    getContentPane().add(new RimpleXButton("EIGHT", "8", controller, 60, 110, 40, 40));
+    getContentPane().add(new RimpleXButton("NINE", "9", controller, 110, 110, 40, 40));
+    getContentPane().add(new RimpleXButton("FOUR", "4", controller, 10, 160, 40, 40));
+    getContentPane().add(new RimpleXButton("FIVE", "5", controller, 60, 160, 40, 40));
+    getContentPane().add(new RimpleXButton("SIX", "6", controller, 110, 160, 40, 40));
+    getContentPane().add(new RimpleXButton("ONE", "1", controller, 10, 210, 40, 40));
+    getContentPane().add(new RimpleXButton("TWO", "2", controller, 60, 210, 40, 40));
+    getContentPane().add(new RimpleXButton("THREE", "3", controller, 110, 210, 40, 40));
+    getContentPane().add(new RimpleXButton("ZERO", "0", controller, 10, 260, 90, 40));
+    
+    getContentPane().add(new RimpleXButton("BACKSPACE", "\u2190", controller, 110, 60, 40, 40));
 
     // Add more buttons as new capabilities are added.
   }

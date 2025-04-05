@@ -93,6 +93,11 @@ public class RimpleXController implements ActionListener
         display.setText(display.getText() + "0");
         break;
       }
+      case "BACKSPACE":
+        if (display.getText().length() != 0)
+        {
+          display.setText(display.getText().substring(0, display.getText().length() - 1));
+        }
     }
   }
 
