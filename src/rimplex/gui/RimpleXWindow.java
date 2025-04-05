@@ -41,7 +41,7 @@ public class RimpleXWindow extends JFrame
     Container contentPane = this.getContentPane();
     contentPane.setLayout(null);
 
-    setupNumberPad();
+    setupSoftKeyboard();
     setupDisplay();
 
     this.setSize(400, 400);
@@ -53,7 +53,7 @@ public class RimpleXWindow extends JFrame
   /**
    * Setup the buttons on the application.
    */
-  private void setupNumberPad()
+  private void setupSoftKeyboard()
   {
     getContentPane().add(new RimpleXButton("SEVEN", "7", controller, 10, 110, 40, 40));
     getContentPane().add(new RimpleXButton("EIGHT", "8", controller, 60, 110, 40, 40));
@@ -65,6 +65,7 @@ public class RimpleXWindow extends JFrame
     getContentPane().add(new RimpleXButton("TWO", "2", controller, 60, 210, 40, 40));
     getContentPane().add(new RimpleXButton("THREE", "3", controller, 110, 210, 40, 40));
     getContentPane().add(new RimpleXButton("ZERO", "0", controller, 10, 260, 90, 40));
+    getContentPane().add(new RimpleXButton("DECIMAL", ".", controller, 210, 260, 40, 40));
     
     getContentPane().add(new RimpleXButton("BACKSPACE", "\u2190", controller, 110, 60, 40, 40));
 
@@ -79,7 +80,7 @@ public class RimpleXWindow extends JFrame
     JLabel display = new JLabel("");
     this.controller.setDisplay(display);
 
-    display.setBounds(10, 10, 210, 40);
+    display.setBounds(10, 10, 240, 40);
     
     // Using compound border to set padding of the text in the display:
     // https://docs.oracle.com/javase/7/docs/api/javax/swing/border/CompoundBorder.html
