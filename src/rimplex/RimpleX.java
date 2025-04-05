@@ -24,7 +24,6 @@ public class RimpleX implements Runnable
   @Override
   public void run()
   {
-    // TODO Auto-generated method stub
     RimpleXController controller = new RimpleXController();
     RimpleXWindow window = new RimpleXWindow(controller);
 

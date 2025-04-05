@@ -3,6 +3,7 @@ package rimplex.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JLabel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -17,6 +18,7 @@ import javax.swing.event.DocumentListener;
 public class RimpleXController implements ActionListener
 {
   private RimpleXWindow window;
+  private JLabel        display;
 
   public RimpleXController()
   {
@@ -38,7 +40,60 @@ public class RimpleXController implements ActionListener
     // if (ac.equals(NAME_OF_BUTTON)) { do stuff...}.
 
     // For testing if buttons are linked with actions.
-    System.out.println(ac + " was pressed.");
+    //    System.out.println(ac + " was pressed.");
+    switch (ac)
+    {
+      case "ONE":
+      {
+        display.setText(display.getText() + "1");
+        break;
+      }
+      case "TWO":
+      {
+        display.setText(display.getText() + "2");
+        break;
+      }
+      case "THREE":
+      {
+        display.setText(display.getText() + "3");
+        break;
+      }
+      case "FOUR":
+      {
+        display.setText(display.getText() + "4");
+        break;
+      }
+      case "FIVE":
+      {
+        display.setText(display.getText() + "5");
+        break;
+      }
+      case "SIX":
+      {
+        display.setText(display.getText() + "6");
+        break;
+      }
+      case "SEVEN":
+      {
+        display.setText(display.getText() + "7");
+        break;
+      }
+      case "EIGHT":
+      {
+        display.setText(display.getText() + "8");
+        break;
+      }
+      case "NINE":
+      {
+        display.setText(display.getText() + "9");
+        break;
+      }
+      case "ZERO":
+      {
+        display.setText(display.getText() + "0");
+        break;
+      }
+    }
   }
 
   /**
@@ -50,5 +105,16 @@ public class RimpleXController implements ActionListener
   public void setWindow(RimpleXWindow window)
   {
     this.window = window;
+  }
+  
+  /**
+   * Set the display that this object is controlling.
+   * 
+   * @param window
+   *          The window
+   */
+  public void setDisplay(JLabel display)
+  {
+    this.display = display;
   }
 }
