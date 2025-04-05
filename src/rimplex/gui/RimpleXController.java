@@ -98,6 +98,20 @@ public class RimpleXController implements ActionListener
         {
           display.setText(display.getText().substring(0, display.getText().length() - 1));
         }
+        break;
+      case "DECIMAL":
+        // This is a temporary solution since this won't work when operators are in the current
+        // expression.
+        String currentExpression = display.getText();
+        currentExpression += ".";
+        try {
+          Float.parseFloat(currentExpression);
+          display.setText(currentExpression);
+        }
+        catch (NumberFormatException nfe) {
+          System.out.println("Invalid decimal placement.");
+        }
+        break;
     }
   }
 
