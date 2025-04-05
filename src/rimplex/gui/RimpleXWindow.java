@@ -6,6 +6,8 @@ import java.awt.Container;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 
 /**
  * The main window for the RimpleX application.
@@ -76,8 +78,14 @@ public class RimpleXWindow extends JFrame
     this.controller.setDisplay(display);
 
     display.setBounds(10, 10, 210, 40);
-    display.setBorder(BorderFactory.createEtchedBorder());
-    display.setBackground(Color.BLACK);
+    
+    // Using compound border to set padding of the text in the display:
+    // https://docs.oracle.com/javase/7/docs/api/javax/swing/border/CompoundBorder.html
+    Border padding = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+    Border border = BorderFactory.createLineBorder(Color.BLACK);
+    Border compound = new CompoundBorder(border, padding);
+    
+    display.setBorder(compound);
     getContentPane().add(display);
   }
 }
