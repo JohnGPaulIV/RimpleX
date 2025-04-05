@@ -39,8 +39,8 @@ public class RimpleXWindow extends JFrame
     Container contentPane = this.getContentPane();
     contentPane.setLayout(null);
 
-    setupNumberPad(contentPane);
-    setupDisplay(contentPane);
+    setupNumberPad();
+    setupDisplay();
 
     this.setSize(400, 400);
     this.setResizable(false);
@@ -50,33 +50,27 @@ public class RimpleXWindow extends JFrame
 
   /**
    * Setup the buttons on the application.
-   * 
-   * @param contentPane
-   *          The pane to add buttons to.
    */
-  private void setupNumberPad(Container contentPane)
+  private void setupNumberPad()
   {
-    contentPane.add(new RimpleXButton("SEVEN", "7", controller, 10, 60, 40, 40));
-    contentPane.add(new RimpleXButton("EIGHT", "8", controller, 60, 60, 40, 40));
-    contentPane.add(new RimpleXButton("NINE", "9", controller, 110, 60, 40, 40));
-    contentPane.add(new RimpleXButton("FOUR", "4", controller, 10, 110, 40, 40));
-    contentPane.add(new RimpleXButton("FIVE", "5", controller, 60, 110, 40, 40));
-    contentPane.add(new RimpleXButton("SIX", "6", controller, 110, 110, 40, 40));
-    contentPane.add(new RimpleXButton("ONE", "1", controller, 10, 160, 40, 40));
-    contentPane.add(new RimpleXButton("TWO", "2", controller, 60, 160, 40, 40));
-    contentPane.add(new RimpleXButton("THREE", "3", controller, 110, 160, 40, 40));
-    contentPane.add(new RimpleXButton("ZERO", "0", controller, 10, 210, 90, 40));
+    getContentPane().add(new RimpleXButton("SEVEN", "7", controller, 10, 60, 40, 40));
+    getContentPane().add(new RimpleXButton("EIGHT", "8", controller, 60, 60, 40, 40));
+    getContentPane().add(new RimpleXButton("NINE", "9", controller, 110, 60, 40, 40));
+    getContentPane().add(new RimpleXButton("FOUR", "4", controller, 10, 110, 40, 40));
+    getContentPane().add(new RimpleXButton("FIVE", "5", controller, 60, 110, 40, 40));
+    getContentPane().add(new RimpleXButton("SIX", "6", controller, 110, 110, 40, 40));
+    getContentPane().add(new RimpleXButton("ONE", "1", controller, 10, 160, 40, 40));
+    getContentPane().add(new RimpleXButton("TWO", "2", controller, 60, 160, 40, 40));
+    getContentPane().add(new RimpleXButton("THREE", "3", controller, 110, 160, 40, 40));
+    getContentPane().add(new RimpleXButton("ZERO", "0", controller, 10, 210, 90, 40));
 
     // Add more buttons as new capabilities are added.
   }
 
   /**
    * Setup the display on the application.
-   * 
-   * @param contentPane
-   *          The pane to add buttons to.
    */
-  private void setupDisplay(Container contentPane)
+  private void setupDisplay()
   {
     JLabel display = new JLabel("");
     this.controller.setDisplay(display);
@@ -84,6 +78,6 @@ public class RimpleXWindow extends JFrame
     display.setBounds(10, 10, 210, 40);
     display.setBorder(BorderFactory.createEtchedBorder());
     display.setBackground(Color.BLACK);
-    contentPane.add(display);
+    getContentPane().add(display);
   }
 }
