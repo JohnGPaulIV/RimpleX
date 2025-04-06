@@ -15,7 +15,14 @@ import javax.swing.SwingUtilities;
  */
 public class RimpleX implements Runnable
 {
-  public static void main(String[] args) throws InterruptedException, InvocationTargetException
+  /**
+   * Main driver.
+   * @param args Command line arguments.
+   * @throws InterruptedException
+   * @throws InvocationTargetException
+   */
+  public static void main(final String[] args)
+      throws InterruptedException, InvocationTargetException
   {
     // Perform all of the setup activities in the event dispatch thread
     SwingUtilities.invokeAndWait(new RimpleX());

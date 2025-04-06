@@ -30,8 +30,8 @@ public class RimpleXButton extends JButton
    * @param height
    *          The height of the button.
    */
-  public RimpleXButton(String name, String text, RimpleXController controller, int xPos, int yPos,
-      int width, int height)
+  public RimpleXButton(final String name, final String text, final RimpleXController controller,
+      final int xPos, final int yPos, final int width, final int height)
   {
     this.setText(text);
     this.setActionCommand(name);

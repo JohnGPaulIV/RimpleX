@@ -29,7 +29,7 @@ public class RimpleXWindow extends JFrame
    * @param controller
    *          The observer for all GUI components.
    */
-  public RimpleXWindow(RimpleXController controller)
+  public RimpleXWindow(final RimpleXController controller)
   {
     super();
 
@@ -70,6 +70,10 @@ public class RimpleXWindow extends JFrame
     getContentPane().add(new RimpleXButton("BACKSPACE", "\u2190", controller, 110, 60, 40, 40));
 
     // Add more buttons as new capabilities are added.
+    
+    // Adding parenthesis to GUI - John
+    getContentPane().add(new RimpleXButton("OPEN_PARENTHESIS", "(", controller, 10, 60, 40, 40));
+    getContentPane().add(new RimpleXButton("CLOSED_PARENTHESIS", ")", controller, 60, 60, 40, 40));
   }
 
   /**

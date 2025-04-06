@@ -4,8 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 /**
  * The observer of all GUI components of the RimpleX application.
@@ -17,9 +15,14 @@ import javax.swing.event.DocumentListener;
  */
 public class RimpleXController implements ActionListener
 {
+  @SuppressWarnings("unused")
   private RimpleXWindow window;
   private JLabel        display;
+  private int parenCount;
 
+  /**
+   * Constructor for a RimpleXController.
+   */
   public RimpleXController()
   {
     super();
@@ -32,7 +35,7 @@ public class RimpleXController implements ActionListener
    * @param ae
    *          The ActionEvent that generated the message.
    */
-  public void actionPerformed(ActionEvent ae)
+  public void actionPerformed(final ActionEvent ae)
   {
     String ac = ae.getActionCommand();
 
@@ -44,55 +47,35 @@ public class RimpleXController implements ActionListener
     switch (ac)
     {
       case "ONE":
-      {
         display.setText(display.getText() + "1");
         break;
-      }
       case "TWO":
-      {
         display.setText(display.getText() + "2");
         break;
-      }
       case "THREE":
-      {
         display.setText(display.getText() + "3");
         break;
-      }
       case "FOUR":
-      {
         display.setText(display.getText() + "4");
         break;
-      }
       case "FIVE":
-      {
         display.setText(display.getText() + "5");
         break;
-      }
       case "SIX":
-      {
         display.setText(display.getText() + "6");
         break;
-      }
       case "SEVEN":
-      {
         display.setText(display.getText() + "7");
         break;
-      }
       case "EIGHT":
-      {
         display.setText(display.getText() + "8");
         break;
-      }
       case "NINE":
-      {
         display.setText(display.getText() + "9");
         break;
-      }
       case "ZERO":
-      {
         display.setText(display.getText() + "0");
         break;
-      }
       case "BACKSPACE":
         if (display.getText().length() != 0)
         {
@@ -102,7 +85,20 @@ public class RimpleXController implements ActionListener
       case "DECIMAL":
         // This is a temporary solution since this won't work when operators are in the current
         // expression.
-        String currentExpression = display.getText();
+        
+        /* Fixed decimal issue by checking to make sure the
+        last character in the string is a digit. - John */
+        boolean canPlace = !(display.getText().length() == 0)
+            && Character.isDigit(display.getText().charAt(display.getText().length() - 1));
+        if (canPlace) 
+        {
+          display.setText(display.getText() + ".");
+          break;
+        } else
+        {
+          break;
+        }
+        /* String currentExpression = display.getText();
         currentExpression += ".";
         try {
           Float.parseFloat(currentExpression);
@@ -110,7 +106,30 @@ public class RimpleXController implements ActionListener
         }
         catch (NumberFormatException nfe) {
           System.out.println("Invalid decimal placement.");
+        } */
+      case "OPEN_PARENTHESIS":
+        if (lastChar() == '.')
+        {
+          break;
+        } else
+        {
+          display.setText(display.getText() + "(");
+          parenCount++;
+          break;
         }
+      case "CLOSED_PARENTHESIS":
+        String displayText = display.getText();
+        char lastVal = displayText.charAt(displayText.length() - 1);
+        if (parenCount == 0 || !Character.isDigit(lastVal))
+        {
+          break;
+        } else 
+        {
+          display.setText(display.getText() + ")");
+          parenCount--;
+          break;
+        }
+      default:
         break;
     }
   }
@@ -118,10 +137,9 @@ public class RimpleXController implements ActionListener
   /**
    * Set the RimpleXWindow that this object is controlling.
    * 
-   * @param window
-   *          The window
+   * @param window The window
    */
-  public void setWindow(RimpleXWindow window)
+  public void setWindow(final RimpleXWindow window)
   {
     this.window = window;
   }
@@ -129,11 +147,21 @@ public class RimpleXController implements ActionListener
   /**
    * Set the display that this object is controlling.
    * 
-   * @param window
-   *          The window
+   * @param display The window
    */
-  public void setDisplay(JLabel display)
+  public void setDisplay(final JLabel display)
   {
     this.display = display;
   }
+  
+  /**
+   * Gets the last character in the display window.
+   * @return The last character.
+   */
+  private char lastChar()
+  {
+    String txt = display.getText();
+    return txt.charAt(txt.length() - 1);
+  }
+  
 }
