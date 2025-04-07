@@ -1,5 +1,6 @@
 package rimplex;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import rimplex.gui.*;
 
@@ -32,7 +33,16 @@ public class RimpleX implements Runnable
   public void run()
   {
     RimpleXController controller = new RimpleXController();
-    RimpleXWindow window = new RimpleXWindow(controller);
+    RimpleXWindow window = null;
+    try
+    {
+      window = new RimpleXWindow(controller);
+    }
+    catch (IOException e)
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
     window.setVisible(true);
   }
