@@ -143,10 +143,9 @@ public class RimpleXController implements ActionListener
     		  display.setText("-" + display.getText());
     	  }
     	  break;
-      //Adding operator events
       case "ADD":
           if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' 
-          || lastChar() == 'X' || lastChar() == '÷')
+          	|| lastChar() == '×' || lastChar() == '÷')
           {
             break;
           } else
@@ -156,7 +155,7 @@ public class RimpleXController implements ActionListener
           }
       case "SUBTRACT":
           if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' 
-          || lastChar() == 'X' || lastChar() == '÷')
+          	|| lastChar() == '×' || lastChar() == '÷')
           {
             break;
           } else
@@ -166,24 +165,27 @@ public class RimpleXController implements ActionListener
           }
       case "MULTIPLY":
           if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' 
-          || lastChar() == 'X' || lastChar() == '÷')
+          	|| lastChar() == '×' || lastChar() == '÷')
           {
             break;
           } else
           {
-            display.setText(display.getText() + "X");
+            display.setText(display.getText() + "×");
             break;
           }
       case "DIVIDE":
           if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' 
-          || lastChar() == 'X' || lastChar() == '÷')
+          	|| lastChar() == '×' || lastChar() == '÷')
           {
             break;
           } else
           {
             display.setText(display.getText() + "÷");
             break;
-          }    
+          }   
+      case "ACTION_EXIT":
+    	  System.exit(0);
+    	  break;
       default:
         break;
     }

@@ -13,6 +13,9 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 
@@ -71,8 +74,20 @@ public class RimpleXWindow extends JFrame
     picLabel.setBounds(10, 10, scaledWidth, scaledHeight);
     getContentPane().add(picLabel);
 
-    this.setSize(275, 400);
+    this.setSize(275, 420);
     this.setResizable(false);
+    
+    //Adding menu bar
+    JMenuBar menuBar = new JMenuBar();
+    
+    JMenu fileMenu = new JMenu("File");
+    JMenuItem exitItem = new JMenuItem("Exit");
+    exitItem.setActionCommand("ACTION_EXIT");
+    exitItem.addActionListener(controller);
+    fileMenu.add(exitItem);
+    menuBar.add(fileMenu);
+    setJMenuBar(menuBar);
+    
     // TODO: Add Java GUI Components to the main window here
     // TODO: Set size, layout, all those goodies. Helper functions can be utilized.
   }
@@ -111,7 +126,7 @@ public class RimpleXWindow extends JFrame
     //Adding operator buttons
     getContentPane().add(new RimpleXButton("ADD", "+", controller, 160, 110, 45, 45));
     getContentPane().add(new RimpleXButton("SUBTRACT", "-", controller, 160, 160, 45, 45));
-    getContentPane().add(new RimpleXButton("MULTIPLY", "X", controller, 160, 210, 45, 45));
+    getContentPane().add(new RimpleXButton("MULTIPLY", "×", controller, 160, 210, 45, 45));
     getContentPane().add(new RimpleXButton("DIVIDE", "÷", controller, 160, 260, 45, 45));
   }
 
