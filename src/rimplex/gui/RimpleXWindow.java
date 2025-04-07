@@ -72,6 +72,7 @@ public class RimpleXWindow extends JFrame
     // Add more buttons as new capabilities are added.
     
     // Adding parenthesis to GUI - John
+
     getContentPane().add(new RimpleXButton("OPEN_PARENTHESIS", "(", controller, 10, 60, 45, 45));
     getContentPane().add(new RimpleXButton("CLOSED_PARENTHESIS", ")", controller, 60, 60, 45, 45));
     
@@ -79,6 +80,12 @@ public class RimpleXWindow extends JFrame
     getContentPane().add(new RimpleXButton("CLEAR", "C", controller, 160, 60, 45, 45));
     getContentPane().add(new RimpleXButton("RESET", "R", controller, 210, 60, 45, 45));
     getContentPane().add(new RimpleXButton("SIGN", "+/-", controller, 160, 110, 95, 45));
+    
+    //Adding operator buttons
+    getContentPane().add(new RimpleXButton("ADD", "+", controller, 160, 60, 40, 40));
+    getContentPane().add(new RimpleXButton("SUBTRACT", "-", controller, 160, 110, 40, 40));
+    getContentPane().add(new RimpleXButton("MULTIPLY", "X", controller, 160, 160, 40, 40));
+    getContentPane().add(new RimpleXButton("DIVIDE", "÷", controller, 160, 210, 40, 40));
   }
 
   /**

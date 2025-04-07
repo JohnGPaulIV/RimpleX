@@ -17,7 +17,7 @@ public class RimpleXController implements ActionListener
 {
   @SuppressWarnings("unused")
   private RimpleXWindow window;
-  private JLabel        display;
+  private JLabel display;
   private int parenCount;
 
   /**
@@ -143,6 +143,47 @@ public class RimpleXController implements ActionListener
     		  display.setText("-" + display.getText());
     	  }
     	  break;
+      //Adding operator events
+      case "ADD":
+          if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' 
+          || lastChar() == 'X' || lastChar() == '÷')
+          {
+            break;
+          } else
+          {
+            display.setText(display.getText() + "+");
+            break;
+          }
+      case "SUBTRACT":
+          if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' 
+          || lastChar() == 'X' || lastChar() == '÷')
+          {
+            break;
+          } else
+          {
+            display.setText(display.getText() + "-");
+            break;
+          }
+      case "MULTIPLY":
+          if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' 
+          || lastChar() == 'X' || lastChar() == '÷')
+          {
+            break;
+          } else
+          {
+            display.setText(display.getText() + "X");
+            break;
+          }
+      case "DIVIDE":
+          if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' 
+          || lastChar() == 'X' || lastChar() == '÷')
+          {
+            break;
+          } else
+          {
+            display.setText(display.getText() + "÷");
+            break;
+          }    
       default:
         break;
     }
@@ -151,25 +192,28 @@ public class RimpleXController implements ActionListener
   /**
    * Set the RimpleXWindow that this object is controlling.
    * 
-   * @param window The window
+   * @param window
+   *          The window
    */
   public void setWindow(final RimpleXWindow window)
   {
     this.window = window;
   }
-  
+
   /**
    * Set the display that this object is controlling.
    * 
-   * @param display The window
+   * @param display
+   *          The window
    */
   public void setDisplay(final JLabel display)
   {
     this.display = display;
   }
-  
+
   /**
    * Gets the last character in the display window.
+   * 
    * @return The last character.
    */
   private char lastChar()
@@ -177,5 +221,5 @@ public class RimpleXController implements ActionListener
     String txt = display.getText();
     return txt.charAt(txt.length() - 1);
   }
-  
+
 }
