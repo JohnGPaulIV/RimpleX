@@ -129,6 +129,20 @@ public class RimpleXController implements ActionListener
           parenCount--;
           break;
         }
+      case "CLEAR":
+        display.setText("");
+    	  break;
+      case "RESET":
+        display.setText("");    	  
+        break;
+      case "SIGN":
+    	  if (display.getText().charAt(0) == '-') {
+    		  display.setText(display.getText().substring(1));
+    	  }
+    	  else { 
+    		  display.setText("-" + display.getText());
+    	  }
+    	  break;
       default:
         break;
     }
