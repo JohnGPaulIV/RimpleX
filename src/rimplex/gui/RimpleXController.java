@@ -129,6 +129,48 @@ public class RimpleXController implements ActionListener
           parenCount--;
           break;
         }
+        
+      //Adding operator events
+      case "ADD":
+          if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' 
+          || lastChar() == 'X' || lastChar() == '÷')
+          {
+            break;
+          } else
+          {
+            display.setText(display.getText() + "+");
+            break;
+          }
+      case "SUBTRACT":
+          if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' 
+          || lastChar() == 'X' || lastChar() == '÷')
+          {
+            break;
+          } else
+          {
+            display.setText(display.getText() + "-");
+            break;
+          }
+      case "MULTIPLY":
+          if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' 
+          || lastChar() == 'X' || lastChar() == '÷')
+          {
+            break;
+          } else
+          {
+            display.setText(display.getText() + "X");
+            break;
+          }
+      case "DIVIDE":
+          if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' 
+          || lastChar() == 'X' || lastChar() == '÷')
+          {
+            break;
+          } else
+          {
+            display.setText(display.getText() + "÷");
+            break;
+          }    
       default:
         break;
     }
