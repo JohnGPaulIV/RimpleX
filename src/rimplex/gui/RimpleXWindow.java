@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 
@@ -138,7 +139,7 @@ public class RimpleXWindow extends JFrame
   private void setupDisplay()
   {
     // Create new displays.
-    JLabel display = new JLabel("");
+    JLabel display = new JLabel("", SwingConstants.RIGHT);
     JLabel topDisplay = new JLabel("");
     this.controller.setDisplays(display, topDisplay);
     
