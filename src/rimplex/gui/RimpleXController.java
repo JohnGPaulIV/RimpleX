@@ -19,7 +19,6 @@ public class RimpleXController implements ActionListener
   private RimpleXWindow window;
   private JLabel topDisplay;
   private JLabel display;
-  private int parenCount;
   private boolean parenPresent;
 
   /**
@@ -219,7 +218,7 @@ public class RimpleXController implements ActionListener
         }
         else
         {
-          checkOperatorPlacement(display, topDisplay, "+");
+          setOperator(display, topDisplay, "+");
           break;
         }
       case "SUBTRACT":
@@ -229,7 +228,7 @@ public class RimpleXController implements ActionListener
         }
         else
         {
-          checkOperatorPlacement(display, topDisplay, "-");
+          setOperator(display, topDisplay, "-");
           break;
         }
       case "MULTIPLY":
@@ -239,7 +238,7 @@ public class RimpleXController implements ActionListener
         }
         else
         {
-          checkOperatorPlacement(display, topDisplay, "×");
+          setOperator(display, topDisplay, "×");
           break;
         }
       case "DIVIDE":
@@ -249,7 +248,7 @@ public class RimpleXController implements ActionListener
         }
         else
         {
-          checkOperatorPlacement(display, topDisplay, "÷");
+          setOperator(display, topDisplay, "÷");
           break;
         }
       case "ACTION_EXIT":
@@ -302,6 +301,13 @@ public class RimpleXController implements ActionListener
     return txt.charAt(txt.length() - 1);
   }
 
+  /**
+   * Check if a digit can be placed based on display length and presence of imaginary unit.
+   * 
+   * @param display
+   *          The display to extract the text from.
+   * @return True if digit can be placed.
+   */
   private boolean checkDigitPlacement(final JLabel display)
   {
     if (display.getText().length() != 0)
@@ -314,7 +320,18 @@ public class RimpleXController implements ActionListener
     return true;
   }
 
-  private void checkOperatorPlacement(final JLabel display, final JLabel topDisplay, final String operator)
+  /**
+   * Set the operator onto the display depending on presence of parentheses and other operators
+   * within the current expression.
+   * 
+   * @param display
+   *          The display that holds the current operand.
+   * @param topDisplay
+   *          The display that holds the left operand.
+   * @param operator
+   *          The operator to place.
+   */
+  private void setOperator(final JLabel display, final JLabel topDisplay, final String operator)
   {
     if ((lastChar() != '.' && lastChar() != '+' && lastChar() != '-' && lastChar() != '×'
         && lastChar() != '÷') && !parenPresent)
