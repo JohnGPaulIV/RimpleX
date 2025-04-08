@@ -183,15 +183,19 @@ public class RimpleXController implements ActionListener
         }
       case "CLOSED_PARENTHESIS":
         String displayText = display.getText();
-        char lastVal = displayText.charAt(displayText.length() - 1);
-        if (!parenPresent || !Character.isDigit(lastVal))
+        if (displayText.length() == 0)
         {
+          break;
+        }
+        char lastVal = displayText.charAt(displayText.length() - 1);
+        if (parenPresent && (Character.isDigit(lastVal) || !checkDigitPlacement(display)))
+        {
+          display.setText(display.getText().replace("(", ""));
+          parenPresent = false;
           break;
         }
         else
         {
-          display.setText(display.getText().replace("(", ""));
-          parenPresent = false;
           break;
         }
       case "CLEAR":
