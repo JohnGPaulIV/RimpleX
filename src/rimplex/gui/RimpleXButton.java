@@ -1,5 +1,8 @@
 package rimplex.gui;
 
+import java.awt.Font;
+import java.awt.Insets;
+
 import javax.swing.JButton;
 
 /**
@@ -37,6 +40,9 @@ public class RimpleXButton extends JButton
     this.setActionCommand(name);
     this.addActionListener(controller);
     this.setBounds(xPos, yPos, width, height);
+    this.setMargin(new Insets(2, 2, 2, 2));  // Smaller than default
+    this.setFont(new Font("Arial", Font.PLAIN, 24));
+
   }
 
 }
