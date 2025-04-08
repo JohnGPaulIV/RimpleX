@@ -2,6 +2,7 @@ package rimplex.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.StringTokenizer;
 
 import javax.swing.JLabel;
 
@@ -186,6 +187,18 @@ public class RimpleXController implements ActionListener
       case "ACTION_EXIT":
     	  System.exit(0);
     	  break;
+      case "EQUALS":
+          try
+          {
+            String expression = display.getText().replace("×",  "*").replace("÷", "/");
+            double result = evaluate(expression);
+            display.setText(Double.toString(result));
+          }
+          catch (Exception e)
+          {
+            display.setText("Error");
+          }
+          break;
       default:
         break;
     }
@@ -223,5 +236,92 @@ public class RimpleXController implements ActionListener
     String txt = display.getText();
     return txt.charAt(txt.length() - 1);
   }
+  
+  /**
+   * Evaluates the expression given as a string.
+   * 
+   * @param expr The expression to evaluate.
+   * @return The result as a double.
+   */
+  private double evaluate(String expr) throws Exception
+  {
+    return parseExpression(new StringTokenizer(expr, "+-*/()", true));
+  }
+  
+  private double parseExpression(StringTokenizer tokens)
+  {
+    double value = parseTerm(tokens);
+    while (tokens.hasMoreTokens())
+    {
+      String op = tokens.nextToken().trim();
+      if (op.isEmpty()) continue;
+      if (op.equals("+"))
+      {
+        value += parseTerm(tokens);
+      }
+      else if (op.equals("-"))
+      {
+        value -= parseTerm(tokens);
+      }
+      else
+      {
+        tokens = putBackToken(tokens, op);
+        break;
+      }
+    }
+    return value;
+  }
+  
+  private double parseTerm(StringTokenizer tokens)
+  {
+    double value = parseFactor(tokens);
+    while (tokens.hasMoreTokens())
+    {
+      String op = tokens.nextToken().trim();
+      if (op.isEmpty()) continue;
+      if (op.equals("*"))
+      {
+        value *= parseFactor(tokens);
+      }
+      else if (op.equals("/"))
+      {
+        value /= parseFactor(tokens);
+      }
+      else
+      {
+        tokens = putBackToken(tokens, op);
+        break;
+      }
+    }
+    return value;
+  }
 
+  private double parseFactor(StringTokenizer tokens)
+  {
+    if (!tokens.hasMoreTokens()) throw new IllegalArgumentException("Unexpected end of expression");
+    String token = tokens.nextToken().trim();
+    if (token.equals("("))
+    {
+      double value = parseExpression(tokens);
+      if (!tokens.hasMoreTokens() || !tokens.nextToken().equals(")"))
+      {
+        throw new IllegalArgumentException("Missing closing parenthesis");
+      }
+      return value;
+    }
+    else
+    {
+      return Double.parseDouble(token);
+    }
+  }
+  
+  private StringTokenizer putBackToken(StringTokenizer oldTokens, String token)
+  {
+    StringBuilder remaining = new StringBuilder(token);
+    while (oldTokens.hasMoreTokens())
+    {
+      remaining.append(oldTokens.nextToken());
+    }
+    return new StringTokenizer(remaining.toString(), "+-*/()", true);
+  }
 }
