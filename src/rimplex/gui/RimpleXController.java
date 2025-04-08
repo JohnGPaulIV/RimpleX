@@ -17,6 +17,7 @@ public class RimpleXController implements ActionListener
 {
   @SuppressWarnings("unused")
   private RimpleXWindow window;
+  private JLabel topDisplay;
   private JLabel display;
   private int parenCount;
 
@@ -93,14 +94,14 @@ public class RimpleXController implements ActionListener
           String str = display.getText().replace("(", "");
           str.replace(")", "");
           String[] operands = str.split(" ");
-          
+
           // For debugging
           for (String string : operands)
           {
             System.out.print(string + ", ");
           }
           System.out.println();
-          
+
           String lastOperand = operands[operands.length - 1];
           try
           {
@@ -230,11 +231,14 @@ public class RimpleXController implements ActionListener
    * Set the display that this object is controlling.
    * 
    * @param display
-   *          The window
+   *          The display with the current expression.
+   * @param topDisplay
+   *          The display with the left operand.
    */
-  public void setDisplay(final JLabel display)
+  public void setDisplays(final JLabel display, final JLabel topDisplay)
   {
     this.display = display;
+    this.topDisplay = topDisplay;
   }
 
   /**
