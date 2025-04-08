@@ -86,7 +86,7 @@ public class RimpleXController implements ActionListener
         {
           if (topDisplay.getText().length() != 0)
           {
-            display.setText(topDisplay.getText().substring(0, topDisplay.getText().length() - 1));
+            display.setText(topDisplay.getText());
             topDisplay.setText("");
           }
         }
@@ -164,49 +164,64 @@ public class RimpleXController implements ActionListener
         }
         break;
       case "ADD":
-        if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' || lastChar() == '×'
-            || lastChar() == '÷')
+        if (display.getText().length() == 0)
         {
           break;
         }
         else
         {
-          topDisplay.setText(display.getText() + "+");
-          display.setText("");
-          break;
+          if (lastChar() != '.' && lastChar() != '+' && lastChar() != '-' && lastChar() != '×'
+              && lastChar() != '÷')
+          {
+            topDisplay.setText(display.getText() + "+");
+            display.setText("");
+            break;
+          }
         }
       case "SUBTRACT":
-        if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' || lastChar() == '×'
-            || lastChar() == '÷')
+        if (display.getText().length() == 0)
         {
           break;
         }
         else
         {
-          topDisplay.setText(display.getText() + "-");
-          display.setText("");
+          if (lastChar() != '.' && lastChar() != '+' && lastChar() != '-' && lastChar() != '×'
+              && lastChar() != '÷')
+          {
+            topDisplay.setText(display.getText() + "-");
+            display.setText("");
+            break;
+          }
         }
       case "MULTIPLY":
-        if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' || lastChar() == '×'
-            || lastChar() == '÷')
+        if (display.getText().length() == 0)
         {
           break;
         }
         else
         {
-          topDisplay.setText(display.getText() + "×");
-          display.setText("");
+          if (lastChar() != '.' && lastChar() != '+' && lastChar() != '-' && lastChar() != '×'
+              && lastChar() != '÷')
+          {
+            topDisplay.setText(display.getText() + "×");
+            display.setText("");
+            break;
+          }
         }
       case "DIVIDE":
-        if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' || lastChar() == '×'
-            || lastChar() == '÷')
+        if (display.getText().length() == 0)
         {
           break;
         }
         else
         {
-          topDisplay.setText(display.getText() + "÷");
-          display.setText("");
+          if (lastChar() != '.' && lastChar() != '+' && lastChar() != '-' && lastChar() != '×'
+              && lastChar() != '÷')
+          {
+            topDisplay.setText(display.getText() + "÷");
+            display.setText("");
+            break;
+          }
         }
       case "ACTION_EXIT":
         System.exit(0);
