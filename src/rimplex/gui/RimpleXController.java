@@ -146,23 +146,30 @@ public class RimpleXController implements ActionListener
         if (canPlace)
         {
           // Remove the parentheses to not set the parser off.
-          String str = display.getText().replace("(", "");
-          str.replace(")", "");
-          String[] operands = str.split(" ");
+          String displayText = new String(display.getText());
+          displayText = displayText.replace("(", "");
+          displayText = displayText.replace(")", "");
+          displayText = displayText.replace("+", " ");
+          displayText = displayText.replace("-", " ");
+          displayText = displayText.replace("×", " ");
+          displayText = displayText.replace("÷", " ");
+          String[] operands = displayText.split(" ");
 
           // For debugging
-          for (String string : operands)
-          {
-            System.out.print(string + ", ");
-          }
-          System.out.println();
+          // for (String string : operands)
+          // {
+          // System.out.print(string + ", ");
+          // }
+          // System.out.println();
 
           String lastOperand = operands[operands.length - 1];
+          // For debugging
+          // System.out.println("lastOperand = " + lastOperand);
           try
           {
             lastOperand += ".";
             Float.parseFloat(lastOperand);
-            display.setText(lastOperand);
+            display.setText(display.getText() + ".");
           }
           catch (NumberFormatException nfe)
           {
