@@ -123,17 +123,17 @@ public class RimpleXWindow extends JFrame
 
     // Adding Clear button to GUI - Ben
 
-    getContentPane().add(new RimpleXButton("CLEAR", "C", controller, 60, 110, 45, 45));
-    getContentPane().add(new RimpleXButton("RESET", "R", controller, 210, 110, 45, 45));
-    getContentPane().add(new RimpleXButton("SIGN", "±", controller, 10, 110, 45, 45));
+//    getContentPane().add(new RimpleXButton("CLEAR", "C", controller, 60, 110, 45, 45));
+//    getContentPane().add(new RimpleXButton("RESET", "R", controller, 210, 110, 45, 45));
+//    getContentPane().add(new RimpleXButton("SIGN", "±", controller, 10, 110, 45, 45));
+//    
+//    //Adding operator buttons
+//    getContentPane().add(new RimpleXButton("ADD", "+", controller, 160, 110, 45, 45));
+//    getContentPane().add(new RimpleXButton("SUBTRACT", "-", controller, 160, 160, 45, 45));
+//    getContentPane().add(new RimpleXButton("MULTIPLY", "×", controller, 160, 210, 45, 45));
+//    getContentPane().add(new RimpleXButton("DIVIDE", "÷", controller, 160, 260, 45, 45));
     
-    //Adding operator buttons
-    getContentPane().add(new RimpleXButton("ADD", "+", controller, 160, 110, 45, 45));
-    getContentPane().add(new RimpleXButton("SUBTRACT", "-", controller, 160, 160, 45, 45));
-    getContentPane().add(new RimpleXButton("MULTIPLY", "×", controller, 160, 210, 45, 45));
-    getContentPane().add(new RimpleXButton("DIVIDE", "÷", controller, 160, 260, 45, 45));
-    
-    getContentPane().add(new RimpleXButton("EQUALS", "=", controller, 160, 310, 45, 45));
+    getContentPane().add(new RimpleXButton("EQUALS", "=", controller, 160, 350, 45, 45));
 
     getContentPane().add(new RimpleXButton("CLEAR", "C", controller, 60, 150, 45, 45));
     getContentPane().add(new RimpleXButton("RESET", "R", controller, 210, 150, 45, 45));
