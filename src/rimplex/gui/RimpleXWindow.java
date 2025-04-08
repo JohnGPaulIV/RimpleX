@@ -38,7 +38,7 @@ public class RimpleXWindow extends JFrame
    * 
    * @param controller
    *          The observer for all GUI components.
-   * @throws IOException 
+   * @throws IOException
    */
   public RimpleXWindow(final RimpleXController controller) throws IOException
   {
@@ -51,12 +51,10 @@ public class RimpleXWindow extends JFrame
 
     Container contentPane = this.getContentPane();
     contentPane.setLayout(null);
-    
-
 
     setupSoftKeyboard();
     setupDisplay();
-    
+
     BufferedImage myPicture = ImageIO.read(new File("logoRimplex.png"));
 
     // Calculate scaled dimensions
@@ -64,9 +62,11 @@ public class RimpleXWindow extends JFrame
     int scaledHeight = myPicture.getHeight() / 2;
 
     // Create scaled image
-    BufferedImage scaledImage = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
+    BufferedImage scaledImage = new BufferedImage(scaledWidth, scaledHeight,
+        BufferedImage.TYPE_INT_ARGB);
     Graphics2D g2d = scaledImage.createGraphics();
-    g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+    g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+        RenderingHints.VALUE_INTERPOLATION_BILINEAR);
     g2d.drawImage(myPicture, 0, 0, scaledWidth, scaledHeight, null);
     g2d.dispose();
 
@@ -76,10 +76,10 @@ public class RimpleXWindow extends JFrame
 
     this.setSize(275, 420);
     this.setResizable(false);
-    
-    //Adding menu bar
+
+    // Adding menu bar
     JMenuBar menuBar = new JMenuBar();
-    
+
     JMenu fileMenu = new JMenu("File");
     JMenuItem exitItem = new JMenuItem("Exit");
     exitItem.setActionCommand("ACTION_EXIT");
@@ -87,7 +87,7 @@ public class RimpleXWindow extends JFrame
     fileMenu.add(exitItem);
     menuBar.add(fileMenu);
     setJMenuBar(menuBar);
-    
+
     // TODO: Add Java GUI Components to the main window here
     // TODO: Set size, layout, all those goodies. Helper functions can be utilized.
   }
@@ -108,22 +108,23 @@ public class RimpleXWindow extends JFrame
     getContentPane().add(new RimpleXButton("THREE", "3", controller, 110, 260, 45, 45));
     getContentPane().add(new RimpleXButton("ZERO", "0", controller, 10, 310, 95, 45));
     getContentPane().add(new RimpleXButton("DECIMAL", ".", controller, 210, 310, 45, 45));
-    
+
     getContentPane().add(new RimpleXButton("BACKSPACE", "\u2190", controller, 110, 110, 45, 45));
 
     // Add more buttons as new capabilities are added.
-    
+
     // Adding parenthesis to GUI - John
 
     getContentPane().add(new RimpleXButton("OPEN_PARENTHESIS", "(", controller, 210, 210, 45, 45));
-    getContentPane().add(new RimpleXButton("CLOSED_PARENTHESIS", ")", controller, 210, 260, 45, 45));
-    
+    getContentPane()
+        .add(new RimpleXButton("CLOSED_PARENTHESIS", ")", controller, 210, 260, 45, 45));
+
     // Adding Clear button to GUI - Ben
     getContentPane().add(new RimpleXButton("CLEAR", "C", controller, 60, 110, 45, 45));
     getContentPane().add(new RimpleXButton("RESET", "R", controller, 210, 110, 45, 45));
     getContentPane().add(new RimpleXButton("SIGN", "±", controller, 10, 110, 45, 45));
-    
-    //Adding operator buttons
+
+    // Adding operator buttons
     getContentPane().add(new RimpleXButton("ADD", "+", controller, 160, 110, 45, 45));
     getContentPane().add(new RimpleXButton("SUBTRACT", "-", controller, 160, 160, 45, 45));
     getContentPane().add(new RimpleXButton("MULTIPLY", "×", controller, 160, 210, 45, 45));
@@ -139,13 +140,13 @@ public class RimpleXWindow extends JFrame
     this.controller.setDisplay(display);
 
     display.setBounds(10, 55, 245, 40);
-    
+
     // Using compound border to set padding of the text in the display:
     // https://docs.oracle.com/javase/7/docs/api/javax/swing/border/CompoundBorder.html
     Border padding = BorderFactory.createEmptyBorder(5, 5, 5, 5);
     Border border = BorderFactory.createLineBorder(Color.BLACK);
     Border compound = new CompoundBorder(border, padding);
-    
+
     display.setBorder(compound);
     getContentPane().add(display);
   }

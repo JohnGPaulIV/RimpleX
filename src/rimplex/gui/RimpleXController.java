@@ -43,7 +43,7 @@ public class RimpleXController implements ActionListener
     // if (ac.equals(NAME_OF_BUTTON)) { do stuff...}.
 
     // For testing if buttons are linked with actions.
-    //    System.out.println(ac + " was pressed.");
+    // System.out.println(ac + " was pressed.");
     switch (ac)
     {
       case "ONE":
@@ -85,33 +85,33 @@ public class RimpleXController implements ActionListener
       case "DECIMAL":
         // This is a temporary solution since this won't work when operators are in the current
         // expression.
-        
-        /* Fixed decimal issue by checking to make sure the
-        last character in the string is a digit. - John */
+
+        /*
+         * Fixed decimal issue by checking to make sure the last character in the string is a digit.
+         * - John
+         */
         boolean canPlace = !(display.getText().length() == 0)
             && Character.isDigit(display.getText().charAt(display.getText().length() - 1));
-        if (canPlace) 
+        if (canPlace)
         {
           display.setText(display.getText() + ".");
           break;
-        } else
+        }
+        else
         {
           break;
         }
-        /* String currentExpression = display.getText();
-        currentExpression += ".";
-        try {
-          Float.parseFloat(currentExpression);
-          display.setText(currentExpression);
-        }
-        catch (NumberFormatException nfe) {
-          System.out.println("Invalid decimal placement.");
-        } */
+        /*
+         * String currentExpression = display.getText(); currentExpression += "."; try {
+         * Float.parseFloat(currentExpression); display.setText(currentExpression); } catch
+         * (NumberFormatException nfe) { System.out.println("Invalid decimal placement."); }
+         */
       case "OPEN_PARENTHESIS":
         if (lastChar() == '.')
         {
           break;
-        } else
+        }
+        else
         {
           display.setText(display.getText() + "(");
           parenCount++;
@@ -123,7 +123,8 @@ public class RimpleXController implements ActionListener
         if (parenCount == 0 || !Character.isDigit(lastVal))
         {
           break;
-        } else 
+        }
+        else
         {
           display.setText(display.getText() + ")");
           parenCount--;
@@ -131,61 +132,67 @@ public class RimpleXController implements ActionListener
         }
       case "CLEAR":
         display.setText("");
-    	  break;
+        break;
       case "RESET":
-        display.setText("");    	  
+        display.setText("");
         break;
       case "SIGN":
-    	  if (display.getText().charAt(0) == '-') {
-    		  display.setText(display.getText().substring(1));
-    	  }
-    	  else { 
-    		  display.setText("-" + display.getText());
-    	  }
-    	  break;
+        if (display.getText().charAt(0) == '-')
+        {
+          display.setText(display.getText().substring(1));
+        }
+        else
+        {
+          display.setText("-" + display.getText());
+        }
+        break;
       case "ADD":
-          if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' 
-          	|| lastChar() == '×' || lastChar() == '÷')
-          {
-            break;
-          } else
-          {
-            display.setText(display.getText() + "+");
-            break;
-          }
+        if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' || lastChar() == '×'
+            || lastChar() == '÷')
+        {
+          break;
+        }
+        else
+        {
+          display.setText(display.getText() + "+");
+          break;
+        }
       case "SUBTRACT":
-          if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' 
-          	|| lastChar() == '×' || lastChar() == '÷')
-          {
-            break;
-          } else
-          {
-            display.setText(display.getText() + "-");
-            break;
-          }
+        if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' || lastChar() == '×'
+            || lastChar() == '÷')
+        {
+          break;
+        }
+        else
+        {
+          display.setText(display.getText() + "-");
+          break;
+        }
       case "MULTIPLY":
-          if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' 
-          	|| lastChar() == '×' || lastChar() == '÷')
-          {
-            break;
-          } else
-          {
-            display.setText(display.getText() + "×");
-            break;
-          }
+        if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' || lastChar() == '×'
+            || lastChar() == '÷')
+        {
+          break;
+        }
+        else
+        {
+          display.setText(display.getText() + "×");
+          break;
+        }
       case "DIVIDE":
-          if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' 
-          	|| lastChar() == '×' || lastChar() == '÷')
-          {
-            break;
-          } else
-          {
-            display.setText(display.getText() + "÷");
-            break;
-          }   
+        if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' || lastChar() == '×'
+            || lastChar() == '÷')
+        {
+          break;
+        }
+        else
+        {
+          display.setText(display.getText() + "÷");
+          break;
+        }
       case "ACTION_EXIT":
-    	  System.exit(0);
-    	  break;
+        System.exit(0);
+        break;
       default:
         break;
     }
