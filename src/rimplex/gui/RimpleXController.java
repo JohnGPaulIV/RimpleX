@@ -50,7 +50,7 @@ public class RimpleXController implements ActionListener
       case "ONE":
         if (display.getText().length() != 0)
         {
-          if (lastChar() == 'i')
+          if (display.getText().endsWith("\uD835\uDC56"))
           {
             break;
           }
@@ -60,7 +60,7 @@ public class RimpleXController implements ActionListener
       case "TWO":
         if (display.getText().length() != 0)
         {
-          if (lastChar() == 'i')
+          if (display.getText().endsWith("\uD835\uDC56"))
           {
             break;
           }
@@ -70,7 +70,7 @@ public class RimpleXController implements ActionListener
       case "THREE":
         if (display.getText().length() != 0)
         {
-          if (lastChar() == 'i')
+          if (display.getText().endsWith("\uD835\uDC56"))
           {
             break;
           }
@@ -80,7 +80,7 @@ public class RimpleXController implements ActionListener
       case "FOUR":
         if (display.getText().length() != 0)
         {
-          if (lastChar() == 'i')
+          if (display.getText().endsWith("\uD835\uDC56"))
           {
             break;
           }
@@ -90,7 +90,7 @@ public class RimpleXController implements ActionListener
       case "FIVE":
         if (display.getText().length() != 0)
         {
-          if (lastChar() == 'i')
+          if (display.getText().endsWith("\uD835\uDC56"))
           {
             break;
           }
@@ -100,7 +100,7 @@ public class RimpleXController implements ActionListener
       case "SIX":
         if (display.getText().length() != 0)
         {
-          if (lastChar() == 'i')
+          if (display.getText().endsWith("\uD835\uDC56"))
           {
             break;
           }
@@ -110,7 +110,7 @@ public class RimpleXController implements ActionListener
       case "SEVEN":
         if (display.getText().length() != 0)
         {
-          if (lastChar() == 'i')
+          if (display.getText().endsWith("\uD835\uDC56"))
           {
             break;
           }
@@ -120,7 +120,7 @@ public class RimpleXController implements ActionListener
       case "EIGHT":
         if (display.getText().length() != 0)
         {
-          if (lastChar() == 'i')
+          if (display.getText().endsWith("\uD835\uDC56"))
           {
             break;
           }
@@ -130,7 +130,7 @@ public class RimpleXController implements ActionListener
       case "NINE":
         if (display.getText().length() != 0)
         {
-          if (lastChar() == 'i')
+          if (display.getText().endsWith("\uD835\uDC56"))
           {
             break;
           }
@@ -140,7 +140,7 @@ public class RimpleXController implements ActionListener
       case "ZERO":
         if (display.getText().length() != 0)
         {
-          if (lastChar() == 'i')
+          if (display.getText().endsWith("\uD835\uDC56"))
           {
             break;
           }
@@ -150,7 +150,14 @@ public class RimpleXController implements ActionListener
       case "BACKSPACE":
         if (display.getText().length() != 0)
         {
+          if (display.getText().endsWith("\uD835\uDC56"))
+          {
+            display.setText(display.getText().substring(0, display.getText().length() - 2));
+          }
+          else
+          {
           display.setText(display.getText().substring(0, display.getText().length() - 1));
+          }
         }
         else
         {
@@ -299,7 +306,7 @@ public class RimpleXController implements ActionListener
       case "UNIT":
         if (display.getText().length() != 0 && Character.isDigit(lastChar()))
         {
-          display.setText(display.getText() + "i");
+          display.setText(display.getText() + "𝑖");
         }
         break;
       default:

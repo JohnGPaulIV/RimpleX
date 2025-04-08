@@ -125,10 +125,8 @@ public class RimpleXWindow extends JFrame
     getContentPane().add(new RimpleXButton("CLEAR", "C", controller, 60, 150, 45, 45));
     getContentPane().add(new RimpleXButton("RESET", "R", controller, 210, 150, 45, 45));
     getContentPane().add(new RimpleXButton("SIGN", "±", controller, 10, 150, 45, 45));
-    RimpleXButton imaginaryUnitButton = new RimpleXButton("UNIT", "i", controller, 110, 350, 45,
-        45);
-    imaginaryUnitButton.setFont(imaginaryUnitButton.getFont().deriveFont(Font.BOLD | Font.ITALIC));
-    getContentPane().add(imaginaryUnitButton);
+    getContentPane().add(new RimpleXButton("UNIT", "𝑖", controller, 110, 350, 45,
+        45));
 
     // Adding operator buttons
     getContentPane().add(new RimpleXButton("ADD", "+", controller, 160, 150, 45, 45));
