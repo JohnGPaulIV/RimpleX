@@ -228,6 +228,7 @@ public class RimpleXController implements ActionListener
         display.setText("");
         break;
       case "RESET":
+        topDisplay.setText("");
         display.setText("");
         break;
       case "SIGN":
