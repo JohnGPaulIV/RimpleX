@@ -48,33 +48,103 @@ public class RimpleXController implements ActionListener
     switch (ac)
     {
       case "ONE":
+        if (display.getText().length() != 0)
+        {
+          if (lastChar() == 'i')
+          {
+            break;
+          }
+        }
         display.setText(display.getText() + "1");
         break;
       case "TWO":
+        if (display.getText().length() != 0)
+        {
+          if (lastChar() == 'i')
+          {
+            break;
+          }
+        }
         display.setText(display.getText() + "2");
         break;
       case "THREE":
+        if (display.getText().length() != 0)
+        {
+          if (lastChar() == 'i')
+          {
+            break;
+          }
+        }
         display.setText(display.getText() + "3");
         break;
       case "FOUR":
+        if (display.getText().length() != 0)
+        {
+          if (lastChar() == 'i')
+          {
+            break;
+          }
+        }
         display.setText(display.getText() + "4");
         break;
       case "FIVE":
+        if (display.getText().length() != 0)
+        {
+          if (lastChar() == 'i')
+          {
+            break;
+          }
+        }
         display.setText(display.getText() + "5");
         break;
       case "SIX":
+        if (display.getText().length() != 0)
+        {
+          if (lastChar() == 'i')
+          {
+            break;
+          }
+        }
         display.setText(display.getText() + "6");
         break;
       case "SEVEN":
+        if (display.getText().length() != 0)
+        {
+          if (lastChar() == 'i')
+          {
+            break;
+          }
+        }
         display.setText(display.getText() + "7");
         break;
       case "EIGHT":
+        if (display.getText().length() != 0)
+        {
+          if (lastChar() == 'i')
+          {
+            break;
+          }
+        }
         display.setText(display.getText() + "8");
         break;
       case "NINE":
+        if (display.getText().length() != 0)
+        {
+          if (lastChar() == 'i')
+          {
+            break;
+          }
+        }
         display.setText(display.getText() + "9");
         break;
       case "ZERO":
+        if (display.getText().length() != 0)
+        {
+          if (lastChar() == 'i')
+          {
+            break;
+          }
+        }
         display.setText(display.getText() + "0");
         break;
       case "BACKSPACE":
@@ -225,6 +295,12 @@ public class RimpleXController implements ActionListener
         }
       case "ACTION_EXIT":
         System.exit(0);
+        break;
+      case "UNIT":
+        if (display.getText().length() != 0 && Character.isDigit(lastChar()))
+        {
+          display.setText(display.getText() + "i");
+        }
         break;
       default:
         break;
