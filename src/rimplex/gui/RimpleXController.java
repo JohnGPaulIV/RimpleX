@@ -119,11 +119,6 @@ public class RimpleXController implements ActionListener
         {
           break;
         }
-        /*
-         * String currentExpression = display.getText(); currentExpression += "."; try {
-         * Float.parseFloat(currentExpression); display.setText(currentExpression); } catch
-         * (NumberFormatException nfe) { System.out.println("Invalid decimal placement."); }
-         */
       case "OPEN_PARENTHESIS":
         if (lastChar() == '.')
         {
@@ -172,7 +167,8 @@ public class RimpleXController implements ActionListener
         }
         else
         {
-          display.setText(display.getText() + "+");
+          topDisplay.setText(display.getText() + "+");
+          display.setText("");
           break;
         }
       case "SUBTRACT":
@@ -183,8 +179,8 @@ public class RimpleXController implements ActionListener
         }
         else
         {
-          display.setText(display.getText() + "-");
-          break;
+          topDisplay.setText(display.getText() + "-");
+          display.setText("");
         }
       case "MULTIPLY":
         if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' || lastChar() == '×'
@@ -194,8 +190,8 @@ public class RimpleXController implements ActionListener
         }
         else
         {
-          display.setText(display.getText() + "×");
-          break;
+          topDisplay.setText(display.getText() + "×");
+          display.setText("");
         }
       case "DIVIDE":
         if (lastChar() == '.' || lastChar() == '+' || lastChar() == '-' || lastChar() == '×'
@@ -205,8 +201,8 @@ public class RimpleXController implements ActionListener
         }
         else
         {
-          display.setText(display.getText() + "÷");
-          break;
+          topDisplay.setText(display.getText() + "÷");
+          display.setText("");
         }
       case "ACTION_EXIT":
         System.exit(0);
