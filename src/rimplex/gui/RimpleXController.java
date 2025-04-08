@@ -85,16 +85,33 @@ public class RimpleXController implements ActionListener
       case "DECIMAL":
         // This is a temporary solution since this won't work when operators are in the current
         // expression.
-
-        /*
-         * Fixed decimal issue by checking to make sure the last character in the string is a digit.
-         * - John
-         */
         boolean canPlace = !(display.getText().length() == 0)
             && Character.isDigit(display.getText().charAt(display.getText().length() - 1));
         if (canPlace)
         {
-          display.setText(display.getText() + ".");
+          // Remove the parentheses to not set the parser off.
+          String str = display.getText().replace("(", "");
+          str.replace(")", "");
+          String[] operands = str.split(" ");
+          
+          // For debugging
+          for (String string : operands)
+          {
+            System.out.print(string + ", ");
+          }
+          System.out.println();
+          
+          String lastOperand = operands[operands.length - 1];
+          try
+          {
+            lastOperand += ".";
+            Float.parseFloat(lastOperand);
+            display.setText(lastOperand);
+          }
+          catch (NumberFormatException nfe)
+          {
+            System.out.println("Invalid decimal placement.");
+          }
           break;
         }
         else
