@@ -82,6 +82,14 @@ public class RimpleXController implements ActionListener
         {
           display.setText(display.getText().substring(0, display.getText().length() - 1));
         }
+        else
+        {
+          if (topDisplay.getText().length() != 0)
+          {
+            display.setText(topDisplay.getText().substring(0, topDisplay.getText().length() - 1));
+            topDisplay.setText("");
+          }
+        }
         break;
       case "DECIMAL":
         // This is a temporary solution since this won't work when operators are in the current
