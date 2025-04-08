@@ -120,11 +120,7 @@ public class RimpleXController implements ActionListener
           break;
         }
       case "OPEN_PARENTHESIS":
-        if (lastChar() == '.')
-        {
-          break;
-        }
-        else
+        if (display.getText().length() == 0 || lastChar() != '.')
         {
           display.setText(display.getText() + "(");
           parenCount++;
