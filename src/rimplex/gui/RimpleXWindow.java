@@ -2,6 +2,7 @@ package rimplex.gui;
 
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -16,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 
@@ -38,7 +40,7 @@ public class RimpleXWindow extends JFrame
    * 
    * @param controller
    *          The observer for all GUI components.
-   * @throws IOException 
+   * @throws IOException
    */
   public RimpleXWindow(final RimpleXController controller) throws IOException
   {
@@ -51,12 +53,10 @@ public class RimpleXWindow extends JFrame
 
     Container contentPane = this.getContentPane();
     contentPane.setLayout(null);
-    
-
 
     setupSoftKeyboard();
     setupDisplay();
-    
+
     BufferedImage myPicture = ImageIO.read(new File("logoRimplex.png"));
 
     // Calculate scaled dimensions
@@ -64,9 +64,11 @@ public class RimpleXWindow extends JFrame
     int scaledHeight = myPicture.getHeight() / 2;
 
     // Create scaled image
-    BufferedImage scaledImage = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
+    BufferedImage scaledImage = new BufferedImage(scaledWidth, scaledHeight,
+        BufferedImage.TYPE_INT_ARGB);
     Graphics2D g2d = scaledImage.createGraphics();
-    g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+    g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+        RenderingHints.VALUE_INTERPOLATION_BILINEAR);
     g2d.drawImage(myPicture, 0, 0, scaledWidth, scaledHeight, null);
     g2d.dispose();
 
@@ -74,12 +76,12 @@ public class RimpleXWindow extends JFrame
     picLabel.setBounds(10, 10, scaledWidth, scaledHeight);
     getContentPane().add(picLabel);
 
-    this.setSize(275, 420);
+    this.setSize(275, 460);
     this.setResizable(false);
-    
-    //Adding menu bar
+
+    // Adding menu bar
     JMenuBar menuBar = new JMenuBar();
-    
+
     JMenu fileMenu = new JMenu("File");
     JMenuItem exitItem = new JMenuItem("Exit");
     exitItem.setActionCommand("ACTION_EXIT");
@@ -87,7 +89,7 @@ public class RimpleXWindow extends JFrame
     fileMenu.add(exitItem);
     menuBar.add(fileMenu);
     setJMenuBar(menuBar);
-    
+
     // TODO: Add Java GUI Components to the main window here
     // TODO: Set size, layout, all those goodies. Helper functions can be utilized.
   }
@@ -97,28 +99,30 @@ public class RimpleXWindow extends JFrame
    */
   private void setupSoftKeyboard()
   {
-    getContentPane().add(new RimpleXButton("SEVEN", "7", controller, 10, 160, 45, 45));
-    getContentPane().add(new RimpleXButton("EIGHT", "8", controller, 60, 160, 45, 45));
-    getContentPane().add(new RimpleXButton("NINE", "9", controller, 110, 160, 45, 45));
-    getContentPane().add(new RimpleXButton("FOUR", "4", controller, 10, 210, 45, 45));
-    getContentPane().add(new RimpleXButton("FIVE", "5", controller, 60, 210, 45, 45));
-    getContentPane().add(new RimpleXButton("SIX", "6", controller, 110, 210, 45, 45));
-    getContentPane().add(new RimpleXButton("ONE", "1", controller, 10, 260, 45, 45));
-    getContentPane().add(new RimpleXButton("TWO", "2", controller, 60, 260, 45, 45));
-    getContentPane().add(new RimpleXButton("THREE", "3", controller, 110, 260, 45, 45));
-    getContentPane().add(new RimpleXButton("ZERO", "0", controller, 10, 310, 95, 45));
-    getContentPane().add(new RimpleXButton("DECIMAL", ".", controller, 210, 310, 45, 45));
-    
-    getContentPane().add(new RimpleXButton("BACKSPACE", "\u2190", controller, 110, 110, 45, 45));
+    getContentPane().add(new RimpleXButton("SEVEN", "7", controller, 10, 200, 45, 45));
+    getContentPane().add(new RimpleXButton("EIGHT", "8", controller, 60, 200, 45, 45));
+    getContentPane().add(new RimpleXButton("NINE", "9", controller, 110, 200, 45, 45));
+    getContentPane().add(new RimpleXButton("FOUR", "4", controller, 10, 250, 45, 45));
+    getContentPane().add(new RimpleXButton("FIVE", "5", controller, 60, 250, 45, 45));
+    getContentPane().add(new RimpleXButton("SIX", "6", controller, 110, 250, 45, 45));
+    getContentPane().add(new RimpleXButton("ONE", "1", controller, 10, 300, 45, 45));
+    getContentPane().add(new RimpleXButton("TWO", "2", controller, 60, 300, 45, 45));
+    getContentPane().add(new RimpleXButton("THREE", "3", controller, 110, 300, 45, 45));
+    getContentPane().add(new RimpleXButton("ZERO", "0", controller, 10, 350, 95, 45));
+    getContentPane().add(new RimpleXButton("DECIMAL", ".", controller, 210, 350, 45, 45));
+
+    getContentPane().add(new RimpleXButton("BACKSPACE", "\u2190", controller, 110, 150, 45, 45));
 
     // Add more buttons as new capabilities are added.
-    
+
     // Adding parenthesis to GUI - John
 
-    getContentPane().add(new RimpleXButton("OPEN_PARENTHESIS", "(", controller, 210, 210, 45, 45));
-    getContentPane().add(new RimpleXButton("CLOSED_PARENTHESIS", ")", controller, 210, 260, 45, 45));
-    
+    getContentPane().add(new RimpleXButton("OPEN_PARENTHESIS", "(", controller, 210, 250, 45, 45));
+    getContentPane()
+        .add(new RimpleXButton("CLOSED_PARENTHESIS", ")", controller, 210, 300, 45, 45));
+
     // Adding Clear button to GUI - Ben
+
     getContentPane().add(new RimpleXButton("CLEAR", "C", controller, 60, 110, 45, 45));
     getContentPane().add(new RimpleXButton("RESET", "R", controller, 210, 110, 45, 45));
     getContentPane().add(new RimpleXButton("SIGN", "±", controller, 10, 110, 45, 45));
@@ -130,6 +134,19 @@ public class RimpleXWindow extends JFrame
     getContentPane().add(new RimpleXButton("DIVIDE", "÷", controller, 160, 260, 45, 45));
     
     getContentPane().add(new RimpleXButton("EQUALS", "=", controller, 160, 310, 45, 45));
+
+    getContentPane().add(new RimpleXButton("CLEAR", "C", controller, 60, 150, 45, 45));
+    getContentPane().add(new RimpleXButton("RESET", "R", controller, 210, 150, 45, 45));
+    getContentPane().add(new RimpleXButton("SIGN", "±", controller, 10, 150, 45, 45));
+    getContentPane().add(new RimpleXButton("UNIT", "𝑖", controller, 110, 350, 45,
+        45));
+
+    // Adding operator buttons
+    getContentPane().add(new RimpleXButton("ADD", "+", controller, 160, 150, 45, 45));
+    getContentPane().add(new RimpleXButton("SUBTRACT", "-", controller, 160, 200, 45, 45));
+    getContentPane().add(new RimpleXButton("MULTIPLY", "×", controller, 160, 250, 45, 45));
+    getContentPane().add(new RimpleXButton("DIVIDE", "÷", controller, 160, 300, 45, 45));
+
   }
 
   /**
@@ -137,18 +154,29 @@ public class RimpleXWindow extends JFrame
    */
   private void setupDisplay()
   {
-    JLabel display = new JLabel("");
-    this.controller.setDisplay(display);
+    // Create new displays.
+    JLabel display = new JLabel("", SwingConstants.RIGHT);
+    JLabel topDisplay = new JLabel("");
+    this.controller.setDisplays(display, topDisplay);
 
-    display.setBounds(10, 55, 245, 40);
-    
+    // Set the font of the displayed text.
+    display.setFont(new Font("Serif", Font.PLAIN, 18));
+    topDisplay.setFont(new Font("Serif", Font.PLAIN, 18));
+
+    // Set the size of the displays.
+    display.setBounds(10, 65, 245, 50);
+    topDisplay.setBounds(10, 65, 245, 30);
+
     // Using compound border to set padding of the text in the display:
     // https://docs.oracle.com/javase/7/docs/api/javax/swing/border/CompoundBorder.html
-    Border padding = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+    Border padding = BorderFactory.createEmptyBorder(30, 5, 5, 5);
     Border border = BorderFactory.createLineBorder(Color.BLACK);
     Border compound = new CompoundBorder(border, padding);
-    
+
     display.setBorder(compound);
+    topDisplay.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+
     getContentPane().add(display);
+    getContentPane().add(topDisplay);
   }
 }
