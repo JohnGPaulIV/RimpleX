@@ -20,6 +20,7 @@ public class RimpleXController implements ActionListener
   private JLabel topDisplay;
   private JLabel display;
   private int parenCount;
+  private boolean parenPresent;
 
   /**
    * Constructor for a RimpleXController.
@@ -175,23 +176,23 @@ public class RimpleXController implements ActionListener
           break;
         }
       case "OPEN_PARENTHESIS":
-        if (display.getText().length() == 0 || lastChar() != '.')
+        if (display.getText().length() == 0)
         {
           display.setText(display.getText() + "(");
-          parenCount++;
+          parenPresent = true;
           break;
         }
       case "CLOSED_PARENTHESIS":
         String displayText = display.getText();
         char lastVal = displayText.charAt(displayText.length() - 1);
-        if (parenCount == 0 || !Character.isDigit(lastVal))
+        if (!parenPresent || !Character.isDigit(lastVal))
         {
           break;
         }
         else
         {
-          display.setText(display.getText() + ")");
-          parenCount--;
+          display.setText(display.getText().replace("(", ""));
+          parenPresent = false;
           break;
         }
       case "CLEAR":
@@ -218,13 +219,8 @@ public class RimpleXController implements ActionListener
         }
         else
         {
-          if (lastChar() != '.' && lastChar() != '+' && lastChar() != '-' && lastChar() != '×'
-              && lastChar() != '÷')
-          {
-            topDisplay.setText(display.getText() + "+");
-            display.setText("");
-            break;
-          }
+          checkOperatorPlacement(display, topDisplay, "+");
+          break;
         }
       case "SUBTRACT":
         if (display.getText().length() == 0)
@@ -233,13 +229,8 @@ public class RimpleXController implements ActionListener
         }
         else
         {
-          if (lastChar() != '.' && lastChar() != '+' && lastChar() != '-' && lastChar() != '×'
-              && lastChar() != '÷')
-          {
-            topDisplay.setText(display.getText() + "-");
-            display.setText("");
-            break;
-          }
+          checkOperatorPlacement(display, topDisplay, "-");
+          break;
         }
       case "MULTIPLY":
         if (display.getText().length() == 0)
@@ -248,13 +239,8 @@ public class RimpleXController implements ActionListener
         }
         else
         {
-          if (lastChar() != '.' && lastChar() != '+' && lastChar() != '-' && lastChar() != '×'
-              && lastChar() != '÷')
-          {
-            topDisplay.setText(display.getText() + "×");
-            display.setText("");
-            break;
-          }
+          checkOperatorPlacement(display, topDisplay, "×");
+          break;
         }
       case "DIVIDE":
         if (display.getText().length() == 0)
@@ -263,13 +249,8 @@ public class RimpleXController implements ActionListener
         }
         else
         {
-          if (lastChar() != '.' && lastChar() != '+' && lastChar() != '-' && lastChar() != '×'
-              && lastChar() != '÷')
-          {
-            topDisplay.setText(display.getText() + "÷");
-            display.setText("");
-            break;
-          }
+          checkOperatorPlacement(display, topDisplay, "÷");
+          break;
         }
       case "ACTION_EXIT":
         System.exit(0);
@@ -331,5 +312,26 @@ public class RimpleXController implements ActionListener
       }
     }
     return true;
+  }
+
+  private void checkOperatorPlacement(final JLabel display, final JLabel topDisplay, final String operator)
+  {
+    if ((lastChar() != '.' && lastChar() != '+' && lastChar() != '-' && lastChar() != '×'
+        && lastChar() != '÷') && !parenPresent)
+    {
+      topDisplay.setText(display.getText() + operator);
+      display.setText("");
+      return;
+    }
+    else
+    {
+      if (!display.getText().contains("+") && !display.getText().contains("-")
+          && !display.getText().contains("×") && !display.getText().contains("÷"))
+      {
+        display.setText(display.getText() + operator);
+        return;
+      }
+      return;
+    }
   }
 }
