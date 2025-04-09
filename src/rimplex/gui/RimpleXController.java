@@ -270,7 +270,7 @@ public class RimpleXController implements ActionListener
       case "EQUALS":
         try
         {
-          String expression = display.getText().replace("×",  "*").replace("÷", "/");
+          String expression = (topDisplay.getText() + display.getText()).replace("×",  "*").replace("÷", "/");
           double result = evaluate(expression);
           display.setText(Double.toString(result));
         }
