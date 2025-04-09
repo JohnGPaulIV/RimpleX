@@ -238,9 +238,10 @@ public class RimpleXController implements ActionListener
         {
           break;
         }
+        // NOTE! This "subtraction" sign is a MINUS character. Not a hyphen.
         else
         {
-          setOperator(display, topDisplay, "-");
+          setOperator(display, topDisplay, "−");
           break;
         }
       case "MULTIPLY":

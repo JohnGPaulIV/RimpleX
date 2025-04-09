@@ -28,7 +28,7 @@ public class RimpleXButton extends JButton
    *          The absolute position of the button on the x-axis.
    * @param yPos
    *          The absolute position of the button on the y-axis.
-   * @param width
+   * @param widthArial
    *          The width of the button.
    * @param height
    *          The height of the button.
