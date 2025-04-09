@@ -41,7 +41,7 @@ public class RimpleXButton extends JButton
     this.addActionListener(controller);
     this.setBounds(xPos, yPos, width, height);
     this.setMargin(new Insets(2, 2, 2, 2));  // Smaller than default
-    this.setFont(new Font("Arial", Font.PLAIN, 24));
+    this.setFont(new Font("Sans-Serif", Font.PLAIN, 24));
 
   }
 
