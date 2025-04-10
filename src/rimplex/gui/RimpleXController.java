@@ -393,10 +393,13 @@ public class RimpleXController implements ActionListener
       {
         value /= parseFactor(tokens);
       }
-      else
+      else if (op.equals("+"))
       {
-        tokens = putBackToken(tokens, op);
-        break;
+        value += parseFactor(tokens);
+      }
+      else if (op.equals("-"))
+      {
+        value -= parseFactor(tokens);
       }
     }
     return value;
