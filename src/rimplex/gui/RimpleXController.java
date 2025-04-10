@@ -3,15 +3,14 @@ package rimplex.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.StringTokenizer;
-
 import javax.swing.JLabel;
 
 /**
  * The observer of all GUI components of the RimpleX application.
- * 
+ *
  * General structure taken from Dr. Bernstein's Serialization Lab:
  * (https://w3.cs.jmu.edu/bernstdh/web/common/labs/experience_serialization/tempz/index.php)
- * 
+ *
  * This work complies with JMU Honor Code.
  */
 public class RimpleXController implements ActionListener
@@ -21,6 +20,8 @@ public class RimpleXController implements ActionListener
   private JLabel topDisplay;
   private JLabel display;
   private boolean parenPresent;
+  private boolean equalsPresent;
+  private double previousResult;
 
   /**
    * Constructor for a RimpleXController.
@@ -28,22 +29,22 @@ public class RimpleXController implements ActionListener
   public RimpleXController()
   {
     super();
+    equalsPresent = false;
+    previousResult = 0;
   }
 
   @Override
   /**
    * Action handler when buttons or clicked.
-   * 
+   *
    * @param ae
    *          The ActionEvent that generated the message.
    */
   public void actionPerformed(final ActionEvent ae)
   {
     String ac = ae.getActionCommand();
-
     // General structure of handling actions:
     // if (ac.equals(NAME_OF_BUTTON)) { do stuff...}.
-
     // For testing if buttons are linked with actions.
     // System.out.println(ac + " was pressed.");
     switch (ac)
@@ -155,14 +156,12 @@ public class RimpleXController implements ActionListener
           displayText = displayText.replace("×", " ");
           displayText = displayText.replace("÷", " ");
           String[] operands = displayText.split(" ");
-
           // For debugging
           // for (String string : operands)
           // {
           // System.out.print(string + ", ");
           // }
           // System.out.println();
-
           String lastOperand = operands[operands.length - 1];
           // For debugging
           // System.out.println("lastOperand = " + lastOperand);
@@ -212,6 +211,7 @@ public class RimpleXController implements ActionListener
       case "RESET":
         topDisplay.setText("");
         display.setText("");
+        equalsPresent = false;
         break;
       case "SIGN":
         if (display.getText().charAt(0) == '-')
@@ -224,7 +224,7 @@ public class RimpleXController implements ActionListener
         }
         break;
       case "ADD":
-        if (display.getText().length() == 0)
+        if (display.getText().length() == 0 && !equalsPresent)
         {
           break;
         }
@@ -234,18 +234,18 @@ public class RimpleXController implements ActionListener
           break;
         }
       case "SUBTRACT":
-        if (display.getText().length() == 0)
+        if (display.getText().length() == 0 && !equalsPresent)
         {
           break;
         }
         // NOTE! This "subtraction" sign is a MINUS character. Not a hyphen.
         else
         {
-          setOperator(display, topDisplay, "−");
+          setOperator(display, topDisplay, "-");
           break;
         }
       case "MULTIPLY":
-        if (display.getText().length() == 0)
+        if (display.getText().length() == 0 && !equalsPresent)
         {
           break;
         }
@@ -255,7 +255,7 @@ public class RimpleXController implements ActionListener
           break;
         }
       case "DIVIDE":
-        if (display.getText().length() == 0)
+        if (display.getText().length() == 0 && !equalsPresent)
         {
           break;
         }
@@ -265,14 +265,30 @@ public class RimpleXController implements ActionListener
           break;
         }
       case "ACTION_EXIT":
-    	  System.exit(0);
-    	  break;
+        System.exit(0);
+        break;
       case "EQUALS":
         try
         {
-          String expression = (topDisplay.getText() + display.getText()).replace("×",  "*").replace("÷", "/");
-          double result = evaluate(expression);
-          display.setText(Double.toString(result));
+          if (equalsPresent)
+          {
+            String expression = previousResult
+                + display.getText().replace("×", "*").replace("÷", "/");
+            double result = evaluate(expression);
+            topDisplay.setText(previousResult + display.getText() + " = " + result);
+            display.setText("");
+            previousResult = result;
+          }
+          else
+          {
+            String expression = topDisplay.getText().replace("×", "*").replace("÷", "/")
+                + display.getText();
+            double result = evaluate(expression);
+            topDisplay.setText(topDisplay.getText() + display.getText() + " = " + result);
+            display.setText("");
+            previousResult = result;
+            equalsPresent = true;
+          }
         }
         catch (Exception e)
         {
@@ -292,7 +308,7 @@ public class RimpleXController implements ActionListener
 
   /**
    * Set the RimpleXWindow that this object is controlling.
-   * 
+   *
    * @param window
    *          The window
    */
@@ -303,7 +319,7 @@ public class RimpleXController implements ActionListener
 
   /**
    * Set the display that this object is controlling.
-   * 
+   *
    * @param display
    *          The display with the current expression.
    * @param topDisplay
@@ -317,7 +333,7 @@ public class RimpleXController implements ActionListener
 
   /**
    * Gets the last character in the display window.
-   * 
+   *
    * @return The last character.
    */
   private char lastChar()
@@ -325,18 +341,19 @@ public class RimpleXController implements ActionListener
     String txt = display.getText();
     return txt.charAt(txt.length() - 1);
   }
-  
+
   /**
    * Evaluates the expression given as a string.
-   * 
-   * @param expr The expression to evaluate.
+   *
+   * @param expr
+   *          The expression to evaluate.
    * @return The result as a double.
    */
   private double evaluate(String expr) throws Exception
   {
     return parseExpression(new StringTokenizer(expr, "+-*/()", true));
   }
-  
+
   private double parseExpression(StringTokenizer tokens)
   {
     double value = parseTerm(tokens);
@@ -360,7 +377,7 @@ public class RimpleXController implements ActionListener
     }
     return value;
   }
-  
+
   private double parseTerm(StringTokenizer tokens)
   {
     double value = parseFactor(tokens);
@@ -387,7 +404,8 @@ public class RimpleXController implements ActionListener
 
   private double parseFactor(StringTokenizer tokens)
   {
-    if (!tokens.hasMoreTokens()) throw new IllegalArgumentException("Unexpected end of expression");
+    if (!tokens.hasMoreTokens())
+      throw new IllegalArgumentException("Unexpected end of expression");
     String token = tokens.nextToken().trim();
     if (token.equals("("))
     {
@@ -403,7 +421,7 @@ public class RimpleXController implements ActionListener
       return Double.parseDouble(token);
     }
   }
-  
+
   private StringTokenizer putBackToken(StringTokenizer oldTokens, String token)
   {
     StringBuilder remaining = new StringBuilder(token);
@@ -416,7 +434,7 @@ public class RimpleXController implements ActionListener
 
   /**
    * Check if a digit can be placed based on display length and presence of imaginary unit.
-   * 
+   *
    * @param display
    *          The display to extract the text from.
    * @return True if digit can be placed.
@@ -436,7 +454,7 @@ public class RimpleXController implements ActionListener
   /**
    * Set the operator onto the display depending on presence of parentheses and other operators
    * within the current expression.
-   * 
+   *
    * @param display
    *          The display that holds the current operand.
    * @param topDisplay
@@ -446,22 +464,51 @@ public class RimpleXController implements ActionListener
    */
   private void setOperator(final JLabel display, final JLabel topDisplay, final String operator)
   {
-    if ((lastChar() != '.' && lastChar() != '+' && lastChar() != '-' && lastChar() != '×'
-        && lastChar() != '÷') && !parenPresent)
+    if (equalsPresent)
     {
-      topDisplay.setText(display.getText() + operator);
-      display.setText("");
-      return;
+      if (display.getText().length() == 0) // Combining previous equation with new one.
+      {
+        display.setText(operator);
+        return;
+      }
+      else
+      {
+        if (display.getText().contains("+") || display.getText().contains("-")
+            || display.getText().contains("×") || display.getText().contains("÷"))
+        { // Allows for multiple operators when using a previous equation.
+          topDisplay.setText(previousResult + display.getText() + operator);
+          display.setText("");
+          equalsPresent = false;
+          return;
+        }
+        if ((lastChar() != '.' && lastChar() != '+' && lastChar() != '-' && lastChar() != '×'
+            && lastChar() != '÷') && !parenPresent) // Creating new equation.
+        {
+          topDisplay.setText(display.getText() + operator);
+          display.setText("");
+          equalsPresent = false;
+          return;
+        }
+      }
     }
     else
     {
-      if (!display.getText().contains("+") && !display.getText().contains("-")
-          && !display.getText().contains("×") && !display.getText().contains("÷"))
+      if ((lastChar() != '.' && lastChar() != '+' && lastChar() != '-' && lastChar() != '×'
+          && lastChar() != '÷') && !parenPresent)
       {
-        display.setText(display.getText() + operator);
+        topDisplay.setText(topDisplay.getText() + display.getText() + operator);
+        display.setText("");
         return;
       }
-      return;
+      else
+      {
+        if (!display.getText().contains("+") && !display.getText().contains("-")
+            && !display.getText().contains("×") && !display.getText().contains("÷"))
+        {
+          display.setText(display.getText() + operator);
+          return;
+        }
+      }
     }
   }
 }
