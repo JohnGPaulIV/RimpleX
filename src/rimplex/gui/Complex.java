@@ -54,7 +54,10 @@ public class Complex
   @Override
   public String toString()
   {
-    return String.format("%.2f + %.2fi", real, imaginary);
+    String realStr = String.format("%.2f", real);
+    String imaginaryStr = String.format("%.2f", Math.abs(imaginary)) + "𝑖";
+    String sign = (imaginary >= 0) ? " + " : " - ";
+    return realStr + sign + imaginaryStr;
   }
 
   public static Complex parse(String input)

@@ -2,7 +2,7 @@ package rimplex.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.StringTokenizer;
+
 import javax.swing.JLabel;
 
 /**
@@ -21,7 +21,9 @@ public class RimpleXController implements ActionListener
   private JLabel display;
   private boolean parenPresent;
   private boolean equalsPresent;
-  private double previousResult;
+  private Complex previousResult;
+  private int pos;
+  private String input;
 
   /**
    * Constructor for a RimpleXController.
@@ -30,7 +32,7 @@ public class RimpleXController implements ActionListener
   {
     super();
     equalsPresent = false;
-    previousResult = 0;
+    previousResult = new Complex(0, 0);
   }
 
   @Override
@@ -120,26 +122,44 @@ public class RimpleXController implements ActionListener
         display.setText(display.getText() + "0");
         break;
       case "BACKSPACE":
-        if (display.getText().length() != 0)
+        String text = display.getText();
+        if (!text.isEmpty())
         {
-          if (display.getText().endsWith("\uD835\uDC56"))
+          if (text.endsWith("𝑖"))
           {
-            display.setText(display.getText().substring(0, display.getText().length() - 2));
+            display.setText(text.substring(0, text.length() - 1));
           }
           else
           {
-            display.setText(display.getText().substring(0, display.getText().length() - 1));
+            display.setText(text.substring(0, text.length() - 1));
           }
         }
-        else
+        else if (!topDisplay.getText().isEmpty())
         {
-          if (topDisplay.getText().length() != 0)
-          {
-            display.setText(topDisplay.getText());
-            topDisplay.setText("");
-          }
+          display.setText(topDisplay.getText());
+          topDisplay.setText("");
         }
         break;
+      // if (display.getText().length() != 0)
+      // {
+      // if (display.getText().endsWith("\uD835\uDC56"))
+      // {
+      // display.setText(display.getText().substring(0, display.getText().length() - 2));
+      // }
+      // else
+      // {
+      // display.setText(display.getText().substring(0, display.getText().length() - 1));
+      // }
+      // }
+      // else
+      // {
+      // if (topDisplay.getText().length() != 0)
+      // {
+      // display.setText(topDisplay.getText());
+      // topDisplay.setText("");
+      // }
+      // }
+      // break;
       case "DECIMAL":
         // This is a temporary solution since this won't work when operators are in the current
         // expression.
@@ -270,25 +290,23 @@ public class RimpleXController implements ActionListener
       case "EQUALS":
         try
         {
+          String expression;
           if (equalsPresent)
           {
-            String expression = previousResult
-                + display.getText().replace("×", "*").replace("÷", "/");
-            double result = evaluate(expression);
-            topDisplay.setText(previousResult + display.getText() + " = " + result);
-            display.setText("");
-            previousResult = result;
+            expression = previousResult.toString() + display.getText();
           }
           else
           {
-            String expression = topDisplay.getText().replace("×", "*").replace("÷", "/")
-                + display.getText();
-            double result = evaluate(expression);
-            topDisplay.setText(topDisplay.getText() + display.getText() + " = " + result);
-            display.setText("");
-            previousResult = result;
-            equalsPresent = true;
+            expression = topDisplay.getText() + display.getText();
           }
+          String displayExpression = expression.replace("/", "÷").replace("*", "×").replace("i",
+              "𝑖");
+          expression = expression.replace("×", "*").replace("÷", "/").replace("𝑖", "i");
+          Complex result = evaluate(expression);
+          topDisplay.setText(displayExpression + " = " + result);
+          display.setText("");
+          previousResult = result;
+          equalsPresent = true;
         }
         catch (Exception e)
         {
@@ -349,90 +367,133 @@ public class RimpleXController implements ActionListener
    *          The expression to evaluate.
    * @return The result as a double.
    */
-  private double evaluate(String expr) throws Exception
+  private Complex evaluate(String expr) throws Exception
   {
-    return parseExpression(new StringTokenizer(expr, "+-*/()", true));
+    this.input = expr.replaceAll("\\s+", "");
+    this.pos = 0;
+    return parseExpression();
   }
 
-  private double parseExpression(StringTokenizer tokens)
+  /**
+   * A method that handles addition and subtraction.
+   * 
+   * @return The result of an expression that has addition and subtraction handled.
+   */
+  private Complex parseExpression()
   {
-    double value = parseTerm(tokens);
-    while (tokens.hasMoreTokens())
+    Complex result = parseTerm();
+    while (pos < input.length())
     {
-      String op = tokens.nextToken().trim();
-      if (op.isEmpty()) continue;
-      if (op.equals("+"))
+      char op = input.charAt(pos);
+      if (op == '+' || op == '-')
       {
-        value += parseTerm(tokens);
-      }
-      else if (op.equals("-"))
-      {
-        value -= parseTerm(tokens);
+        pos++;
+        Complex right = parseTerm();
+        if (op == '+')
+        {
+          result = result.add(right);
+        }
+        else
+        {
+          result = result.subtract(right);
+        }
       }
       else
       {
-        tokens = putBackToken(tokens, op);
         break;
       }
     }
-    return value;
+    return result;
   }
 
-  private double parseTerm(StringTokenizer tokens)
+  /**
+   * A method that handles multiplication and subtraction.
+   * 
+   * @return An expression that has multiplication and subtraction handled.
+   */
+  private Complex parseTerm()
   {
-    double value = parseFactor(tokens);
-    while (tokens.hasMoreTokens())
+    Complex result = parseFactor();
+    while (pos < input.length())
     {
-      String op = tokens.nextToken().trim();
-      if (op.isEmpty()) continue;
-      if (op.equals("*"))
+      char op = input.charAt(pos);
+      if (op == '*' || op == '/')
       {
-        value *= parseFactor(tokens);
+        pos++;
+        Complex right = parseFactor();
+        if (op == '*')
+        {
+          result = result.multiply(right);
+        }
+        else
+        {
+          result = result.divide(right);
+        }
       }
-      else if (op.equals("/"))
+      else
       {
-        value /= parseFactor(tokens);
-      }
-      else if (op.equals("+"))
-      {
-        value += parseFactor(tokens);
-      }
-      else if (op.equals("-"))
-      {
-        value -= parseFactor(tokens);
+        break;
       }
     }
-    return value;
+    return result;
   }
 
-  private double parseFactor(StringTokenizer tokens)
+  /**
+   * A method that handles numbers, complex numbers, and parentheses.
+   * 
+   * @return An expression's result that handled all digits, imaginary numbers, and parentheses.
+   */
+  private Complex parseFactor()
   {
-    if (!tokens.hasMoreTokens())
-      throw new IllegalArgumentException("Unexpected end of expression");
-    String token = tokens.nextToken().trim();
-    if (token.equals("("))
+    if (pos >= input.length())
+      return new Complex(0, 0);
+    char ch = input.charAt(pos);
+    if (ch == '(')
     {
-      double value = parseExpression(tokens);
-      if (!tokens.hasMoreTokens() || !tokens.nextToken().equals(")"))
+      pos++;
+      Complex inner = parseExpression();
+      if (pos < input.length() && input.charAt(pos) == ')')
       {
-        throw new IllegalArgumentException("Missing closing parenthesis");
+        pos++;
       }
-      return value;
+      return inner;
+    }
+    StringBuilder sb = new StringBuilder();
+    boolean hasDecimal = false;
+    if (ch == '+' || ch == '-')
+    {
+      sb.append(ch);
+      pos++;
+    }
+    while (pos < input.length())
+    {
+      ch = input.charAt(pos);
+      if (Character.isDigit(ch))
+      {
+        sb.append(ch);
+        pos++;
+      }
+      else if (ch == '.' && !hasDecimal)
+      {
+        sb.append(ch);
+        hasDecimal = true;
+        pos++;
+      }
+      else
+      {
+        break;
+      }
+    }
+    double value = sb.length() > 0 ? Double.parseDouble(sb.toString()) : 0.0;
+    if (pos < input.length() && input.charAt(pos) == 'i')
+    {
+      pos++;
+      return new Complex(0, value == 0.0 ? 1.0 : value);
     }
     else
     {
-      return Double.parseDouble(token);
+      return new Complex(value, 0);
     }
-  }
-
-  private StringTokenizer putBackToken(StringTokenizer oldTokens, String token)
-  {
-    StringBuilder remaining = new StringBuilder(token);
-    while (oldTokens.hasMoreTokens())
-    {
-      remaining.append(oldTokens.nextToken());
-    }
-    return new StringTokenizer(remaining.toString(), "+-*/()", true);
   }
 
   /**
@@ -508,7 +569,8 @@ public class RimpleXController implements ActionListener
         if (!display.getText().contains("+") && !display.getText().contains("-")
             && !display.getText().contains("×") && !display.getText().contains("÷"))
         {
-          display.setText(display.getText() + operator);
+          topDisplay.setText(display.getText() + operator);
+          display.setText("");
           return;
         }
       }
