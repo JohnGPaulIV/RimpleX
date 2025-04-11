@@ -2,8 +2,11 @@ package rimplex.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  * The observer of all GUI components of the RimpleX application.
@@ -13,8 +16,7 @@ import javax.swing.JLabel;
  *
  * This work complies with JMU Honor Code.
  */
-public class RimpleXController implements ActionListener
-{
+public class RimpleXController implements ActionListener {
   @SuppressWarnings("unused")
   private RimpleXWindow window;
   private JLabel topDisplay;
@@ -22,209 +24,197 @@ public class RimpleXController implements ActionListener
   private boolean parenPresent;
   private boolean equalsPresent;
   private Complex previousResult;
-  private int pos;
-  private String input;
+  private String previousAnswer;
+  private String fullExpression;
+  private int currentTokenIndex;
+  private boolean runningCalc = true;
+  private boolean newStarted = false;
 
   /**
    * Constructor for a RimpleXController.
    */
-  public RimpleXController()
-  {
+  public RimpleXController() {
     super();
     equalsPresent = false;
-    previousResult = new Complex(0, 0);
+    previousResult = Complex.fromReal(0);
+    previousAnswer = "";
+    fullExpression = "";
   }
 
   @Override
   /**
-   * Action handler when buttons or clicked.
+   * Action handler when buttons are clicked.
    *
-   * @param ae
-   *          The ActionEvent that generated the message.
+   * @param ae The ActionEvent that generated the message.
    */
-  public void actionPerformed(final ActionEvent ae)
-  {
+  public void actionPerformed(final ActionEvent ae) {
     String ac = ae.getActionCommand();
-    // General structure of handling actions:
-    // if (ac.equals(NAME_OF_BUTTON)) { do stuff...}.
+    // General structure: if (ac.equals(NAME_OF_BUTTON)) { do stuff... }.
     // For testing if buttons are linked with actions.
     // System.out.println(ac + " was pressed.");
-    switch (ac)
-    {
+    if (display.getText().equals("Error")) {
+    	display.setText("");
+    	topDisplay.setText("");
+    }
+    switch (ac) {
       case "ONE":
-        if (!checkDigitPlacement(display))
-        {
-          break;
-        }
-        display.setText(display.getText() + "1");
-        break;
-      case "TWO":
-        if (!checkDigitPlacement(display))
-        {
-          break;
-        }
-        display.setText(display.getText() + "2");
-        break;
-      case "THREE":
-        if (!checkDigitPlacement(display))
-        {
-          break;
-        }
-        display.setText(display.getText() + "3");
-        break;
-      case "FOUR":
-        if (!checkDigitPlacement(display))
-        {
-          break;
-        }
-        display.setText(display.getText() + "4");
-        break;
-      case "FIVE":
-        if (!checkDigitPlacement(display))
-        {
-          break;
-        }
-        display.setText(display.getText() + "5");
-        break;
-      case "SIX":
-        if (!checkDigitPlacement(display))
-        {
-          break;
-        }
-        display.setText(display.getText() + "6");
-        break;
-      case "SEVEN":
-        if (!checkDigitPlacement(display))
-        {
-          break;
-        }
-        display.setText(display.getText() + "7");
-        break;
-      case "EIGHT":
-        if (!checkDigitPlacement(display))
-        {
-          break;
-        }
-        display.setText(display.getText() + "8");
-        break;
-      case "NINE":
-        if (!checkDigitPlacement(display))
-        {
-          break;
-        }
-        display.setText(display.getText() + "9");
-        break;
-      case "ZERO":
-        if (!checkDigitPlacement(display))
-        {
-          break;
-        }
-        display.setText(display.getText() + "0");
-        break;
-      case "BACKSPACE":
-        String text = display.getText();
-        if (!text.isEmpty())
-        {
-          if (text.endsWith("𝑖"))
-          {
-            display.setText(text.substring(0, text.length() - 1));
-          }
-          else
-          {
-            display.setText(text.substring(0, text.length() - 1));
-          }
-        }
-        else if (!topDisplay.getText().isEmpty())
-        {
-          display.setText(topDisplay.getText());
+        if (!checkDigitPlacement(display)) { break; }
+        if (!runningCalc && !newStarted) {
+          display.setText("");
           topDisplay.setText("");
         }
+        display.setText(display.getText() + "1");
+        fullExpression += "1";
+        newStarted = true;
         break;
-      // if (display.getText().length() != 0)
-      // {
-      // if (display.getText().endsWith("\uD835\uDC56"))
-      // {
-      // display.setText(display.getText().substring(0, display.getText().length() - 2));
-      // }
-      // else
-      // {
-      // display.setText(display.getText().substring(0, display.getText().length() - 1));
-      // }
-      // }
-      // else
-      // {
-      // if (topDisplay.getText().length() != 0)
-      // {
-      // display.setText(topDisplay.getText());
-      // topDisplay.setText("");
-      // }
-      // }
-      // break;
+      case "TWO":
+        if (!checkDigitPlacement(display)) { break; }
+        if (!runningCalc && !newStarted) {
+          display.setText("");
+          topDisplay.setText("");
+        }
+        display.setText(display.getText() + "2");
+        fullExpression += "2";
+        newStarted = true;
+        break;
+      case "THREE":
+        if (!checkDigitPlacement(display)) { break; }
+        if (!runningCalc && !newStarted) {
+          display.setText("");
+          topDisplay.setText("");
+        }
+        display.setText(display.getText() + "3");
+        fullExpression += "3";
+        newStarted = true;
+        break;
+      case "FOUR":
+        if (!checkDigitPlacement(display)) { break; }
+        if (!runningCalc && !newStarted) {
+          display.setText("");
+          topDisplay.setText("");
+        }
+        display.setText(display.getText() + "4");
+        fullExpression += "4";
+        newStarted = true;
+        break;
+      case "FIVE":
+        if (!checkDigitPlacement(display)) { break; }
+        if (!runningCalc && !newStarted) {
+          display.setText("");
+          topDisplay.setText("");
+        }
+        display.setText(display.getText() + "5");
+        fullExpression += "5";
+        newStarted = true;
+        break;
+      case "SIX":
+        if (!checkDigitPlacement(display)) { break; }
+        if (!runningCalc && !newStarted) {
+          display.setText("");
+          topDisplay.setText("");
+        }
+        display.setText(display.getText() + "6");
+        fullExpression += "6";
+        newStarted = true;
+        break;
+      case "SEVEN":
+        if (!checkDigitPlacement(display)) { break; }
+        if (!runningCalc && !newStarted) {
+          display.setText("");
+          topDisplay.setText("");
+        }
+        display.setText(display.getText() + "7");
+        fullExpression += "7";
+        newStarted = true;
+        break;
+      case "EIGHT":
+        if (!checkDigitPlacement(display)) { break; }
+        if (!runningCalc && !newStarted) {
+          display.setText("");
+          topDisplay.setText("");
+        }
+        display.setText(display.getText() + "8");
+        fullExpression += "8";
+        newStarted = true;
+        break;
+      case "NINE":
+        if (!checkDigitPlacement(display)) { break; }
+        if (!runningCalc && !newStarted) {
+          display.setText("");
+          topDisplay.setText("");
+        }
+        display.setText(display.getText() + "9");
+        fullExpression += "9";
+        newStarted = true;
+        break;
+      case "ZERO":
+        if (!checkDigitPlacement(display)) { break; }
+        if (!runningCalc && !newStarted) {
+          display.setText("");
+          topDisplay.setText("");
+        }
+        display.setText(display.getText() + "0");
+        fullExpression += "0";
+        newStarted = true;
+        break;
+      case "BACKSPACE":
+        if (display.getText().length() != 0) {
+          if (display.getText().endsWith("\uD835\uDC56")) {
+            display.setText(display.getText().substring(0, display.getText().length() - 2));
+            fullExpression = fullExpression.substring(0, fullExpression.length() - 2);
+          } else {
+            display.setText(display.getText().substring(0, display.getText().length() - 1));
+            if (fullExpression.substring(fullExpression.length() - 1).equals(")")) {
+              fullExpression = fullExpression.substring(0, fullExpression.length() - 2)
+                + fullExpression.substring(fullExpression.length() - 1);
+            }
+            fullExpression = fullExpression.substring(0, fullExpression.length() - 1);
+          }
+        } else {
+          if (topDisplay.getText().length() != 0) {
+            display.setText(topDisplay.getText());
+            topDisplay.setText("");
+          }
+        }
+        break;
       case "DECIMAL":
-        // This is a temporary solution since this won't work when operators are in the current
-        // expression.
+        // This is a temporary solution since this won't work when operators are in the current expression.
         boolean canPlace = !(display.getText().length() == 0)
-            && Character.isDigit(display.getText().charAt(display.getText().length() - 1));
-        if (canPlace)
-        {
-          // Remove the parentheses to not set the parser off.
+          && Character.isDigit(display.getText().charAt(display.getText().length() - 1));
+        if (canPlace) {
+          // Remove the parentheses so as not to set the parser off.
           String displayText = new String(display.getText());
-          displayText = displayText.replace("(", "");
-          displayText = displayText.replace(")", "");
-          displayText = displayText.replace("+", " ");
-          displayText = displayText.replace("-", " ");
-          displayText = displayText.replace("×", " ");
-          displayText = displayText.replace("÷", " ");
+          displayText = displayText.replace("(", "").replace(")", "")
+            .replace("+", " ").replace("-", " ").replace("×", " ").replace("÷", " ");
           String[] operands = displayText.split(" ");
-          // For debugging
-          // for (String string : operands)
-          // {
-          // System.out.print(string + ", ");
-          // }
-          // System.out.println();
+          fullExpression += ".";
           String lastOperand = operands[operands.length - 1];
-          // For debugging
-          // System.out.println("lastOperand = " + lastOperand);
-          try
-          {
+          try {
             lastOperand += ".";
             Float.parseFloat(lastOperand);
             display.setText(display.getText() + ".");
-          }
-          catch (NumberFormatException nfe)
-          {
-            System.out.println("Invalid decimal placement.");
+          } catch (NumberFormatException nfe) {
           }
           break;
-        }
-        else
-        {
-          break;
-        }
+        } else { break; }
       case "OPEN_PARENTHESIS":
-        if (display.getText().length() == 0)
-        {
+        if (display.getText().length() == 0) {
           display.setText(display.getText() + "(");
           parenPresent = true;
+          fullExpression += "(";
           break;
         }
+        break;
       case "CLOSED_PARENTHESIS":
-        String displayText = display.getText();
-        if (displayText.length() == 0)
-        {
-          break;
-        }
-        char lastVal = displayText.charAt(displayText.length() - 1);
-        if (parenPresent && (Character.isDigit(lastVal) || !checkDigitPlacement(display)))
-        {
+        String dispText = display.getText();
+        if (dispText.length() == 0) { break; }
+        char lastVal = dispText.charAt(dispText.length() - 1);
+        if (parenPresent && (Character.isDigit(lastVal) || !checkDigitPlacement(display))) {
           display.setText(display.getText().replace("(", ""));
           parenPresent = false;
+          fullExpression += ")";
           break;
-        }
-        else
-        {
-          break;
-        }
+        } else { break; }
       case "CLEAR":
         display.setText("");
         break;
@@ -232,283 +222,220 @@ public class RimpleXController implements ActionListener
         topDisplay.setText("");
         display.setText("");
         equalsPresent = false;
+        fullExpression = "";
+        previousAnswer = "";
         break;
       case "SIGN":
         if (display.getText().charAt(0) == '-')
-        {
           display.setText(display.getText().substring(1));
-        }
         else
-        {
           display.setText("-" + display.getText());
-        }
+        fullExpression = fullExpression.substring(0, fullExpression.length() - display.getText().length())
+          + "-1*(" + fullExpression.substring(fullExpression.length() - display.getText().length()) + ")";
         break;
       case "ADD":
-        if (display.getText().length() == 0 && !equalsPresent)
-        {
-          break;
-        }
-        else
-        {
-          setOperator(display, topDisplay, "+");
-          break;
-        }
+        if (display.getText().length() == 0 && !runningCalc) { break; }
+        else { setOperator(display, topDisplay, "+"); fullExpression += "+"; break; }
       case "SUBTRACT":
-        if (display.getText().length() == 0 && !equalsPresent)
-        {
-          break;
-        }
-        // NOTE! This "subtraction" sign is a MINUS character. Not a hyphen.
-        else
-        {
-          setOperator(display, topDisplay, "-");
-          break;
-        }
+        if (display.getText().length() == 0 && !runningCalc) { break; }
+        else { setOperator(display, topDisplay, "-"); fullExpression += "-"; break; }
       case "MULTIPLY":
-        if (display.getText().length() == 0 && !equalsPresent)
-        {
-          break;
-        }
-        else
-        {
-          setOperator(display, topDisplay, "×");
-          break;
-        }
+        if (display.getText().length() == 0 && !runningCalc) { break; }
+        else { setOperator(display, topDisplay, "×"); fullExpression += "*"; break; }
       case "DIVIDE":
-        if (display.getText().length() == 0 && !equalsPresent)
-        {
-          break;
-        }
-        else
-        {
-          setOperator(display, topDisplay, "÷");
-          break;
-        }
+        if (display.getText().length() == 0 && !runningCalc) { break; }
+        else { setOperator(display, topDisplay, "÷"); fullExpression += "/"; break; }
       case "ACTION_EXIT":
         System.exit(0);
         break;
       case "EQUALS":
-        try
-        {
-          String expression;
-          if (equalsPresent)
-          {
-            expression = previousResult.toString() + display.getText();
+        try {
+          String expr;
+          if (!previousAnswer.isBlank() && runningCalc) {
+            fullExpression = previousAnswer + fullExpression;
           }
-          else
-          {
-            expression = topDisplay.getText() + display.getText();
+          expr = fullExpression;
+          
+          double[] result = evaluate(expr);
+          // Format the result for display.
+          String resultStr;
+          if (result[1] == 0) {
+            resultStr = Double.toString(result[0]);
+            previousAnswer = Double.toString(result[0]);
+          } else {
+            String imagPart = (result[1] > 0 ? "+" : "") + result[1] + "i";
+            resultStr = result[0] + imagPart;
+            previousAnswer = result[0] + imagPart;
           }
-          String displayExpression = expression.replace("/", "÷").replace("*", "×").replace("i",
-              "𝑖");
-          expression = expression.replace("×", "*").replace("÷", "/").replace("𝑖", "i");
-          Complex result = evaluate(expression);
-          topDisplay.setText(displayExpression + " = " + result);
+          topDisplay.setText(fullExpression + " = " + resultStr);
           display.setText("");
-          previousResult = result;
           equalsPresent = true;
-        }
-        catch (Exception e)
-        {
+          if (!runningCalc) {
+            fullExpression = "";
+            newStarted = false;
+          }
+          fullExpression = "";
+        } catch (Exception ex) {
           display.setText("Error");
+          JOptionPane.showMessageDialog(null, "Calculation error: " + ex.getMessage(),
+            "Error", JOptionPane.ERROR_MESSAGE);
         }
         break;
       case "UNIT":
-        if (display.getText().length() != 0 && Character.isDigit(lastChar()))
-        {
+        if (display.getText().length() != 0 && Character.isDigit(lastChar())) {
           display.setText(display.getText() + "𝑖");
+          fullExpression += "𝑖";
         }
         break;
+      case "SWITCHRUNNINGCALC":
+        runningCalc = !runningCalc;
       default:
         break;
     }
   }
 
-  /**
-   * Set the RimpleXWindow that this object is controlling.
-   *
-   * @param window
-   *          The window
-   */
-  public void setWindow(final RimpleXWindow window)
-  {
+  public void setWindow(final RimpleXWindow window) {
     this.window = window;
   }
 
-  /**
-   * Set the display that this object is controlling.
-   *
-   * @param display
-   *          The display with the current expression.
-   * @param topDisplay
-   *          The display with the left operand.
-   */
-  public void setDisplays(final JLabel display, final JLabel topDisplay)
-  {
+  public void setDisplays(final JLabel display, final JLabel topDisplay) {
     this.display = display;
     this.topDisplay = topDisplay;
   }
 
-  /**
-   * Gets the last character in the display window.
-   *
-   * @return The last character.
-   */
-  private char lastChar()
-  {
+  private char lastChar() {
     String txt = display.getText();
     return txt.charAt(txt.length() - 1);
   }
 
-  /**
-   * Evaluates the expression given as a string.
-   *
-   * @param expr
-   *          The expression to evaluate.
-   * @return The result as a double.
-   */
-  private Complex evaluate(String expr) throws Exception
-  {
-    this.input = expr.replaceAll("\\s+", "");
-    this.pos = 0;
-    return parseExpression();
+  // Tokenizer: splits the expression string into tokens.
+  private List<String> tokenize(String expr) {
+    List<String> tokens = new ArrayList<>();
+    StringTokenizer st = new StringTokenizer(expr, "+-*/()", true);
+    while (st.hasMoreTokens()) {
+      String token = st.nextToken().trim();
+      if (!token.isEmpty()) {
+        tokens.add(token);
+      }
+    }
+    return tokens;
   }
 
   /**
-   * A method that handles addition and subtraction.
-   * 
-   * @return The result of an expression that has addition and subtraction handled.
+   * Evaluation method for Equals button.
+   * @param expr Expression to be evaluated.
+   * @return The evaluated Expression.
+   * @throws Exception
    */
-  private Complex parseExpression()
-  {
-    Complex result = parseTerm();
-    while (pos < input.length())
-    {
-      char op = input.charAt(pos);
-      if (op == '+' || op == '-')
-      {
-        pos++;
-        Complex right = parseTerm();
-        if (op == '+')
-        {
-          result = result.add(right);
-        }
-        else
-        {
-          result = result.subtract(right);
-        }
-      }
-      else
-      {
-        break;
-      }
-    }
+  private double[] evaluate(String expr) throws Exception {
+    List<String> tokens = tokenize(expr);
+    currentTokenIndex = 0;
+    double[] result = parseExpression(tokens);
     return result;
   }
 
   /**
-   * A method that handles multiplication and subtraction.
-   * 
-   * @return An expression that has multiplication and subtraction handled.
+   * Parser dealing with addition and subtraction of expression.
+   * @param tokens List of "Tokens"
+   * @return evaluated expression.
+   * @throws Exception
    */
-  private Complex parseTerm()
-  {
-    Complex result = parseFactor();
-    while (pos < input.length())
-    {
-      char op = input.charAt(pos);
-      if (op == '*' || op == '/')
-      {
-        pos++;
-        Complex right = parseFactor();
-        if (op == '*')
-        {
-          result = result.multiply(right);
-        }
-        else
-        {
-          result = result.divide(right);
-        }
-      }
-      else
-      {
-        break;
-      }
+  private double[] parseExpression(List<String> tokens) throws Exception {
+    double[] value = parseTerm(tokens);
+    while (currentTokenIndex < tokens.size()) {
+      String op = tokens.get(currentTokenIndex);
+      if (op.equals("+")) {
+        currentTokenIndex++;
+        value = addComplex(value, parseTerm(tokens));
+      } else if (op.equals("-")) {
+        currentTokenIndex++;
+        value = subtractComplex(value, parseTerm(tokens));
+      } else break;
     }
-    return result;
+    return value;
   }
 
   /**
-   * A method that handles numbers, complex numbers, and parentheses.
-   * 
-   * @return An expression's result that handled all digits, imaginary numbers, and parentheses.
+   * Parser dealing with multiplication and division of expression.
+   * @param tokens List of "Tokens"
+   * @return evaluated expression.
+   * @throws Exception
    */
-  private Complex parseFactor()
-  {
-    if (pos >= input.length())
-      return new Complex(0, 0);
-    char ch = input.charAt(pos);
-    if (ch == '(')
-    {
-      pos++;
-      Complex inner = parseExpression();
-      if (pos < input.length() && input.charAt(pos) == ')')
-      {
-        pos++;
+  private double[] parseTerm(List<String> tokens) throws Exception {
+    double[] value = parsePrimary(tokens);
+    while (currentTokenIndex < tokens.size()) {
+      String op = tokens.get(currentTokenIndex);
+      if (op.equals("*")) {
+        currentTokenIndex++;
+        value = multiplyComplex(value, parsePrimary(tokens));
+      } else if (op.equals("/")) {
+        currentTokenIndex++;
+        double[] divisor = parsePrimary(tokens);
+        value = divideComplex(value, divisor);
+      } else break;
+    }
+    return value;
+  }
+
+  /**
+   * Parser dealing with expression in parenthesis.
+   * @param tokens List of "Tokens"
+   * @return evaluated expression.
+   * @throws Exception
+   */
+  private double[] parsePrimary(List<String> tokens) throws Exception {
+    if (currentTokenIndex >= tokens.size()) throw new IllegalArgumentException("Unexpected end of expression");
+    String token = tokens.get(currentTokenIndex);
+    if (token.equals("(")) {
+      currentTokenIndex++;
+      double[] value = parseExpression(tokens);
+      if (currentTokenIndex >= tokens.size() || !tokens.get(currentTokenIndex).equals(")"))
+        throw new IllegalArgumentException("Missing closing parenthesis");
+      currentTokenIndex++;
+      return value;
+    } else {
+      currentTokenIndex++;
+      if (token.contains("𝑖")) {
+        token = token.replace("𝑖", "");
+        double imag;
+        if (token.isEmpty() || token.equals("+")) imag = 1.0;
+        else if (token.equals("-")) imag = -1.0;
+        else imag = Double.parseDouble(token);
+        return new double[]{0.0, imag};
+      } else {
+        double real = Double.parseDouble(token);
+        return new double[]{real, 0.0};
       }
-      return inner;
     }
-    StringBuilder sb = new StringBuilder();
-    boolean hasDecimal = false;
-    if (ch == '+' || ch == '-')
-    {
-      sb.append(ch);
-      pos++;
-    }
-    while (pos < input.length())
-    {
-      ch = input.charAt(pos);
-      if (Character.isDigit(ch))
-      {
-        sb.append(ch);
-        pos++;
-      }
-      else if (ch == '.' && !hasDecimal)
-      {
-        sb.append(ch);
-        hasDecimal = true;
-        pos++;
-      }
-      else
-      {
-        break;
-      }
-    }
-    double value = sb.length() > 0 ? Double.parseDouble(sb.toString()) : 0.0;
-    if (pos < input.length() && input.charAt(pos) == 'i')
-    {
-      pos++;
-      return new Complex(0, value == 0.0 ? 1.0 : value);
-    }
-    else
-    {
-      return new Complex(value, 0);
-    }
+  }
+
+  private double[] addComplex(double[] a, double[] b) {
+    return new double[]{a[0] + b[0], a[1] + b[1]};
+  }
+
+  private double[] subtractComplex(double[] a, double[] b) {
+    return new double[]{a[0] - b[0], a[1] - b[1]};
+  }
+
+  private double[] multiplyComplex(double[] a, double[] b) {
+    return new double[]{a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0]};
+  }
+
+  private double[] divideComplex(double[] a, double[] b) {
+    double denom = b[0] * b[0] + b[1] * b[1];
+    if (denom == 0) throw new ArithmeticException("Division by zero");
+    return new double[]{(a[0] * b[0] + a[1] * b[1]) / denom, (a[1] * b[0] - a[0] * b[1]) / denom};
   }
 
   /**
    * Check if a digit can be placed based on display length and presence of imaginary unit.
    *
-   * @param display
-   *          The display to extract the text from.
+   * @param display The display to extract the text from.
    * @return True if digit can be placed.
    */
-  private boolean checkDigitPlacement(final JLabel display)
-  {
-    if (display.getText().length() != 0)
-    {
-      if (display.getText().endsWith("\uD835\uDC56"))
-      {
+  private boolean checkDigitPlacement(final JLabel display) {
+    if (display.getText().length() != 0) {
+      if (display.getText().endsWith("\uD835\uDC56")) {
         return false;
       }
     }
@@ -519,28 +446,20 @@ public class RimpleXController implements ActionListener
    * Set the operator onto the display depending on presence of parentheses and other operators
    * within the current expression.
    *
-   * @param display
-   *          The display that holds the current operand.
-   * @param topDisplay
-   *          The display that holds the left operand.
-   * @param operator
-   *          The operator to place.
+   * @param display  The display that holds the current operand.
+   * @param topDisplay The display that holds the left operand.
+   * @param operator The operator to place.
    */
-  private void setOperator(final JLabel display, final JLabel topDisplay, final String operator)
-  {
-    if (equalsPresent)
-    {
+  private void setOperator(final JLabel display, final JLabel topDisplay, final String operator) {
+    if (equalsPresent) {
       if (display.getText().length() == 0) // Combining previous equation with new one.
       {
         display.setText(operator);
         return;
-      }
-      else
-      {
+      } else {
         if (display.getText().contains("+") || display.getText().contains("-")
-            || display.getText().contains("×") || display.getText().contains("÷"))
-        { // Allows for multiple operators when using a previous equation.
-          topDisplay.setText(previousResult + display.getText() + operator);
+            || display.getText().contains("×") || display.getText().contains("÷")) { // Allows for multiple operators when using a previous equation.
+          topDisplay.setText(previousResult.toString() + display.getText() + operator);
           display.setText("");
           equalsPresent = false;
           return;
@@ -554,23 +473,16 @@ public class RimpleXController implements ActionListener
           return;
         }
       }
-    }
-    else
-    {
+    } else {
       if ((lastChar() != '.' && lastChar() != '+' && lastChar() != '-' && lastChar() != '×'
-          && lastChar() != '÷') && !parenPresent)
-      {
+          && lastChar() != '÷') && !parenPresent) {
         topDisplay.setText(topDisplay.getText() + display.getText() + operator);
         display.setText("");
         return;
-      }
-      else
-      {
+      } else {
         if (!display.getText().contains("+") && !display.getText().contains("-")
-            && !display.getText().contains("×") && !display.getText().contains("÷"))
-        {
-          topDisplay.setText(display.getText() + operator);
-          display.setText("");
+            && !display.getText().contains("×") && !display.getText().contains("÷")) {
+          display.setText(display.getText() + operator);
           return;
         }
       }

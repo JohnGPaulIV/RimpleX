@@ -134,6 +134,7 @@ public class RimpleXWindow extends JFrame
     getContentPane().add(new RimpleXButton("ADD", "+", controller, 160, 150, 45, 45));
     // NOTE! This "subtraction" sign is a MINUS character. Not a hyphen.
     getContentPane().add(new RimpleXButton("SUBTRACT", "−", controller, 160, 200, 45, 45));
+    getContentPane().add(new RimpleXButton("SWITCHRUNNINGCALC", "Inv", controller, 210, 200, 45, 45));
     getContentPane().add(new RimpleXButton("MULTIPLY", "×", controller, 160, 250, 45, 45));
     getContentPane().add(new RimpleXButton("DIVIDE", "÷", controller, 160, 300, 45, 45));
 
