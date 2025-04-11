@@ -267,7 +267,12 @@ public class RimpleXController implements ActionListener {
             resultStr = result[0] + imagPart;
             previousAnswer = result[0] + imagPart;
           }
-          topDisplay.setText(fullExpression + " = " + resultStr);
+          String formattedExpr = new String(fullExpression);
+          formattedExpr = formattedExpr.replace("*", "×");
+          formattedExpr = formattedExpr.replace("/", "÷");
+          formattedExpr = formattedExpr.replace("-", "-");
+          formattedExpr = formattedExpr.replace("+", "+");
+          topDisplay.setText(formattedExpr + " = " + resultStr);
           display.setText("");
           equalsPresent = true;
           if (!runningCalc) {
