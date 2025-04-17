@@ -12,6 +12,7 @@ public final class Evaluator
   static final String MULTIPLICATION = "×";
   static final String DIVISION = "÷";
   static final String NEGATIVE = "-";
+  static final String POWER = "^";
 
   /**
    * Initialize static Evaluator.
@@ -74,6 +75,9 @@ public final class Evaluator
       case MULTIPLICATION:
         result = String.valueOf(Double.parseDouble(leftResult) * Double.parseDouble(rightResult));
         break;
+      case POWER:
+        result = String.valueOf(Math.pow(Double.parseDouble(leftResult), Double.parseDouble(rightResult)));
+        break;
       default:
         result = "Error"; // For debugging
         break;
@@ -104,6 +108,10 @@ public final class Evaluator
     else if (operand.contains(MULTIPLICATION))
     {
       return MULTIPLICATION;
+    }
+    else if (operand.contains(POWER))
+    {
+      return POWER;
     }
     else
     {

@@ -13,6 +13,7 @@ class EvaluatorTest
   static final String MULTIPLICATION = "×";
   static final String DIVISION = "÷";
   static final String NEGATIVE = "-";
+  static final String POWER = "^";
 
   @Test
   void testEvaluatingBasicSubtraction()
@@ -39,12 +40,19 @@ class EvaluatorTest
   }
   
   @Test
+  void testEvaluatingBasicExponentiation()
+  {
+    assertEquals("64.0", Evaluator.evaluate("8", POWER, "2"));
+  }
+  
+  @Test
   void testEvaluatingParenthesizedOperands()
   {
     assertEquals("13.0", Evaluator.evaluate("7+11", SUBTRACTION, "5"));
     assertEquals("-9.0", Evaluator.evaluate("-2+8", SUBTRACTION, "15"));
     assertEquals("42.0", Evaluator.evaluate("4—1", MULTIPLICATION, "7×2"));
     assertEquals("10.0", Evaluator.evaluate("2+2+2+2", ADDITION, "4×0.5"));
+    assertEquals("484.0", Evaluator.evaluate("3^3—5", POWER, "-8+10"));
   }
 
 }
