@@ -1,4 +1,4 @@
-package rimplex;
+package utilities;
 
 public class Complex
 {
