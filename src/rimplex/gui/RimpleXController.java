@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-import rimplex.Complex;
+import utilities.Complex;
 
 /**
  * The observer of all GUI components of the RimpleX application.

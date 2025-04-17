@@ -51,7 +51,7 @@ public class Complex
     {
       throw new ArithmeticException("Cannot divide by zero");
     }
-    double realPart = (this.real * other.real + this.imaginary * other.imaginary) / denominator;
+    double realPart = (this.real * other.real + this.imaginary * -(other.imaginary)) / denominator;
     double imaginaryPart = (this.imaginary * other.real - this.real * other.imaginary)
         / denominator;
     return new Complex(realPart, imaginaryPart);

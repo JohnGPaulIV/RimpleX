@@ -58,8 +58,14 @@ class EvaluatorTest
   @Test
   void testEvaluatingBasicImaginaryUnits()
   {
-    assertEquals("5𝑖", Evaluator.evaluate("2𝑖", ADDITION, "3𝑖"));
-    assertEquals("4𝑖", Evaluator.evaluate("6𝑖", SUBTRACTION, "2𝑖"));
+    assertEquals("5.0𝑖", Evaluator.evaluate("2𝑖", ADDITION, "3𝑖"));
+    assertEquals("4.0𝑖", Evaluator.evaluate("6𝑖", SUBTRACTION, "2𝑖"));
+    assertEquals("-12.0", Evaluator.evaluate("6𝑖", MULTIPLICATION, "2𝑖"));
+    assertEquals("12.0𝑖", Evaluator.evaluate("6𝑖", MULTIPLICATION, "2"));
+    assertEquals("-3.0", Evaluator.evaluate("6𝑖", DIVISION, "2𝑖"));
+    assertEquals("3.0", Evaluator.evaluate("6𝑖", DIVISION, "-2𝑖"));
+    assertEquals("-3.0𝑖", Evaluator.evaluate("-6𝑖", DIVISION, "2"));
+    assertEquals("0.3333333333333333𝑖", Evaluator.evaluate("2𝑖", DIVISION, "6"));
   }
   
   @Test
