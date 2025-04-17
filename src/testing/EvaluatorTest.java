@@ -54,5 +54,20 @@ class EvaluatorTest
     assertEquals("10.0", Evaluator.evaluate("2+2+2+2", ADDITION, "4×0.5"));
     assertEquals("484.0", Evaluator.evaluate("3^3—5", POWER, "-8+10"));
   }
+  
+  @Test
+  void testEvaluatingBasicImaginaryUnits()
+  {
+    assertEquals("5𝑖", Evaluator.evaluate("2𝑖", ADDITION, "3𝑖"));
+    assertEquals("4𝑖", Evaluator.evaluate("6𝑖", SUBTRACTION, "2𝑖"));
+  }
+  
+  @Test
+  void testEvaluatingParenthesizedImaginaryUnits()
+  {
+    assertEquals("4+5𝑖", Evaluator.evaluate("2+2𝑖", ADDITION, "2+3𝑖"));
+    assertEquals("4+5𝑖", Evaluator.evaluate("2+4𝑖", ADDITION, "2𝑖"));
+    assertEquals("4+5𝑖", Evaluator.evaluate("8+6𝑖", SUBTRACTION, "2—3𝑖+1"));
+  }
 
 }
