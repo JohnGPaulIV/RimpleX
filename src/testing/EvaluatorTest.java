@@ -93,4 +93,13 @@ class EvaluatorTest
     assertEquals("-0.075+0.15𝑖", Evaluator.evaluate("-3÷4𝑖", DIVISION, "2𝑖+4"));
   }
 
+  @Test
+  void testEvaluatingComplexExponentiation()
+  {
+    assertEquals("64𝑖", Evaluator.evaluate("4", POWER, "3𝑖"));
+    assertEquals("4𝑖^3𝑖", Evaluator.evaluate("4𝑖", POWER, "3𝑖"));
+    assertEquals("-4𝑖", Evaluator.evaluate("4𝑖", POWER, "3"));
+    assertEquals("4𝑖", Evaluator.evaluate("4𝑖", POWER, "-3"));
+    assertEquals("4𝑖^3𝑖+2", Evaluator.evaluate("4𝑖", POWER, "3𝑖+2")); // Should return as is in controller.
+  }
 }
