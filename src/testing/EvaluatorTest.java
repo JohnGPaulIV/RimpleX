@@ -25,6 +25,8 @@ class EvaluatorTest
   void testEvaluatingBasicAddition()
   {
     assertEquals("10.0", Evaluator.evaluate("8", ADDITION, "2"));
+    assertEquals("6.0", Evaluator.evaluate("8", ADDITION, "-2"));
+    assertEquals("-10.0", Evaluator.evaluate("-8", ADDITION, "-2"));
   }
   
   @Test
@@ -71,9 +73,11 @@ class EvaluatorTest
   @Test
   void testEvaluatingParenthesizedImaginaryUnits()
   {
-    assertEquals("4+5𝑖", Evaluator.evaluate("2+2𝑖", ADDITION, "2+3𝑖"));
-    assertEquals("4+5𝑖", Evaluator.evaluate("2+4𝑖", ADDITION, "2𝑖"));
-    assertEquals("4+5𝑖", Evaluator.evaluate("8+6𝑖", SUBTRACTION, "2—3𝑖+1"));
+    assertEquals("4.0+5.0𝑖", Evaluator.evaluate("2+2𝑖", ADDITION, "2+3𝑖"));
+    assertEquals("2.0+6.0𝑖", Evaluator.evaluate("2+4𝑖", ADDITION, "2𝑖"));
+    assertEquals("8.0+3.0𝑖", Evaluator.evaluate("8+6𝑖", SUBTRACTION, "3𝑖"));
+    assertEquals("3.0—9.0𝑖", Evaluator.evaluate("3—6𝑖", SUBTRACTION, "3𝑖"));
+    assertEquals("5.0+9.0𝑖", Evaluator.evaluate("8+6𝑖", SUBTRACTION, "2—3𝑖+1"));
   }
 
 }

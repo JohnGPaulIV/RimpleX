@@ -5,6 +5,8 @@ public class Complex
   private final double real;
   private final double imaginary;
   private static final String IMAGINARY_UNIT = "𝑖";
+  static final String SUBTRACTION = "—";
+  static final String NEGATIVE = "-";
   private boolean imaginaryUnitPresent = true;
 
   public Complex(double real, double imaginary)
@@ -73,48 +75,73 @@ public class Complex
           return "-" + String.valueOf(this.imaginary) + unit;
         }
         return String.valueOf(this.imaginary) + unit;
+      } 
+      else if (sign == "+")
+      {
+        return String.valueOf(this.real) + sign + String.valueOf(this.imaginary) + unit;
       }
-      return String.valueOf(this.real) + sign + String.valueOf(this.imaginary) + unit;
+      else
+      {
+        return String.valueOf(this.real) + SUBTRACTION + String.valueOf(Math.abs(this.imaginary)) + unit;
+      }
     } 
     return String.valueOf(this.real);
   }
 
   public static Complex parse(String input)
   {
-    input = input.replace(" ", "").replace("i", "");
+//    input = input.replace(" ", "").replace("𝑖", "");
     if (input.contains("+"))
     {
       String[] parts = input.split("\\+");
-      return new Complex(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]));
+      if (parts[0].contains("𝑖"))
+      {
+        parts[0] = parts[0].replace("𝑖", "");
+        return new Complex(Double.parseDouble(parts[1]), Double.parseDouble(parts[0]));
+      }
+      else
+      {
+        parts[1] = parts[1].replace("𝑖", "");
+        return new Complex(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]));
+      }
+
     }
-    else if (input.contains("-"))
+    else if (input.contains(SUBTRACTION))
     {
-      int index = input.lastIndexOf("-");
+      int index = input.lastIndexOf(SUBTRACTION);
       if (index == 0)
       {
         input = input.substring(1);
-        index = input.indexOf("-", 1);
+        index = input.indexOf(SUBTRACTION, 1);
         if (index == -1)
         {
+          input = input.replace("𝑖", "");
           return new Complex(-Double.parseDouble(input), 0);
         }
         else
         {
+          input = input.replace("𝑖", "");
           return new Complex(-Double.parseDouble(input.substring(0, index)),
               -Double.parseDouble(input.substring(index + 1)));
         }
       }
+      input = input.replace("𝑖", "");
       return new Complex(Double.parseDouble(input.substring(0, index)),
           -Double.parseDouble(input.substring(index + 1)));
     }
+    else if (input.contains("𝑖"))
+    {
+      input = input.replace("𝑖", "");
+      return new Complex(0.0, Double.parseDouble(input));
+    }
     else
     {
-      return new Complex(Double.parseDouble(input), 0);
+      return new Complex(Double.parseDouble(input), 0.0);
     }
   }
 
   public static Complex fromReal(double real)
   {
-    return new Complex(real, 0);
+    return new Complex(real, 0.0);
   }
 }
