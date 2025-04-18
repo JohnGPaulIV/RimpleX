@@ -6,6 +6,14 @@ import org.junit.jupiter.api.Test;
 
 import utilities.Evaluator;
 
+/**
+ * Tests to ensure the Evaluator utility parses and evaluates expressions accurately and
+ * in logical order (PEMDAS).
+ * 
+ * @author Joseph Pogoretskiy
+ * 
+ * This work complies with JMU Honor Code.
+ */
 class EvaluatorTest
 {
   static final String SUBTRACTION = "—";

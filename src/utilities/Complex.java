@@ -2,6 +2,8 @@ package utilities;
 
 /**
  * Represents a number in complex form consisting of a real part and an imaginary part.
+ * 
+ * @author Joseph Pogoretskiy, Sofia Miller
  */
 public class Complex
 {

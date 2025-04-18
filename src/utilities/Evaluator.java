@@ -3,6 +3,8 @@ package utilities;
 /**
  * This class evaluates given operands and operators recursively given a string of input.
  * 
+ * @author Joseph Pogoretskiy
+ * 
  * This work complies with JMU Honor Code.
  */
 public final class Evaluator
