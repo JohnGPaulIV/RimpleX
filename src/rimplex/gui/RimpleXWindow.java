@@ -80,14 +80,26 @@ public class RimpleXWindow extends JFrame
     this.setResizable(false);
 
     // Adding menu bar
+    // File menu
     JMenuBar menuBar = new JMenuBar();
 
     JMenu fileMenu = new JMenu("File");
+    JMenuItem printItem = new JMenuItem("Print Session");
+    printItem.setActionCommand("ACTION_PRINT");
+    printItem.addActionListener(controller);
+    fileMenu.add(printItem);
+    menuBar.add(fileMenu);
     JMenuItem exitItem = new JMenuItem("Exit");
     exitItem.setActionCommand("ACTION_EXIT");
     exitItem.addActionListener(controller);
     fileMenu.add(exitItem);
-    menuBar.add(fileMenu);
+    // Help menu
+    JMenu helpMenu = new JMenu("Help");
+    JMenuItem aboutItem = new JMenuItem("About");
+    aboutItem.setActionCommand("ACTION_ABOUT");
+    aboutItem.addActionListener(controller);
+    helpMenu.add(aboutItem);
+    menuBar.add(helpMenu);
     setJMenuBar(menuBar);
 
     // TODO: Add Java GUI Components to the main window here
@@ -127,22 +139,25 @@ public class RimpleXWindow extends JFrame
     getContentPane().add(new RimpleXButton("CLEAR", "C", controller, 60, 150, 45, 45));
     getContentPane().add(new RimpleXButton("RESET", "R", controller, 210, 150, 45, 45));
     getContentPane().add(new RimpleXButton("SIGN", "±", controller, 10, 150, 45, 45));
-    getContentPane().add(new RimpleXButton("UNIT", "𝑖", controller, 110, 350, 45,
-        45));
+    getContentPane().add(new RimpleXButton("UNIT", "𝑖", controller, 110, 350, 45, 45));
 
     // Adding operator buttons
     getContentPane().add(new RimpleXButton("ADD", "+", controller, 160, 150, 45, 45));
     // NOTE! This "subtraction" sign is a MINUS character. Not a hyphen.
     getContentPane().add(new RimpleXButton("SUBTRACT", "−", controller, 160, 200, 45, 45));
-    getContentPane().add(new RimpleXButton("SWITCHRUNNINGCALC", "Inv", controller, 210, 200, 45, 45));
-    // needs to be changed v
+
+    getContentPane()
+        .add(new RimpleXButton("SWITCHRUNNINGCALC", "Inv", controller, 210, 200, 45, 45));
+    
     getContentPane().add(new RimpleXButton("MULTIPLY", "×", controller, 160, 250, 45, 45));
     getContentPane().add(new RimpleXButton("DIVIDE", "÷", controller, 160, 300, 45, 45));
-    
+
     // Sprint 2 additional buttons.
-    getContentPane().add(new RimpleXButton("IMAGINARY_PART", "Imaginary Part", controller, 260, 150, 95, 45));
+    getContentPane()
+        .add(new RimpleXButton("IMAGINARY_PART", "Imaginary Part", controller, 260, 150, 95, 45));
     getContentPane().add(new RimpleXButton("REAL_PART", "Real Part", controller, 260, 200, 95, 45));
-    getContentPane().add(new RimpleXButton("POLAR_FORM", "Polar Form", controller, 260, 250, 95, 45));
+    getContentPane()
+        .add(new RimpleXButton("POLAR_FORM", "Polar Form", controller, 260, 250, 95, 45));
 
     getContentPane().add(new RimpleXButton("CONJUGATE", "Z*", controller, 260, 300, 45, 45));
     getContentPane().add(new RimpleXButton("SQUARE_ROOT", "√", controller, 310, 300, 45, 45));

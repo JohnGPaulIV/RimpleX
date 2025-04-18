@@ -1,9 +1,11 @@
-package rimplex.gui;
+package utilities;
 
 public class Complex
 {
   private final double real;
   private final double imaginary;
+  private static final String IMAGINARY_UNIT = "𝑖";
+  private boolean imaginaryUnitPresent = true;
 
   public Complex(double real, double imaginary)
   {
@@ -33,6 +35,10 @@ public class Complex
 
   public Complex multiply(Complex other)
   {
+    if (this.imaginary != 0.0 && other.imaginary != 0.0)
+    {
+      imaginaryUnitPresent = !imaginaryUnitPresent;
+    }
     double realPart = this.real * other.real - this.imaginary * other.imaginary;
     double imaginaryPart = this.real * other.imaginary + this.imaginary * other.real;
     return new Complex(realPart, imaginaryPart);
@@ -45,7 +51,7 @@ public class Complex
     {
       throw new ArithmeticException("Cannot divide by zero");
     }
-    double realPart = (this.real * other.real + this.imaginary * other.imaginary) / denominator;
+    double realPart = (this.real * other.real + this.imaginary * -(other.imaginary)) / denominator;
     double imaginaryPart = (this.imaginary * other.real - this.real * other.imaginary)
         / denominator;
     return new Complex(realPart, imaginaryPart);
@@ -54,10 +60,23 @@ public class Complex
   @Override
   public String toString()
   {
-    String realStr = String.format("%.2f", real);
-    String imaginaryStr = String.format("%.2f", Math.abs(imaginary)) + "𝑖";
-    String sign = (imaginary >= 0) ? " + " : " - ";
-    return realStr + sign + imaginaryStr;
+//    String realStr = String.format("%.2f", real);
+//    String imaginaryStr = String.format("%.2f", Math.abs(imaginary)) + "𝑖";
+    String sign = (imaginary >= 0) ? "+" : "-";
+    String unit = (imaginaryUnitPresent) ? IMAGINARY_UNIT : "";
+    if (imaginary != 0.0) 
+    {
+      if (real == 0.0)
+      {
+        if (sign == " - ")
+        {
+          return "-" + String.valueOf(this.imaginary) + unit;
+        }
+        return String.valueOf(this.imaginary) + unit;
+      }
+      return String.valueOf(this.real) + sign + String.valueOf(this.imaginary) + unit;
+    } 
+    return String.valueOf(this.real);
   }
 
   public static Complex parse(String input)

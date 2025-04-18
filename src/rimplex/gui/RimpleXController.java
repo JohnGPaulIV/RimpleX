@@ -8,6 +8,8 @@ import java.util.StringTokenizer;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+import utilities.Complex;
+
 /**
  * The observer of all GUI components of the RimpleX application.
  *
@@ -226,6 +228,7 @@ public class RimpleXController implements ActionListener {
         previousAnswer = "";
         break;
       case "SIGN":
+        // This is a HYPHEN, not a DASH
         if (display.getText().charAt(0) == '-')
           display.setText(display.getText().substring(1));
         else
@@ -237,8 +240,9 @@ public class RimpleXController implements ActionListener {
         if (display.getText().length() == 0 && !runningCalc) { break; }
         else { setOperator(display, topDisplay, "+"); fullExpression += "+"; break; }
       case "SUBTRACT":
+        // This sign is a DASH, not a HYPHEN
         if (display.getText().length() == 0 && !runningCalc) { break; }
-        else { setOperator(display, topDisplay, "-"); fullExpression += "-"; break; }
+        else { setOperator(display, topDisplay, "—"); fullExpression += "—"; break; }
       case "MULTIPLY":
         if (display.getText().length() == 0 && !runningCalc) { break; }
         else { setOperator(display, topDisplay, "×"); fullExpression += "*"; break; }
