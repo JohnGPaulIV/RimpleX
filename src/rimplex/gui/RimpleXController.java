@@ -296,8 +296,22 @@ public class RimpleXController implements ActionListener {
           fullExpression += "𝑖";
         }
         break;
-      case "SWITCHRUNNINGCALC":
+      case "INVERT":
         runningCalc = !runningCalc;
+      case "IMAGINARY_PART":
+        break;
+      case "REAL_PART":
+        break;
+      case "POLAR_FORM":
+        break;
+      case "CONJUGATE":
+        break;
+      case "SQUARE_ROOT":
+        break;
+      case "EXPONENT":
+        break;
+      case "LOGARITHM":
+        break;
       default:
         break;
     }

@@ -147,7 +147,7 @@ public class RimpleXWindow extends JFrame
     getContentPane().add(new RimpleXButton("SUBTRACT", "−", controller, 160, 200, 45, 45));
 
     getContentPane()
-        .add(new RimpleXButton("SWITCHRUNNINGCALC", "Inv", controller, 210, 200, 45, 45));
+        .add(new RimpleXButton("INVERT", "Inv", controller, 210, 200, 45, 45));
     
     getContentPane().add(new RimpleXButton("MULTIPLY", "×", controller, 160, 250, 45, 45));
     getContentPane().add(new RimpleXButton("DIVIDE", "÷", controller, 160, 300, 45, 45));
