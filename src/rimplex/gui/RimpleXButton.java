@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.Insets;
 
 import javax.swing.JButton;
+import javax.swing.SwingConstants;
 
 /**
  * Represents a button on the RimpleX application with a set text, action command, and bounds.
@@ -36,12 +37,39 @@ public class RimpleXButton extends JButton
   public RimpleXButton(final String name, final String text, final RimpleXController controller,
       final int xPos, final int yPos, final int width, final int height)
   {
-    this.setText(text);
     this.setActionCommand(name);
     this.addActionListener(controller);
     this.setBounds(xPos, yPos, width, height);
     this.setMargin(new Insets(2, 2, 2, 2));  // Smaller than default
-    this.setFont(new Font("Sans-Serif", Font.PLAIN, 24));
+    
+    if (text.length() < 3) {
+      this.setFont(new Font("Sans-Serif", Font.PLAIN, 24));
+    }
+    else {
+      this.setFont(new Font("Sans-Serif", Font.PLAIN, 14));
+    }
+    
+    // parse multiple phrases, if too long
+    if (text.length() > 10) {
+      String[] phrases = text.split(" ");
+      if (phrases.length > 1) {
+        String buttonText = new String();
+        buttonText = buttonText + "<html><div style='text-align: center;'>";
+        for (String phrase : phrases) {
+          buttonText = buttonText + phrase + "<br>";
+        }
+        buttonText = buttonText + "</div></html>";
+        this.setText(buttonText);
+      }
+      else {
+        this.setText(text);
+      }
+    }
+    else {
+      this.setText(text);
+    }
+
+    
 
   }
 

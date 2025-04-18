@@ -76,7 +76,7 @@ public class RimpleXWindow extends JFrame
     picLabel.setBounds(10, 10, scaledWidth, scaledHeight);
     getContentPane().add(picLabel);
 
-    this.setSize(275, 460);
+    this.setSize(375, 460);
     this.setResizable(false);
 
     // Adding menu bar
@@ -135,9 +135,19 @@ public class RimpleXWindow extends JFrame
     // NOTE! This "subtraction" sign is a MINUS character. Not a hyphen.
     getContentPane().add(new RimpleXButton("SUBTRACT", "−", controller, 160, 200, 45, 45));
     getContentPane().add(new RimpleXButton("SWITCHRUNNINGCALC", "Inv", controller, 210, 200, 45, 45));
+    // needs to be changed v
     getContentPane().add(new RimpleXButton("MULTIPLY", "×", controller, 160, 250, 45, 45));
     getContentPane().add(new RimpleXButton("DIVIDE", "÷", controller, 160, 300, 45, 45));
+    
+    // Sprint 2 additional buttons.
+    getContentPane().add(new RimpleXButton("IMAGINARY_PART", "Imaginary Part", controller, 260, 150, 95, 45));
+    getContentPane().add(new RimpleXButton("REAL_PART", "Real Part", controller, 260, 200, 95, 45));
+    getContentPane().add(new RimpleXButton("POLAR_FORM", "Polar Form", controller, 260, 250, 95, 45));
 
+    getContentPane().add(new RimpleXButton("CONJUGATE", "Z*", controller, 260, 300, 45, 45));
+    getContentPane().add(new RimpleXButton("SQUARE_ROOT", "√", controller, 310, 300, 45, 45));
+    getContentPane().add(new RimpleXButton("EXPONENT", "^", controller, 260, 350, 45, 45));
+    getContentPane().add(new RimpleXButton("LOGARITHM", "Log", controller, 310, 350, 45, 45));
   }
 
   /**
@@ -155,8 +165,8 @@ public class RimpleXWindow extends JFrame
     topDisplay.setFont(new Font("Serif", Font.PLAIN, 18));
 
     // Set the size of the displays.
-    display.setBounds(10, 65, 245, 50);
-    topDisplay.setBounds(10, 65, 245, 30);
+    display.setBounds(10, 65, 345, 50);
+    topDisplay.setBounds(10, 65, 345, 30);
 
     // Using compound border to set padding of the text in the display:
     // https://docs.oracle.com/javase/7/docs/api/javax/swing/border/CompoundBorder.html
