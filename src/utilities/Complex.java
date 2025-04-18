@@ -1,52 +1,47 @@
 package utilities;
 
+/**
+ * Represents a number in complex form consisting of a real part and an imaginary part.
+ */
 public class Complex
 {
+  private static final String IMAGINARY_UNIT = "𝑖";
+  private static final String SUBTRACTION = "—";
+  private static final String NEGATIVE = "-";
   private final double real;
   private final double imaginary;
-  private static final String IMAGINARY_UNIT = "𝑖";
-  static final String SUBTRACTION = "—";
-  static final String NEGATIVE = "-";
   private boolean imaginaryUnitPresent = true;
-
-  public Complex(double real, double imaginary)
+  
+  /**
+   * Explicit constructor of a new complex number.
+   * 
+   * @param real The real part of the complex number.
+   * @param imaginary The imaginary part of the complex number.
+   */
+  public Complex(final double real, final double imaginary)
   {
     this.real = real;
     this.imaginary = imaginary;
   }
 
-  public double getReal()
-  {
-    return real;
-  }
-
-  public double getImaginary()
-  {
-    return imaginary;
-  }
-
-  public Complex add(Complex other)
+  /**
+   * Add two complex numbers together.
+   * 
+   * @param other The summand.
+   * @return Return the sum of two complex numbers.
+   */
+  public Complex add(final Complex other)
   {
     return new Complex(this.real + other.real, this.imaginary + other.imaginary);
   }
 
-  public Complex subtract(Complex other)
-  {
-    return new Complex(this.real - other.real, this.imaginary - other.imaginary);
-  }
-
-  public Complex multiply(Complex other)
-  {
-    if (this.imaginary != 0.0 && other.imaginary != 0.0)
-    {
-      imaginaryUnitPresent = !imaginaryUnitPresent;
-    }
-    double realPart = this.real * other.real - this.imaginary * other.imaginary;
-    double imaginaryPart = this.real * other.imaginary + this.imaginary * other.real;
-    return new Complex(realPart, imaginaryPart);
-  }
-
-  public Complex divide(Complex other)
+  /**
+   * Divide two complex numbers.
+   * 
+   * @param other The dividend
+   * @return Return the quotient of two complex numbers.
+   */
+  public Complex divide(final Complex other)
   {
     double denominator = other.real * other.real + other.imaginary * other.imaginary;
     if (denominator == 0)
@@ -57,6 +52,124 @@ public class Complex
     double imaginaryPart = (this.imaginary * other.real - this.real * other.imaginary)
         / denominator;
     return new Complex(realPart, imaginaryPart);
+  }
+
+  /**
+   * Create a real number in complex form.
+   * 
+   * @param real The real number to use.
+   * @return Return a new Complex number with only the real part non-zero.
+   */
+  public static Complex fromReal(final double real)
+  {
+    return new Complex(real, 0.0);
+  }
+  /**
+   * Get the imaginary part of the complex number.
+   * 
+   * @return Return imaginary number.
+   */
+  public double getImaginary()
+  {
+    return imaginary;
+  }
+
+  /**
+   * Get the real part of the complex number.
+   * 
+   * @return Return real number.
+   */
+  public double getReal()
+  {
+    return real;
+  }
+
+  /**
+   * Multiply two complex numbers together.
+   * 
+   * @param other The multiplicand.
+   * @return Return the product of two complex numbers.
+   */
+  public Complex multiply(final Complex other)
+  {
+    if (this.imaginary != 0.0 && other.imaginary != 0.0)
+    {
+      imaginaryUnitPresent = !imaginaryUnitPresent;
+    }
+    double realPart = this.real * other.real - this.imaginary * other.imaginary;
+    double imaginaryPart = this.real * other.imaginary + this.imaginary * other.real;
+    return new Complex(realPart, imaginaryPart);
+  }
+
+  /**
+   * Parse a string of inputs to create the appropriate representation of a complex number.
+   * 
+   * @param input The string to parse.
+   * @return Return a new Complex number.
+   */
+  public static Complex parse(final String input)
+  {
+    // If in complex form.
+    String copy = new String(input);
+    if (copy.contains("+"))
+    {
+      String[] parts = copy.split("\\+");
+      if (parts[0].contains("𝑖"))
+      {
+        parts[0] = parts[0].replace("𝑖", "");
+        return new Complex(Double.parseDouble(parts[1]), Double.parseDouble(parts[0]));
+      }
+      else
+      {
+        parts[1] = parts[1].replace("𝑖", "");
+        return new Complex(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]));
+      }
+  
+    }
+    else if (copy.contains(SUBTRACTION))
+    {
+      // Distinguish between negative numbers and subtraction operation.
+      int index = copy.lastIndexOf(SUBTRACTION);
+      if (index == 0)
+      {
+        copy = copy.substring(1);
+        index = copy.indexOf(SUBTRACTION, 1);
+        if (index == -1)
+        {
+          copy = copy.replace("𝑖", "");
+          return new Complex(-Double.parseDouble(copy), 0);
+        }
+        else
+        {
+          copy = copy.replace("𝑖", "");
+          return new Complex(-Double.parseDouble(copy.substring(0, index)),
+              -Double.parseDouble(copy.substring(index + 1)));
+        }
+      }
+      copy = copy.replace("𝑖", "");
+      return new Complex(Double.parseDouble(copy.substring(0, index)),
+          -Double.parseDouble(copy.substring(index + 1)));
+    }
+    else if (copy.contains("𝑖"))
+    {
+      copy = copy.replace("𝑖", "");
+      return new Complex(0.0, Double.parseDouble(copy));
+    }
+    else
+    {
+      return new Complex(Double.parseDouble(copy), 0.0);
+    }
+  }
+
+  /**
+   * Subtract two complex numbers together.
+   * 
+   * @param other The subtrahend.
+   * @return Return the difference of two complex numbers.
+   */
+  public Complex subtract(final Complex other)
+  {
+    return new Complex(this.real - other.real, this.imaginary - other.imaginary);
   }
 
   @Override
@@ -70,78 +183,25 @@ public class Complex
     {
       if (real == 0.0)
       {
+        // If there is only a negative imaginary number.
         if (sign == " - ")
         {
           return "-" + String.valueOf(this.imaginary) + unit;
         }
+        // If there is only a positive imaginary number
         return String.valueOf(this.imaginary) + unit;
       } 
+      // If both parts are present, making it in complex number form.
       else if (sign == "+")
       {
         return String.valueOf(this.real) + sign + String.valueOf(this.imaginary) + unit;
       }
       else
       {
-        return String.valueOf(this.real) + SUBTRACTION + String.valueOf(Math.abs(this.imaginary)) + unit;
+        return String.valueOf(this.real) + SUBTRACTION + String.valueOf(Math.abs(this.imaginary))
+          + unit;
       }
     } 
     return String.valueOf(this.real);
-  }
-
-  public static Complex parse(String input)
-  {
-//    input = input.replace(" ", "").replace("𝑖", "");
-    if (input.contains("+"))
-    {
-      String[] parts = input.split("\\+");
-      if (parts[0].contains("𝑖"))
-      {
-        parts[0] = parts[0].replace("𝑖", "");
-        return new Complex(Double.parseDouble(parts[1]), Double.parseDouble(parts[0]));
-      }
-      else
-      {
-        parts[1] = parts[1].replace("𝑖", "");
-        return new Complex(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]));
-      }
-
-    }
-    else if (input.contains(SUBTRACTION))
-    {
-      int index = input.lastIndexOf(SUBTRACTION);
-      if (index == 0)
-      {
-        input = input.substring(1);
-        index = input.indexOf(SUBTRACTION, 1);
-        if (index == -1)
-        {
-          input = input.replace("𝑖", "");
-          return new Complex(-Double.parseDouble(input), 0);
-        }
-        else
-        {
-          input = input.replace("𝑖", "");
-          return new Complex(-Double.parseDouble(input.substring(0, index)),
-              -Double.parseDouble(input.substring(index + 1)));
-        }
-      }
-      input = input.replace("𝑖", "");
-      return new Complex(Double.parseDouble(input.substring(0, index)),
-          -Double.parseDouble(input.substring(index + 1)));
-    }
-    else if (input.contains("𝑖"))
-    {
-      input = input.replace("𝑖", "");
-      return new Complex(0.0, Double.parseDouble(input));
-    }
-    else
-    {
-      return new Complex(Double.parseDouble(input), 0.0);
-    }
-  }
-
-  public static Complex fromReal(double real)
-  {
-    return new Complex(real, 0.0);
   }
 }
