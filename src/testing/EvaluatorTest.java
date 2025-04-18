@@ -60,8 +60,10 @@ class EvaluatorTest
   @Test
   void testEvaluatingBasicImaginaryUnits()
   {
+    assertEquals("3.0𝑖", Evaluator.evaluate("-5𝑖", ADDITION, "8𝑖"));
     assertEquals("5.0𝑖", Evaluator.evaluate("2𝑖", ADDITION, "3𝑖"));
     assertEquals("4.0𝑖", Evaluator.evaluate("6𝑖", SUBTRACTION, "2𝑖"));
+    assertEquals("-4.0𝑖", Evaluator.evaluate("-7𝑖", SUBTRACTION, "-3𝑖"));
     assertEquals("-12.0", Evaluator.evaluate("6𝑖", MULTIPLICATION, "2𝑖"));
     assertEquals("12.0𝑖", Evaluator.evaluate("6𝑖", MULTIPLICATION, "2"));
     assertEquals("-3.0", Evaluator.evaluate("6𝑖", DIVISION, "2𝑖"));
@@ -74,10 +76,13 @@ class EvaluatorTest
   void testEvaluatingParenthesizedImaginaryUnits()
   {
     assertEquals("4.0+5.0𝑖", Evaluator.evaluate("2+2𝑖", ADDITION, "2+3𝑖"));
+    assertEquals("-2.0+10.0𝑖", Evaluator.evaluate("2+2𝑖", MULTIPLICATION, "2+3𝑖"));
     assertEquals("2.0+6.0𝑖", Evaluator.evaluate("2+4𝑖", ADDITION, "2𝑖"));
     assertEquals("8.0+3.0𝑖", Evaluator.evaluate("8+6𝑖", SUBTRACTION, "3𝑖"));
     assertEquals("3.0—9.0𝑖", Evaluator.evaluate("3—6𝑖", SUBTRACTION, "3𝑖"));
-    assertEquals("5.0+9.0𝑖", Evaluator.evaluate("8+6𝑖", SUBTRACTION, "2—3𝑖+1"));
+    assertEquals("9.0+3.0𝑖", Evaluator.evaluate("8+6𝑖", ADDITION, "2—3𝑖+1"));
+    assertEquals("8.0+2.5999999999999996𝑖", Evaluator.evaluate("8—6𝑖", ADDITION, "4×2𝑖+3𝑖÷5"));
+    assertEquals("-0.075+0.15𝑖", Evaluator.evaluate("-3÷4𝑖", DIVISION, "2𝑖+4"));
   }
 
 }
