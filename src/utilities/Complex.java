@@ -229,6 +229,22 @@ public class Complex
       return new Complex(Double.parseDouble(copy), 0.0);
     }
   }
+  
+  public void squareRoot()
+  {
+    if (this.real != 0.0 && this.imaginary == 0.0)
+    {
+      if (this.real >= 0.0)
+      {
+        this.real = Math.sqrt(this.real);
+      }
+      else
+      {
+        this.real = 0.0;
+        this.imaginary = -(this.real);
+      }
+    }
+  }
 
   /**
    * Subtract two complex numbers together.
