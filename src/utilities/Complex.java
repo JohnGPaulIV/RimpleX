@@ -10,8 +10,8 @@ public class Complex
   private static final String IMAGINARY_UNIT = "𝑖";
   private static final String SUBTRACTION = "—";
   private static final String NEGATIVE = "-";
-  private final double real;
-  private final double imaginary;
+  private double real;
+  private double imaginary;
   private boolean imaginaryUnitPresent = true;
   
   /**
@@ -35,6 +35,17 @@ public class Complex
   public Complex add(final Complex other)
   {
     return new Complex(this.real + other.real, this.imaginary + other.imaginary);
+  }
+  
+  /**
+   * Conjugate the complex number.
+   */
+  public void conjugate()
+  {
+    if (this.imaginary != 0.0)
+    {
+      this.imaginary = -(this.imaginary);
+    }
   }
 
   /**
