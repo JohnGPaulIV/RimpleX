@@ -230,6 +230,53 @@ public class Complex
     }
   }
   
+  /**
+   * Get polar form of the complex number.
+   * 
+   * @return A string representation of the polar form of the number.
+   */
+  public String getPolarForm()
+  {
+    String result = null;
+    if (this.real != 0.0 && this.imaginary != 0.0)
+    {
+      Double modulus = Math.sqrt((this.real * this.real) + (this.imaginary * this.imaginary));
+      Double argument = Math.atan(this.imaginary / this.real);
+      result = String.valueOf(modulus) + "(cos" + String.valueOf(argument) + ") + " + "i sin("
+          + String.valueOf(argument) + "))";
+    }
+    else if (this.real != 0.0 && this.imaginary == 0.0)
+    {
+      if (this.real > 0)
+      {
+        result = String.valueOf(this.real) + "(cos(0)" + " + " + "i sin(0))";
+      }
+
+      else
+      {
+        result = String.valueOf(this.real) + "(cos(π)" + " + " + "i sin(π))";
+      }
+    }
+    else if (this.real == 0.0 && this.imaginary != 0.0)
+    {
+      String argument;
+      Double modulus = Math.sqrt(this.imaginary + this.imaginary);
+      if (this.imaginary > 0.0)
+      {
+        argument = "π/2";
+      }
+      else
+      {
+        argument = "3π/2";
+      }
+      result = String.valueOf(modulus) + "(cos(" + argument + ")" + " + " + "i sin(" + argument + "))";
+    }
+    return result;
+  }
+  
+  /**
+   * Square root the complex number.
+   */
   public void squareRoot()
   {
     if (this.real != 0.0 && this.imaginary == 0.0)
