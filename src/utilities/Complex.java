@@ -107,6 +107,21 @@ public class Complex
     }
     return result;
   }
+  
+  /**
+   * Inverse the complex number (multiplicative)
+   */
+  public void inverse()
+  {
+    Complex numerator = new Complex(this.real, this.imaginary);
+    numerator.conjugate();
+    
+    Complex denominator = new Complex(this.real, this.imaginary).multiply(numerator);
+    Complex result = numerator.divide(denominator);
+    
+    this.real = result.real;
+    this.imaginary = result.imaginary;
+  }
 
   /**
    * Create a real number in complex form.
