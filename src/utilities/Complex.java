@@ -55,6 +55,47 @@ public class Complex
         / denominator;
     return new Complex(realPart, imaginaryPart);
   }
+  
+  /**
+   * Raise one complex number to the other complex number.
+   * 
+   * @param other The power to raise to.
+   * @return Return the result of the calculation in complex form.
+   */
+  public Complex exponentiate(final Complex other)
+  {
+    Complex result = null;
+    if (this.real != 0.0 && this.imaginary == 0.0)
+    {
+      if (other.imaginary == 0.0)
+      {
+        result = new Complex(Math.pow(this.real, other.real), 0.0);
+      }
+    }
+    else if (this.real == 0.0 && this.imaginary != 0.0)
+    {
+      if (other.imaginary == 0.0)
+      {
+        int remainder = (int) other.real % 4;
+        switch (remainder)
+        {
+          case 0:
+            result = new Complex(this.imaginary, 0.0);
+            break;
+          case 1:
+            result = new Complex(0.0, this.imaginary);
+            break;
+          case 2:
+            result = new Complex(-(this.imaginary), 0.0);
+            break;
+          case 3:
+            result = new Complex(0.0, -(this.imaginary));
+            break;
+        }
+      }
+    }
+    return result;
+  }
 
   /**
    * Create a real number in complex form.

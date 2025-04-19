@@ -25,6 +25,40 @@ public final class Evaluator
   };
 
   /**
+   * Check if an operator is within a given operand in PEMDAS order.
+   * 
+   * @param operand The operand to check.
+   * @return The operator is present, null is none are present.
+   */
+  private static String checkOperators(final String operand)
+  {
+    if (operand.contains(SUBTRACTION))
+    {
+      return SUBTRACTION;
+    }
+    else if (operand.contains(ADDITION))
+    {
+      return ADDITION;
+    }
+    else if (operand.contains(DIVISION))
+    {
+      return DIVISION;
+    }
+    else if (operand.contains(MULTIPLICATION))
+    {
+      return MULTIPLICATION;
+    }
+    else if (operand.contains(POWER))
+    {
+      return POWER;
+    }
+    else
+    {
+      return null;
+    }
+  }
+
+  /**
    * Recursively evaluate the given expression.
    * 
    * @param leftOperand The left operand of the expression.
@@ -101,7 +135,7 @@ public final class Evaluator
         result = leftComplex.multiply(rightComplex).toString();
         break;
       case POWER:
-        result = String.valueOf(Math.pow(Double.parseDouble(leftResult), Double.parseDouble(rightResult)));
+        result = evaluatePower(leftComplex, rightComplex);
         break;
       default:
         result = "Error"; // For debugging
@@ -111,36 +145,58 @@ public final class Evaluator
   }
 
   /**
-   * Check if an operator is within a given operand in PEMDAS order.
+   * Evaluate exponentiating between two operands taking into account their possible complex forms.
    * 
-   * @param operand The operand to check.
-   * @return The operator is present, null is none are present.
+   * @param leftOperand The base of the exponentiation.
+   * @param rightOperand The power of the exponentiation.
+   * @return Return the calculation in string form to display on the calculator.
    */
-  private static String checkOperators(final String operand)
+  private static String evaluatePower(final Complex leftOperand, final Complex rightOperand)
   {
-    if (operand.contains(SUBTRACTION))
+    String result = "evaluatePower() Error";
+    if (rightOperand.getImaginary() != 0.0 && rightOperand.getReal() == 0.0)
     {
-      return SUBTRACTION;
+      if (isComplex(leftOperand) || leftOperand.getImaginary() != 0.0)
+      {
+        result = leftOperand.toString() + POWER + rightOperand.toString();
+      }
+      else if (leftOperand.getReal() != 0.0)
+      {
+        String sign = (rightOperand.getImaginary() < 0.0) ? NEGATIVE : "";
+        result = String.valueOf(Math.pow(leftOperand.getReal(), 
+            Math.abs(rightOperand.getImaginary()))) + POWER + sign + IMAGINARY_UNIT;
+      }
     }
-    else if (operand.contains(ADDITION))
+    else if (rightOperand.getImaginary() == 0.0 && rightOperand.getReal() != 0.0)
     {
-      return ADDITION;
-    }
-    else if (operand.contains(DIVISION))
-    {
-      return DIVISION;
-    }
-    else if (operand.contains(MULTIPLICATION))
-    {
-      return MULTIPLICATION;
-    }
-    else if (operand.contains(POWER))
-    {
-      return POWER;
+      if (isComplex(rightOperand))
+      {
+        result = leftOperand.toString() + POWER + rightOperand.toString();
+      }
+      else
+      {
+        result = leftOperand.exponentiate(rightOperand).toString();
+      }
     }
     else
     {
-      return null;
+      result = leftOperand.toString() + POWER + rightOperand.toString();
     }
+    return result;
+  }
+  
+  /**
+   * Check if the complex number is actually complex (has a real and imaginary part).
+   * 
+   * @param number The "complex" number.
+   * @return True if it is complex, false if it isn't.
+   */
+  private static boolean isComplex(final Complex number)
+  {
+    if (number.getReal() != 0.0 && number.getImaginary() != 0.0)
+    {
+      return true;
+    }
+    return false;
   }
 }

@@ -96,10 +96,15 @@ class EvaluatorTest
   @Test
   void testEvaluatingComplexExponentiation()
   {
-    assertEquals("64𝑖", Evaluator.evaluate("4", POWER, "3𝑖"));
-    assertEquals("4𝑖^3𝑖", Evaluator.evaluate("4𝑖", POWER, "3𝑖"));
-    assertEquals("-4𝑖", Evaluator.evaluate("4𝑖", POWER, "3"));
-    assertEquals("4𝑖", Evaluator.evaluate("4𝑖", POWER, "-3"));
-    assertEquals("4𝑖^3𝑖+2", Evaluator.evaluate("4𝑖", POWER, "3𝑖+2")); // Should return as is in controller.
+    assertEquals("64.0^𝑖", Evaluator.evaluate("4", POWER, "3𝑖")); // Should return simplified.
+    assertEquals("-64.0^-𝑖", Evaluator.evaluate("-4", POWER, "-3𝑖")); // Should return simplified.
+    assertEquals("-64.0^𝑖", Evaluator.evaluate("-4", POWER, "3𝑖")); // Should return simplified.
+    assertEquals("2.0^𝑖", Evaluator.evaluate("4", POWER, "0.5𝑖")); // Should return simplified.
+    assertEquals("4.0𝑖^3.0𝑖", Evaluator.evaluate("4𝑖", POWER, "3𝑖")); // Should return as is.
+    assertEquals("-3.0𝑖", Evaluator.evaluate("3𝑖", POWER, "3"));
+    assertEquals("3.0", Evaluator.evaluate("3𝑖", POWER, "4"));
+    assertEquals("3.0𝑖", Evaluator.evaluate("3𝑖", POWER, "5"));
+    assertEquals("-3.0", Evaluator.evaluate("3𝑖", POWER, "6"));
+    assertEquals("4.0𝑖^2.0+3.0𝑖", Evaluator.evaluate("4𝑖", POWER, "3𝑖+2")); // Should return as is.
   }
 }
