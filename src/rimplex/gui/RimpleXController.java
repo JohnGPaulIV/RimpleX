@@ -307,10 +307,17 @@ public class RimpleXController implements ActionListener {
       case "CONJUGATE":
         break;
       case "SQUARE_ROOT":
+        if (display.getText().length() == 0 && !runningCalc) break;
+        display.setText("√(" + display.getText() + ")");
         break;
       case "EXPONENT":
+        if (display.getText().length() == 0 && !runningCalc) break;
+        setOperator(display, topDisplay, "^");
+        fullExpression += "^";
         break;
       case "LOGARITHM":
+        if (display.getText().length() == 0 && !runningCalc) break;
+        display.setText("log(" + display.getText() + ")");
         break;
       default:
         break;
