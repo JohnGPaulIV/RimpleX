@@ -95,10 +95,14 @@ public class RimpleXWindow extends JFrame
     fileMenu.add(exitItem);
     // Help menu
     JMenu helpMenu = new JMenu("Help");
+    JMenuItem helpItem = new JMenuItem("Help");
+    helpItem.setActionCommand("ACTION_HELP");
+    helpItem.addActionListener(controller);
     JMenuItem aboutItem = new JMenuItem("About");
     aboutItem.setActionCommand("ACTION_ABOUT");
     aboutItem.addActionListener(controller);
     helpMenu.add(aboutItem);
+    helpMenu.add(helpItem);
     menuBar.add(helpMenu);
     setJMenuBar(menuBar);
 
@@ -159,7 +163,7 @@ public class RimpleXWindow extends JFrame
     getContentPane()
         .add(new RimpleXButton("POLAR_FORM", "Polar Form", controller, 260, 250, 95, 45));
 
-    getContentPane().add(new RimpleXButton("CONJUGATE", "Z*", controller, 260, 300, 45, 45));
+    getContentPane().add(new RimpleXButton("CONJUGATE", "z̄", controller, 260, 300, 45, 45));
     getContentPane().add(new RimpleXButton("SQUARE_ROOT", "√", controller, 310, 300, 45, 45));
     getContentPane().add(new RimpleXButton("EXPONENT", "^", controller, 260, 350, 45, 45));
     getContentPane().add(new RimpleXButton("LOGARITHM", "Log", controller, 310, 350, 45, 45));

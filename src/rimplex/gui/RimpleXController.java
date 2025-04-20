@@ -1,7 +1,10 @@
 package rimplex.gui;
 
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -251,6 +254,32 @@ public class RimpleXController implements ActionListener {
         else { setOperator(display, topDisplay, "÷"); fullExpression += "/"; break; }
       case "ACTION_EXIT":
         System.exit(0);
+        break;
+      case "ACTION_HELP":
+        File htmlFile = new File("help.html");
+        try
+        {
+          Desktop.getDesktop().browse(htmlFile.toURI());
+        }
+        catch (IOException e)
+        {
+          System.out.println("HTML help file lost.");
+        }
+        catch (UnsupportedOperationException e) 
+        {
+          // on linux this will likely happen.
+          try
+          {
+            Runtime.getRuntime().exec(new String[]{
+                "xdg-open",
+                htmlFile.getAbsolutePath()
+            });
+          }
+          catch (IOException e1)
+          {
+            System.out.println("HTML help file lost.");
+          }
+        }
         break;
       case "EQUALS":
         try {
