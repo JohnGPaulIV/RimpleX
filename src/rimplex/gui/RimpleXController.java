@@ -418,52 +418,7 @@ public class RimpleXController implements ActionListener
       }
     }
   }
-//    if (equalsPresent)
-//    {
-//      if (display.getText().length() == 0) // Combining previous equation with new one.
-//      {
-//        display.setText(operator);
-//        return;
-//      }
-//      else
-//      {
-//        if (display.getText().contains("+") || display.getText().contains("-")
-//            || display.getText().contains("×") || display.getText().contains("÷"))
-//        { // Allows for multiple operators when using a previous equation.
-//          topDisplay.setText(previousResult.toString() + display.getText() + operator);
-//          display.setText("");
-//          equalsPresent = false;
-//          return;
-//        }
-//        if ((lastChar() != '.' && lastChar() != '+' && lastChar() != '-' && lastChar() != '×'
-//            && lastChar() != '÷') && !parenPresent) // Creating new equation.
-//        {
-//          topDisplay.setText(display.getText() + operator);
-//          display.setText("");
-//          equalsPresent = false;
-//          return;
-//        }
-//      }
-//    }
-//    else
-//    {
-//      if ((lastChar() != '.' && lastChar() != '+' && lastChar() != '-' && lastChar() != '×'
-//          && lastChar() != '÷') && !parenPresent)
-//      {
-//        topDisplay.setText(topDisplay.getText() + display.getText() + operator);
-//        display.setText("");
-//        return;
-//      }
-//      else
-//      {
-//        if (!display.getText().contains("+") && !display.getText().contains("-")
-//            && !display.getText().contains("×") && !display.getText().contains("÷"))
-//        {
-//          display.setText(display.getText() + operator);
-//          return;
-//        }
-//      }
-//    }
+  
     private boolean checkOperatorPlacement(final JLabel display)
     {
       char lastChar = display.getText().charAt(display.getText().length() - 1);
