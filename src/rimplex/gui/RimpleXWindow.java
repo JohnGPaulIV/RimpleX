@@ -5,6 +5,9 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +32,7 @@ import javax.swing.border.CompoundBorder;
  * 
  * This work complies with JMU Honor Code.
  */
-public class RimpleXWindow extends JFrame
+public class RimpleXWindow extends JFrame implements KeyListener
 {
   private static final long serialVersionUID = 1L;
 
@@ -106,6 +109,8 @@ public class RimpleXWindow extends JFrame
     menuBar.add(helpMenu);
     setJMenuBar(menuBar);
 
+    addKeyListener(this);
+    setFocusable(true);
     // TODO: Add Java GUI Components to the main window here
     // TODO: Set size, layout, all those goodies. Helper functions can be utilized.
   }
@@ -150,9 +155,8 @@ public class RimpleXWindow extends JFrame
     // NOTE! This "subtraction" sign is a MINUS character. Not a hyphen.
     getContentPane().add(new RimpleXButton("SUBTRACT", "−", controller, 160, 200, 45, 45));
 
-    getContentPane()
-        .add(new RimpleXButton("INVERT", "Inv", controller, 210, 200, 45, 45));
-    
+    getContentPane().add(new RimpleXButton("INVERT", "Inv", controller, 210, 200, 45, 45));
+
     getContentPane().add(new RimpleXButton("MULTIPLY", "×", controller, 160, 250, 45, 45));
     getContentPane().add(new RimpleXButton("DIVIDE", "÷", controller, 160, 300, 45, 45));
 
@@ -198,5 +202,85 @@ public class RimpleXWindow extends JFrame
 
     getContentPane().add(display);
     getContentPane().add(topDisplay);
+  }
+
+  @Override
+  public void keyTyped(KeyEvent e)
+  {
+    char keyChar = e.getKeyChar();
+    String actionCommand = null;
+
+    switch (keyChar)
+    {
+      case '1':
+        actionCommand = "ONE";
+        break;
+      case '2':
+        actionCommand = "TWO";
+        break;
+      case '3':
+        actionCommand = "THREE";
+        break;
+      case '4':
+        actionCommand = "FOUR";
+        break;
+      case '5':
+        actionCommand = "FIVE";
+        break;
+      case '6':
+        actionCommand = "SIX";
+        break;
+      case '7':
+        actionCommand = "SEVEN";
+        break;
+      case '8':
+        actionCommand = "EIGHT";
+        break;
+      case '9':
+        actionCommand = "NINE";
+        break;
+      case '0':
+        actionCommand = "ZERO";
+        break;
+      case '.':
+        actionCommand = "DECIMAL";
+        break;
+      case '+':
+        actionCommand = "ADD";
+        break;
+      case '-':
+        actionCommand = "SUBTRACT";
+        break;
+      case '*':
+        actionCommand = "MULTIPLY";
+        break;
+      case '/':
+        actionCommand = "DIVIDE";
+        break;
+      case 'i':
+        actionCommand = "UNIT";
+        break;
+    }
+    if (e.getKeyChar() == KeyEvent.VK_ENTER)
+    {
+      actionCommand = "EQUALS";
+    }
+    if (actionCommand != null)
+    {
+      ActionEvent ae = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, actionCommand);
+      controller.actionPerformed(ae);
+    }
+  }
+
+  @Override
+  public void keyPressed(KeyEvent e)
+  {
+    // Not needed
+  }
+
+  @Override
+  public void keyReleased(KeyEvent e)
+  {
+    // Not needed
   }
 }
