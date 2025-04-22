@@ -248,6 +248,10 @@ public class Complex
     }
     else
     {
+      if (copy.isBlank())
+      {
+        return new Complex(0.0, 0.0);
+      }
       return new Complex(Double.parseDouble(copy), 0.0);
     }
   }

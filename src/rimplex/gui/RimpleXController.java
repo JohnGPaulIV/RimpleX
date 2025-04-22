@@ -371,7 +371,7 @@ public class RimpleXController implements ActionListener
         }
         break;
       case "INVERT":
-        runningCalc = !runningCalc;
+        break;
       case "IMAGINARY_PART":
         break;
       case "REAL_PART":
@@ -379,6 +379,20 @@ public class RimpleXController implements ActionListener
       case "POLAR_FORM":
         break;
       case "CONJUGATE":
+        if (parenClosed || (!parenPresent && !parenClosed && !display.getText().isEmpty()))
+        {
+          String evaluated = Evaluator.evaluate(display.getText(), "Conjugate", "");
+          topDisplay.setText(display.getText() + " = " + evaluated);
+          display.setText("");
+          parenClosed = false;
+          equalsPresent = true;
+        }
+        else if (equalsPresent)
+        {
+          Complex complexNum = Complex.parse(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 1));
+          complexNum.conjugate();
+          topDisplay.setText(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 2) + " = " + complexNum.toString());
+        }
         break;
       case "SQUARE_ROOT":
         if (display.getText().length() == 0 && !runningCalc)
