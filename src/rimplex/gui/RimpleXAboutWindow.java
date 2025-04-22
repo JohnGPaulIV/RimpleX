@@ -24,40 +24,54 @@ public class RimpleXAboutWindow extends JFrame
   public RimpleXAboutWindow() throws IOException
   {
     setTitle("About RimpleX");
-    setSize(400, 250);
+    setSize(400, 275);
     setLocationRelativeTo(null);
     setLayout(null);
     setResizable(false);
 
     try
     {
-      // Add RimpleX Logo to the About Window.
-      BufferedImage myPicture = ImageIO.read(new File("logoRimplex.png"));
+      // Add title and RimpleX icon to the About Window.
+      JLabel titleLabel = new JLabel("About", JLabel.CENTER);
+      titleLabel.setFont(new Font("Sans-Serif", Font.PLAIN, 16));
+      titleLabel.setBounds(0, 10, 400, 20);
+      add(titleLabel);
 
-      int scaledWidth = myPicture.getWidth() / 2;
-      int scaledHeight = myPicture.getHeight() / 2;
+      BufferedImage icon = ImageIO.read(new File("iconRimplex.png"));
 
-      BufferedImage scaledImage = new BufferedImage(scaledWidth, scaledHeight,
+      int iconWidth = icon.getWidth() / 2;
+      int iconHeight = icon.getHeight() / 2;
+
+      BufferedImage scaledicon = new BufferedImage(iconWidth, iconHeight,
           BufferedImage.TYPE_INT_ARGB);
-      Graphics2D g2d = scaledImage.createGraphics();
+      Graphics2D g2d = scaledicon.createGraphics();
       g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
           RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-      g2d.drawImage(myPicture, 0, 0, scaledWidth, scaledHeight, null);
+      g2d.drawImage(icon, 0, 0, iconWidth, iconHeight, null);
       g2d.dispose();
 
-      JLabel picLabel = new JLabel(new ImageIcon(scaledImage));
-      picLabel.setBounds(10, 10, scaledWidth, scaledHeight);
-      getContentPane().add(picLabel);
+      JLabel iconLabel = new JLabel(new ImageIcon(scaledicon));
+      iconLabel.setBounds((400 - iconWidth) / 2, 35, iconWidth, iconHeight);
+      add(iconLabel);
+
+      // Add version label
+      JLabel versionLabel = new JLabel("Rimplex v1.0", JLabel.CENTER);
+      versionLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+      versionLabel.setBounds(0, 35 + iconHeight, 400, 20);
+      add(versionLabel);
 
       // About description
-      String aboutText = "TODO: Add About Description";
+      String description = "<html><div style='text-align: center;'>"
+          + "Rimplex is a modern, easy-to-use calculator<br>"
+          + "that works with real, imaginary, and complex numbers.<br>"
+          + "It is a product of Sagacious Media that was<br>"
+          + "developed by: Benjamin Bonnell, Kalani Johnson,<br>"
+          + "Sofia Miller, John Paul, and Joseph Pogoretskiy." + "</div></html>";
 
-      JLabel aboutLabel = new JLabel("<html>" + aboutText.replace("\n", "<br>") + "</html>");
-      aboutLabel.setFont(new Font("Sans-Serif", Font.PLAIN, 14));
-      aboutLabel.setBounds(10, scaledHeight + 20, 365, 120);
-      aboutLabel.setBackground(getContentPane().getBackground());
-
-      getContentPane().add(aboutLabel);
+      JLabel descLabel = new JLabel(description, JLabel.CENTER);
+      descLabel.setFont(new Font("Sans-Serif", Font.PLAIN, 14));
+      descLabel.setBounds(10, 35 + iconHeight + 25, 360, 120);
+      add(descLabel);
 
     }
     catch (Exception e)
