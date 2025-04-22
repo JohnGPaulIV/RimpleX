@@ -20,9 +20,12 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
+
+import utilities.Complex;
 
 /**
  * The main window for the RimpleX application.
@@ -96,6 +99,23 @@ public class RimpleXWindow extends JFrame implements KeyListener
     exitItem.setActionCommand("ACTION_EXIT");
     exitItem.addActionListener(controller);
     fileMenu.add(exitItem);
+    // View menu
+    JMenu viewMenu = new JMenu("View");
+    JMenuItem complexPlaneItem = new JMenuItem("Complex Plane");
+    complexPlaneItem.addActionListener(e -> {
+      Complex resultComplex = controller.getResult();
+      if (resultComplex != null)
+      {
+        new ComplexPlaneWindow(resultComplex);
+      }
+      else
+      {
+        JOptionPane.showMessageDialog(this, "No result to visualize.", "Error",
+            JOptionPane.ERROR_MESSAGE);
+      }
+    });
+    viewMenu.add(complexPlaneItem);
+    menuBar.add(viewMenu);
     // Help menu
     JMenu helpMenu = new JMenu("Help");
     JMenuItem helpItem = new JMenuItem("Help");
