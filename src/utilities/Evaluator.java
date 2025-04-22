@@ -33,21 +33,57 @@ public final class Evaluator
   private static String checkOperators(final String operand)
   {
     // Fix this to do operations in order from left to right (PEMDAS)
-    if (operand.contains(SUBTRACTION))
+    if (operand.contains(SUBTRACTION) || operand.contains(ADDITION))
     {
-      return SUBTRACTION;
+      boolean hasSubtraction = operand.contains(SUBTRACTION);
+      boolean hasAddition = operand.contains(ADDITION);
+      if (hasAddition && hasSubtraction)
+      {
+        int indexOfSubtraction = operand.indexOf(SUBTRACTION);
+        int indexOfAddition = operand.indexOf(ADDITION);
+        if (indexOfSubtraction > indexOfAddition)
+        {
+          return SUBTRACTION;
+        }
+        else
+        {
+          return ADDITION;
+        }
+      }
+      else if (hasAddition)
+      {
+        return ADDITION;
+      }
+      else
+      {
+        return SUBTRACTION;
+      }
     }
-    else if (operand.contains(ADDITION))
+    else if (operand.contains(DIVISION) || operand.contains(MULTIPLICATION))
     {
-      return ADDITION;
-    }
-    else if (operand.contains(DIVISION))
-    {
-      return DIVISION;
-    }
-    else if (operand.contains(MULTIPLICATION))
-    {
-      return MULTIPLICATION;
+      boolean hasMultiplication = operand.contains(MULTIPLICATION);
+      boolean hasDivision = operand.contains(DIVISION);
+      if (hasMultiplication && hasDivision)
+      {
+        int indexOfMultiplication = operand.indexOf(MULTIPLICATION);
+        int indexOfDivision = operand.indexOf(DIVISION);
+        if (indexOfMultiplication > indexOfDivision)
+        {
+          return MULTIPLICATION;
+        }
+        else
+        {
+          return DIVISION;
+        }
+      }
+      else if (hasMultiplication)
+      {
+        return MULTIPLICATION;
+      }
+      else
+      {
+        return DIVISION;
+      }
     }
     else if (operand.contains(POWER))
     {
