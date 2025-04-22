@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -40,13 +42,16 @@ public class RimpleXController implements ActionListener
   private boolean equalsPresent = false;
   private String fullExpression;
   private boolean runningCalc = true;
+  
+  private ResourceBundle bundle;
 
   /**
    * Constructor for a RimpleXController.
    */
-  public RimpleXController()
+  public RimpleXController(Locale locale)
   {
     super();
+    this.bundle = ResourceBundle.getBundle("rimplex.gui.languages.Strings", locale);
   }
 
   @Override
