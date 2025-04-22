@@ -138,22 +138,7 @@ public final class Evaluator
     // Create new Complex numbers based on presence of imaginary units.
     Complex leftComplex;
     Complex rightComplex;
-//    if (leftResult.contains(IMAGINARY_UNIT))
-//    {
-//      leftComplex = new Complex(0.0, Double.parseDouble(leftResult.replace(IMAGINARY_UNIT, "")));
-//    }
-//    else
-//    {
-//      leftComplex = new Complex(Double.parseDouble(leftResult), 0.0);
-//    }
-//    if (rightResult.contains(IMAGINARY_UNIT))
-//    {
-//      rightComplex = new Complex(0.0, Double.parseDouble(rightResult.replace(IMAGINARY_UNIT, "")));
-//    }
-//    else
-//    {
-//      rightComplex = new Complex(Double.parseDouble(rightResult), 0.0);
-//    }
+
     leftComplex = Complex.parse(leftResult);
     rightComplex = Complex.parse(rightResult);
     

@@ -201,6 +201,8 @@ public class RimpleXController implements ActionListener
         if (display.getText().length() == 0)
         {
           display.setText(display.getText() + "(");
+          topDisplay.setText("");
+          equalsPresent = false;
           parenPresent = true;
         }
         break;
