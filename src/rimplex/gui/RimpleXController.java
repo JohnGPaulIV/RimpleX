@@ -390,6 +390,21 @@ public class RimpleXController implements ActionListener
         }
         break;
       case "REAL_PART":
+        if (parenClosed || (!parenPresent && !parenClosed && !display.getText().isEmpty()))
+        {
+          String evaluated = Evaluator.evaluate(display.getText(), "", "");
+          Complex real = new Complex(Complex.parse(evaluated).getReal(), 0.0);
+          topDisplay.setText(display.getText() + " = " + real.toString());
+          display.setText("");
+          parenClosed = false;
+          equalsPresent = true;
+        }
+        else if (equalsPresent)
+        {
+          Complex complexNum = Complex.parse(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 1));
+          Complex real = new Complex(complexNum.getReal(), 0.0);
+          topDisplay.setText(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 2) + " = " + real.toString());
+        }
         break;
       case "POLAR_FORM":
         break;
