@@ -32,7 +32,6 @@ public final class Evaluator
    */
   private static String checkOperators(final String operand)
   {
-    // Fix this to do operations in order from left to right (PEMDAS)
     if (operand.contains(SUBTRACTION) || operand.contains(ADDITION))
     {
       boolean hasSubtraction = operand.contains(SUBTRACTION);

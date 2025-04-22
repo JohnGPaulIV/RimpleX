@@ -12,6 +12,8 @@ import javax.swing.SwingUtilities;
  * General structure taken from Dr. Bernstein's Serialization Lab:
  * (https://w3.cs.jmu.edu/bernstdh/web/common/labs/experience_serialization/tempz/index.php)
  * 
+ * @author Joseph Pogoretskiy
+ * 
  * This work complies with JMU Honor Code.
  */
 public class RimpleX implements Runnable

@@ -30,6 +30,8 @@ import javax.swing.border.CompoundBorder;
  * General structure taken from Dr. Bernstein's Serialization Lab:
  * (https://w3.cs.jmu.edu/bernstdh/web/common/labs/experience_serialization/tempz/index.php)
  * 
+ * @author Joseph Pogoretskiy, Benjamin Bonnell, Kalani Johnson, John Paul, Sofia Miller
+ * 
  * This work complies with JMU Honor Code.
  */
 public class RimpleXWindow extends JFrame implements KeyListener
@@ -111,8 +113,6 @@ public class RimpleXWindow extends JFrame implements KeyListener
 
     addKeyListener(this);
     setFocusable(true);
-    // TODO: Add Java GUI Components to the main window here
-    // TODO: Set size, layout, all those goodies. Helper functions can be utilized.
   }
 
   /**

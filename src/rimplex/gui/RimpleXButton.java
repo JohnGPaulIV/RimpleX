@@ -9,6 +9,8 @@ import javax.swing.SwingConstants;
 /**
  * Represents a button on the RimpleX application with a set text, action command, and bounds.
  * 
+ * @author Joseph Pogoretskiy, Benjamin Bonnell
+ * 
  * This work complies with JMU Honor Code.
  */
 public class RimpleXButton extends JButton
