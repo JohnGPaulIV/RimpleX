@@ -74,12 +74,22 @@ public class RimpleXController implements ActionListener
         {
           break;
         }
+        if (equalsPresent)
+        {
+          topDisplay.setText("");
+          equalsPresent = false;
+        }
         display.setText(display.getText() + "1");
         break;
       case "TWO":
         if (!checkDigitPlacement(display))
         {
           break;
+        }
+        if (equalsPresent)
+        {
+          topDisplay.setText("");
+          equalsPresent = false;
         }
         display.setText(display.getText() + "2");
         break;
@@ -88,12 +98,22 @@ public class RimpleXController implements ActionListener
         {
           break;
         }
+        if (equalsPresent)
+        {
+          topDisplay.setText("");
+          equalsPresent = false;
+        }
         display.setText(display.getText() + "3");
         break;
       case "FOUR":
         if (!checkDigitPlacement(display))
         {
           break;
+        }
+        if (equalsPresent)
+        {
+          topDisplay.setText("");
+          equalsPresent = false;
         }
         display.setText(display.getText() + "4");
         break;
@@ -102,12 +122,22 @@ public class RimpleXController implements ActionListener
         {
           break;
         }
+        if (equalsPresent)
+        {
+          topDisplay.setText("");
+          equalsPresent = false;
+        }
         display.setText(display.getText() + "5");
         break;
       case "SIX":
         if (!checkDigitPlacement(display))
         {
           break;
+        }
+        if (equalsPresent)
+        {
+          topDisplay.setText("");
+          equalsPresent = false;
         }
         display.setText(display.getText() + "6");
         break;
@@ -116,12 +146,22 @@ public class RimpleXController implements ActionListener
         {
           break;
         }
+        if (equalsPresent)
+        {
+          topDisplay.setText("");
+          equalsPresent = false;
+        }
         display.setText(display.getText() + "7");
         break;
       case "EIGHT":
         if (!checkDigitPlacement(display))
         {
           break;
+        }
+        if (equalsPresent)
+        {
+          topDisplay.setText("");
+          equalsPresent = false;
         }
         display.setText(display.getText() + "8");
         break;
@@ -130,12 +170,22 @@ public class RimpleXController implements ActionListener
         {
           break;
         }
+        if (equalsPresent)
+        {
+          topDisplay.setText("");
+          equalsPresent = false;
+        }
         display.setText(display.getText() + "9");
         break;
       case "ZERO":
         if (!checkDigitPlacement(display))
         {
           break;
+        }
+        if (equalsPresent)
+        {
+          topDisplay.setText("");
+          equalsPresent = false;
         }
         display.setText(display.getText() + "0");
         break;
@@ -201,8 +251,11 @@ public class RimpleXController implements ActionListener
         if (display.getText().length() == 0)
         {
           display.setText(display.getText() + "(");
-          topDisplay.setText("");
-          equalsPresent = false;
+          if (equalsPresent)
+          {
+            topDisplay.setText("");
+            equalsPresent = false;
+          }
           parenPresent = true;
         }
         break;
