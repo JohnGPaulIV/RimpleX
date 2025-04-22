@@ -20,6 +20,8 @@ import utilities.Evaluator;
  * General structure taken from Dr. Bernstein's Serialization Lab:
  * (https://w3.cs.jmu.edu/bernstdh/web/common/labs/experience_serialization/tempz/index.php)
  *
+ *  @author Joseph Pogoretskiy, Benjamin Bonnell, Kalani Johnson, John Paul, Sofia Miller
+ *
  * This work complies with JMU Honor Code.
  */
 public class RimpleXController implements ActionListener
@@ -41,6 +43,8 @@ public class RimpleXController implements ActionListener
   private String fullExpression;
   private boolean runningCalc = true;
   private Complex result;
+  private boolean polarFormEnabled = false;
+  private Complex polarizedComplex;
 
   /**
    * Constructor for a RimpleXController.
@@ -281,6 +285,8 @@ public class RimpleXController implements ActionListener
         topDisplay.setText("");
         display.setText("");
         equalsPresent = false;
+        polarFormEnabled = false;
+        polarizedComplex = null;
         parenPresent = false;
         parenClosed = false;
         break;
@@ -332,10 +338,29 @@ public class RimpleXController implements ActionListener
           }
         }
         break;
+      case "ACTION_ABOUT":
+        try
+        {
+          RimpleXAboutWindow aboutWindow = new RimpleXAboutWindow();
+          aboutWindow.setVisible(true);
+        }
+        catch (IOException e)
+        {
+          e.printStackTrace();
+        }
+        break;
       case "EQUALS":
         if (!parenPresent && checkOperatorPlacement(display))
         {
-          String leftOperand = topDisplay.getText().substring(0, topDisplay.getText().length() - 1);
+          String leftOperand;
+          if (polarFormEnabled)
+          {
+            leftOperand = polarizedComplex.toString();
+          }
+          else
+          {
+            leftOperand = topDisplay.getText().substring(0, topDisplay.getText().length() - 1);
+          }
           String operator = topDisplay.getText().substring(topDisplay.getText().length() - 1);
           String rightOperand = display.getText();
 
@@ -347,9 +372,22 @@ public class RimpleXController implements ActionListener
           String evaluation = Evaluator.evaluate(leftOperand, operator, rightOperand);
           result = Complex.parse(evaluation);
           topDisplay.setText(leftOperand + operator + " " + rightOperand + " = " + evaluation);
+
+          if (polarFormEnabled)
+          {
+            Complex evaluated = Complex.parse(evaluation);
+            String polarForm = evaluated.getPolarForm();
+            topDisplay.setText(polarizedComplex.getPolarForm() + " " + operator + " " + rightOperand + " = " + polarForm);
+            polarizedComplex = evaluated;
+          }
+          else
+          {
+            topDisplay.setText(leftOperand + operator + " " + rightOperand + " = " + evaluation);
+          }
           display.setText("");
 
           equalsPresent = true;
+          parenClosed = false;
         }
         break;
       case "UNIT":
@@ -359,14 +397,100 @@ public class RimpleXController implements ActionListener
         }
         break;
       case "INVERT":
-        runningCalc = !runningCalc;
+        if (parenClosed || (!parenPresent && !parenClosed && !display.getText().isEmpty()))
+        {
+          String evaluated = Evaluator.evaluate(display.getText(), "Invert", "");
+          topDisplay.setText(display.getText() + " = " + evaluated);
+          display.setText("");
+          parenClosed = false;
+          equalsPresent = true;
+        }
+        else if (equalsPresent)
+        {
+          Complex complexNum = Complex.parse(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 1));
+          complexNum.inverse();
+          topDisplay.setText(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 2) + " = " + complexNum.toString());
+        }
+        break;
       case "IMAGINARY_PART":
+        if (parenClosed || (!parenPresent && !parenClosed && !display.getText().isEmpty()))
+        {
+          String evaluated = Evaluator.evaluate(display.getText(), "", "");
+          Complex imaginary = new Complex(0.0, Complex.parse(evaluated).getImaginary());
+          topDisplay.setText(display.getText() + " = " + imaginary.toString());
+          display.setText("");
+          parenClosed = false;
+          equalsPresent = true;
+        }
+        else if (equalsPresent)
+        {
+          Complex complexNum = Complex.parse(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 1));
+          Complex imaginary = new Complex(0.0, complexNum.getImaginary());
+          topDisplay.setText(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 2) + " = " + imaginary.toString());
+        }
         break;
       case "REAL_PART":
+        if (parenClosed || (!parenPresent && !parenClosed && !display.getText().isEmpty()))
+        {
+          String evaluated = Evaluator.evaluate(display.getText(), "", "");
+          Complex real = new Complex(Complex.parse(evaluated).getReal(), 0.0);
+          topDisplay.setText(display.getText() + " = " + real.toString());
+          display.setText("");
+          parenClosed = false;
+          equalsPresent = true;
+        }
+        else if (equalsPresent)
+        {
+          Complex complexNum = Complex.parse(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 1));
+          Complex real = new Complex(complexNum.getReal(), 0.0);
+          topDisplay.setText(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 2) + " = " + real.toString());
+        }
         break;
       case "POLAR_FORM":
+        if (parenClosed || (!parenPresent && !parenClosed && !display.getText().isEmpty()))
+        {
+          if (!polarFormEnabled)
+          {
+            String evaluated = Evaluator.evaluate(display.getText(), "", "");
+            polarizedComplex = Complex.parse(evaluated);
+            topDisplay.setText(display.getText() + " = " + polarizedComplex.getPolarForm());
+            display.setText("");
+            parenClosed = false;
+            equalsPresent = true;
+            polarFormEnabled = true;
+          }
+        }
+        else if (equalsPresent)
+        {
+          if (!polarFormEnabled)
+          {
+            polarizedComplex = Complex.parse(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 1));
+            String polarForm = polarizedComplex.getPolarForm();
+            topDisplay.setText(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 2) + " = " + polarForm);
+            polarFormEnabled = true;
+          }
+          else
+          {
+            topDisplay.setText(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 2) + " = " + polarizedComplex.toString());
+            polarFormEnabled = false;
+          }
+        }
         break;
       case "CONJUGATE":
+        if (parenClosed || (!parenPresent && !parenClosed && !display.getText().isEmpty()))
+        {
+          String evaluated = Evaluator.evaluate(display.getText(), "Conjugate", "");
+          topDisplay.setText(display.getText() + " = " + evaluated);
+          display.setText("");
+          parenClosed = false;
+          equalsPresent = true;
+        }
+        else if (equalsPresent)
+        {
+          Complex complexNum = Complex.parse(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 1));
+          complexNum.conjugate();
+          topDisplay.setText(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 2) + " = " + complexNum.toString());
+        }
         break;
       case "SQUARE_ROOT":
         if (display.getText().length() == 0 && !runningCalc)

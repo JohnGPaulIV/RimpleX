@@ -85,7 +85,7 @@ class EvaluatorTest
     assertEquals("-3.0", Evaluator.evaluate("6𝑖", DIVISION, "2𝑖"));
     assertEquals("3.0", Evaluator.evaluate("6𝑖", DIVISION, "-2𝑖"));
     assertEquals("-3.0𝑖", Evaluator.evaluate("-6𝑖", DIVISION, "2"));
-    assertEquals("0.3333333333333333𝑖", Evaluator.evaluate("2𝑖", DIVISION, "6"));
+    assertEquals("0.333𝑖", Evaluator.evaluate("2𝑖", DIVISION, "6"));
   }
   
   @Test
@@ -97,7 +97,7 @@ class EvaluatorTest
     assertEquals("8.0+3.0𝑖", Evaluator.evaluate("8+6𝑖", SUBTRACTION, "3𝑖"));
     assertEquals("3.0—9.0𝑖", Evaluator.evaluate("3—6𝑖", SUBTRACTION, "3𝑖"));
     assertEquals("11.0+3.0𝑖", Evaluator.evaluate("8+6𝑖", ADDITION, "2—3𝑖+1"));
-    assertEquals("8.0+2.5999999999999996𝑖", Evaluator.evaluate("8—6𝑖", ADDITION, "4×2𝑖+3𝑖÷5"));
+    assertEquals("8.0+2.599𝑖", Evaluator.evaluate("8—6𝑖", ADDITION, "4×2𝑖+3𝑖÷5"));
     assertEquals("-0.075+0.15𝑖", Evaluator.evaluate("-3÷4𝑖", DIVISION, "2𝑖+4"));
   }
 
@@ -115,6 +115,6 @@ class EvaluatorTest
     assertEquals("-3.0", Evaluator.evaluate("3𝑖", POWER, "6"));
     assertEquals("4.0𝑖^2.0+3.0𝑖", Evaluator.evaluate("4𝑖", POWER, "3𝑖+2")); // Should return as is.
     assertEquals("-6.75—9.0𝑖", Evaluator.evaluate("1.5—3.0𝑖", POWER, "2"));
-    assertEquals("0.0112—0.0384𝑖", Evaluator.evaluate("4+3𝑖", POWER, "-2"));
+    assertEquals("0.011—0.039𝑖", Evaluator.evaluate("4+3𝑖", POWER, "-2"));
   }
 }

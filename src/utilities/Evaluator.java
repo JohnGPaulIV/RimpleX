@@ -9,6 +9,8 @@ package utilities;
  */
 public final class Evaluator
 {
+  private static final String CONJUGATE = "Conjugate";
+  private static final String INVERT = "Invert";
   private static final String SUBTRACTION = "—";
   private static final String ADDITION = "+";
   private static final String MULTIPLICATION = "×";
@@ -32,7 +34,6 @@ public final class Evaluator
    */
   private static String checkOperators(final String operand)
   {
-    // Fix this to do operations in order from left to right (PEMDAS)
     if (operand.contains(SUBTRACTION) || operand.contains(ADDITION))
     {
       boolean hasSubtraction = operand.contains(SUBTRACTION);
@@ -159,8 +160,15 @@ public final class Evaluator
       case POWER:
         result = evaluatePower(leftComplex, rightComplex);
         break;
+      case CONJUGATE:
+        leftComplex.conjugate();
+        result = leftComplex.toString();
+        break;
+      case INVERT:
+        leftComplex.inverse();
+        result = leftComplex.toString();
       default:
-        result = "Error"; // For debugging
+        result = leftComplex.toString();
         break;
     }
     return result;

@@ -50,6 +50,8 @@ public class ComplexPlaneWindow extends JFrame
       g.setColor(Color.BLACK);
       g.drawLine(getWidth() / 2, 0, getWidth() / 2, getHeight());
       g.drawLine(0, getHeight() / 2, getWidth(), getHeight() / 2);
+      g.drawString("Re", getWidth() - 30, getHeight() / 2 - 5);
+      g.drawString("Im", getWidth() / 2 + 5, 15);
       g.setColor(Color.RED);
       g.fillOval(getWidth() / 2 + x - 5, getHeight() / 2 - y - 5, 10, 10);
       g.setColor(Color.BLACK);
