@@ -164,7 +164,7 @@ public final class Evaluator
         result = leftComplex.toString();
         break;
       default:
-        result = "Error"; // For debugging
+        result = leftComplex.toString();
         break;
     }
     return result;

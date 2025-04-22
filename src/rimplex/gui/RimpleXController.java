@@ -373,6 +373,21 @@ public class RimpleXController implements ActionListener
       case "INVERT":
         break;
       case "IMAGINARY_PART":
+        if (parenClosed || (!parenPresent && !parenClosed && !display.getText().isEmpty()))
+        {
+          String evaluated = Evaluator.evaluate(display.getText(), "", "");
+          Complex imaginary = new Complex(0.0, Complex.parse(evaluated).getImaginary());
+          topDisplay.setText(display.getText() + " = " + imaginary.toString());
+          display.setText("");
+          parenClosed = false;
+          equalsPresent = true;
+        }
+        else if (equalsPresent)
+        {
+          Complex complexNum = Complex.parse(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 1));
+          Complex imaginary = new Complex(0.0, complexNum.getImaginary());
+          topDisplay.setText(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 2) + " = " + imaginary.toString());
+        }
         break;
       case "REAL_PART":
         break;
