@@ -114,5 +114,7 @@ class EvaluatorTest
     assertEquals("3.0𝑖", Evaluator.evaluate("3𝑖", POWER, "5"));
     assertEquals("-3.0", Evaluator.evaluate("3𝑖", POWER, "6"));
     assertEquals("4.0𝑖^2.0+3.0𝑖", Evaluator.evaluate("4𝑖", POWER, "3𝑖+2")); // Should return as is.
+    assertEquals("-6.75—9.0𝑖", Evaluator.evaluate("1.5—3.0𝑖", POWER, "2"));
+    assertEquals("0.0112—0.0384𝑖", Evaluator.evaluate("4+3𝑖", POWER, "-2"));
   }
 }

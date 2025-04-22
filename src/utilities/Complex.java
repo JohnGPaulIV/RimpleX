@@ -105,6 +105,28 @@ public class Complex
         }
       }
     }
+    else
+    {
+      if (other.imaginary == 0.0)
+      {
+        if (other.real == 0.0)
+        {
+          result = new Complex(1.0, 0.0);
+        }
+        else if (other.real % 1 == 0)
+        {
+          result = new Complex(this.real, this.imaginary);
+          for (int i = 1; i < (int) Math.abs(other.real); i++)
+          {
+            result = result.multiply(this);
+          }
+          if (other.real < 0.0)
+          {
+            result.inverse();
+          }
+        }
+      }
+    }
     return result;
   }
   
