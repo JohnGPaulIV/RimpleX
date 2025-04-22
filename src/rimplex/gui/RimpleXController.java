@@ -30,7 +30,7 @@ public class RimpleXController implements ActionListener
   private static final String DIVISION = "÷";
   private static final String NEGATIVE = "-";
   private static final String POWER = "^";
-  
+
   @SuppressWarnings("unused")
   private RimpleXWindow window;
   private JLabel topDisplay;
@@ -331,23 +331,34 @@ public class RimpleXController implements ActionListener
           }
         }
         break;
+      case "ACTION_ABOUT":
+        try
+        {
+          RimpleXAboutWindow aboutWindow = new RimpleXAboutWindow();
+          aboutWindow.setVisible(true);
+        }
+        catch (IOException e)
+        {
+          e.printStackTrace();
+        }
+        break;
       case "EQUALS":
         if (!parenPresent && checkOperatorPlacement(display))
         {
           String leftOperand = topDisplay.getText().substring(0, topDisplay.getText().length() - 1);
           String operator = topDisplay.getText().substring(topDisplay.getText().length() - 1);
           String rightOperand = display.getText();
-          
+
           // For debugging:
-//          System.out.println("leftOperand: " + leftOperand);
-//          System.out.println("operator: " + operator);
-//          System.out.println("rightOperand: " + rightOperand);
-          
+          // System.out.println("leftOperand: " + leftOperand);
+          // System.out.println("operator: " + operator);
+          // System.out.println("rightOperand: " + rightOperand);
+
           String evaluation = Evaluator.evaluate(leftOperand, operator, rightOperand);
-          
+
           topDisplay.setText(leftOperand + operator + " " + rightOperand + " = " + evaluation);
           display.setText("");
-          
+
           equalsPresent = true;
         }
         break;
@@ -441,7 +452,8 @@ public class RimpleXController implements ActionListener
     String topDisplayValue = topDisplay.getText();
     if (equalsPresent)
     {
-      topDisplay.setText(topDisplayValue.substring(topDisplayValue.indexOf("=") + 2) + " " + operator);
+      topDisplay
+          .setText(topDisplayValue.substring(topDisplayValue.indexOf("=") + 2) + " " + operator);
       equalsPresent = false;
     }
     else
@@ -450,10 +462,11 @@ public class RimpleXController implements ActionListener
       {
         if (!topDisplay.getText().isBlank())
         {
-          String leftOperand = topDisplay.getText().replace(" ", "").substring(0, topDisplay.getText().length() - 2);
+          String leftOperand = topDisplay.getText().replace(" ", "").substring(0,
+              topDisplay.getText().length() - 2);
           String prevOperator = topDisplay.getText().substring(topDisplay.getText().length() - 1);
           String rightOperand = display.getText();
-          
+
           String evaluation = Evaluator.evaluate(leftOperand, prevOperator, rightOperand);
           topDisplay.setText(evaluation + " " + operator);
         }
@@ -473,14 +486,15 @@ public class RimpleXController implements ActionListener
       }
     }
   }
-  
-    private boolean checkOperatorPlacement(final JLabel display)
+
+  private boolean checkOperatorPlacement(final JLabel display)
+  {
+    char lastChar = display.getText().charAt(display.getText().length() - 1);
+    if (lastChar == '+' || lastChar == '—' || lastChar == '^' || lastChar == '×' || lastChar == '÷'
+        || lastChar == '÷')
     {
-      char lastChar = display.getText().charAt(display.getText().length() - 1);
-      if (lastChar == '+' || lastChar == '—' || lastChar == '^' || lastChar == '×' || lastChar == '÷' || lastChar == '÷')
-      {
-        return false;
-      }
-      return true;
+      return false;
     }
+    return true;
   }
+}
