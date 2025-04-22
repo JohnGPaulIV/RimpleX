@@ -42,6 +42,8 @@ public class RimpleXController implements ActionListener
   private boolean equalsPresent = false;
   private String fullExpression;
   private boolean runningCalc = true;
+  private boolean polarFormEnabled = false;
+  private Complex polarizedComplex;
 
   /**
    * Constructor for a RimpleXController.
@@ -282,6 +284,8 @@ public class RimpleXController implements ActionListener
         topDisplay.setText("");
         display.setText("");
         equalsPresent = false;
+        polarFormEnabled = false;
+        polarizedComplex = null;
         parenPresent = false;
         parenClosed = false;
         break;
@@ -347,7 +351,15 @@ public class RimpleXController implements ActionListener
       case "EQUALS":
         if (!parenPresent && checkOperatorPlacement(display))
         {
-          String leftOperand = topDisplay.getText().substring(0, topDisplay.getText().length() - 1);
+          String leftOperand;
+          if (polarFormEnabled)
+          {
+            leftOperand = polarizedComplex.toString();
+          }
+          else
+          {
+            leftOperand = topDisplay.getText().substring(0, topDisplay.getText().length() - 1);
+          }
           String operator = topDisplay.getText().substring(topDisplay.getText().length() - 1);
           String rightOperand = display.getText();
 
@@ -358,10 +370,21 @@ public class RimpleXController implements ActionListener
 
           String evaluation = Evaluator.evaluate(leftOperand, operator, rightOperand);
 
-          topDisplay.setText(leftOperand + operator + " " + rightOperand + " = " + evaluation);
+          if (polarFormEnabled)
+          {
+            Complex evaluated = Complex.parse(evaluation);
+            String polarForm = evaluated.getPolarForm();
+            topDisplay.setText(polarizedComplex.getPolarForm() + " " + operator + " " + rightOperand + " = " + polarForm);
+            polarizedComplex = evaluated;
+          }
+          else
+          {
+            topDisplay.setText(leftOperand + operator + " " + rightOperand + " = " + evaluation);
+          }
           display.setText("");
 
           equalsPresent = true;
+          parenClosed = false;
         }
         break;
       case "UNIT":
@@ -421,6 +444,34 @@ public class RimpleXController implements ActionListener
         }
         break;
       case "POLAR_FORM":
+        if (parenClosed || (!parenPresent && !parenClosed && !display.getText().isEmpty()))
+        {
+          if (!polarFormEnabled)
+          {
+            String evaluated = Evaluator.evaluate(display.getText(), "", "");
+            polarizedComplex = Complex.parse(evaluated);
+            topDisplay.setText(display.getText() + " = " + polarizedComplex.getPolarForm());
+            display.setText("");
+            parenClosed = false;
+            equalsPresent = true;
+            polarFormEnabled = true;
+          }
+        }
+        else if (equalsPresent)
+        {
+          if (!polarFormEnabled)
+          {
+            polarizedComplex = Complex.parse(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 1));
+            String polarForm = polarizedComplex.getPolarForm();
+            topDisplay.setText(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 2) + " = " + polarForm);
+            polarFormEnabled = true;
+          }
+          else
+          {
+            topDisplay.setText(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 2) + " = " + polarizedComplex.toString());
+            polarFormEnabled = false;
+          }
+        }
         break;
       case "CONJUGATE":
         if (parenClosed || (!parenPresent && !parenClosed && !display.getText().isEmpty()))
