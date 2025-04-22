@@ -10,6 +10,7 @@ package utilities;
 public final class Evaluator
 {
   private static final String CONJUGATE = "Conjugate";
+  private static final String INVERT = "Invert";
   private static final String SUBTRACTION = "—";
   private static final String ADDITION = "+";
   private static final String MULTIPLICATION = "×";
@@ -163,6 +164,9 @@ public final class Evaluator
         leftComplex.conjugate();
         result = leftComplex.toString();
         break;
+      case INVERT:
+        leftComplex.inverse();
+        result = leftComplex.toString();
       default:
         result = leftComplex.toString();
         break;
