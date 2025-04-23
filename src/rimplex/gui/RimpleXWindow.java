@@ -22,6 +22,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 
@@ -35,11 +36,25 @@ import utilities.Complex;
  * 
  * @author Joseph Pogoretskiy, Benjamin Bonnell, Kalani Johnson, John Paul, Sofia Miller
  * 
- * This work complies with JMU Honor Code.
+ *         This work complies with JMU Honor Code.
  */
 public class RimpleXWindow extends JFrame implements KeyListener
 {
   private static final long serialVersionUID = 1L;
+  private static final int WINDOW_WIDTH = 400;
+  private static final int WINDOW_HEIGHT = 460;
+  private boolean isExpanded = false;
+  private SessionHistoryDropoutBar dropoutBar;
+
+  private Timer animationTimer;
+  private int targetWidth = WINDOW_WIDTH;
+  private int targetButtonX = 365;
+  // due to integer division, history width must be even.
+  private static final int HISTORY_WIDTH = 224; 
+  private static final int EXPANDED_WIDTH = WINDOW_WIDTH + HISTORY_WIDTH;
+  private static final int ANIMATION_DURATION = 200;
+  private static final int ANIMATION_STEPS = 20;
+  private JLabel sessionHistory;
 
   private RimpleXController controller;
 
@@ -62,8 +77,12 @@ public class RimpleXWindow extends JFrame implements KeyListener
     Container contentPane = this.getContentPane();
     contentPane.setLayout(null);
 
+    setupAnimationTimer();
+    setupSessionHistoryDropout();
     setupSoftKeyboard();
+    setupSessionHistoryDisplay();
     setupDisplay();
+    sessionHistory.setVisible(isExpanded);
 
     BufferedImage myPicture = ImageIO.read(new File("logoRimplex.png"));
 
@@ -84,7 +103,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
     picLabel.setBounds(10, 10, scaledWidth, scaledHeight);
     getContentPane().add(picLabel);
 
-    this.setSize(375, 460);
+    this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     this.setResizable(false);
 
     // Adding menu bar
@@ -133,6 +152,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
 
     addKeyListener(this);
     setFocusable(true);
+
   }
 
   /**
@@ -223,6 +243,21 @@ public class RimpleXWindow extends JFrame implements KeyListener
     getContentPane().add(display);
     getContentPane().add(topDisplay);
   }
+  
+  public void setupSessionHistoryDisplay() {
+    sessionHistory = new JLabel("history here!");
+    sessionHistory.setVerticalAlignment(SwingConstants.BOTTOM);
+    sessionHistory.setVerticalTextPosition(SwingConstants.BOTTOM);
+    sessionHistory.setBounds(365, 10, 220, 390);
+    Border padding = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+    Border border = BorderFactory.createLineBorder(Color.BLACK);
+    Border compound = new CompoundBorder(border, padding);
+
+    sessionHistory.setBorder(compound);
+    
+    getContentPane().add(sessionHistory);
+    
+  }
 
   @Override
   public void keyTyped(KeyEvent e)
@@ -290,6 +325,67 @@ public class RimpleXWindow extends JFrame implements KeyListener
       ActionEvent ae = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, actionCommand);
       controller.actionPerformed(ae);
     }
+  }
+
+  private void setupSessionHistoryDropout()
+  {
+    dropoutBar = new SessionHistoryDropoutBar(controller);
+    getContentPane().add(dropoutBar);
+  }
+
+  private void setupAnimationTimer()
+  {
+    // animation timer with function attached.
+    animationTimer = new Timer(ANIMATION_DURATION / ANIMATION_STEPS, e -> {
+
+      if (isExpanded) {
+        sessionHistory.setVisible(true);
+      }
+      
+      int currentWidth = getWidth();
+      // this lets us move the button
+      int currentButtonX = dropoutBar.getX();
+
+      int widthStep = Integer.compare(targetWidth, currentWidth) * 2; // Fixed step of 2px
+      int buttonStep = Integer.compare(targetButtonX, currentButtonX) * 2;
+
+      setSize(currentWidth + widthStep, WINDOW_HEIGHT);
+      dropoutBar.setLocation(currentButtonX + buttonStep, dropoutBar.getY());
+
+      // stop it when its in place.
+      // because targetWidth works both ways, it has to be equals.
+      if (currentWidth == targetWidth && currentButtonX == targetButtonX)
+      {
+        if (!isExpanded) {
+          sessionHistory.setVisible(false);
+        }
+        animationTimer.stop();
+        // change the text of the bar accordingly.
+        dropoutBar.setText(!isExpanded ? ">" : "<");
+      }
+    });
+  }
+
+  public void toggleExpansion()
+  {
+    if (animationTimer.isRunning())
+      return;
+
+    // flip expansion logic
+    isExpanded = !isExpanded;
+    
+    // if it isnt expanded, set target to expanded width.
+    // if it IS expanded, set target to window width.
+    if (!isExpanded) {
+      targetWidth = WINDOW_WIDTH;
+      targetButtonX = 365;
+    }
+    else {
+      targetWidth = EXPANDED_WIDTH;
+      targetButtonX = 365 + HISTORY_WIDTH;
+    }
+
+    animationTimer.start();
   }
 
   @Override

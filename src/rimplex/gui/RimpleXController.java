@@ -300,8 +300,9 @@ public class RimpleXController implements ActionListener
         if (parenClosed || (!parenClosed && !parenPresent && !bottomDisplay.getText().isBlank()))
         {
           String displayText = bottomDisplay.getText();
-          displayText = displayText.replace(ADD, SUBTRACTION).replace(SUBTRACTION, ADD).replace(MULTIPLICATION, MULTIPLICATION + NEGATIVE)
-          .replace(DIVIDE, DIVIDE + NEGATIVE).replace(POWER, POWER + NEGATIVE);
+          displayText = displayText.replace(ADD, SUBTRACTION).replace(SUBTRACTION, ADD)
+              .replace(MULTIPLICATION, MULTIPLICATION + NEGATIVE).replace(DIVIDE, DIVIDE + NEGATIVE)
+              .replace(POWER, POWER + NEGATIVE);
           if (displayText.charAt(0) == '-')
           {
             displayText = displayText.substring(1);
@@ -677,6 +678,9 @@ public class RimpleXController implements ActionListener
                     + SPACE + EQUALS + SPACE + complexNum.toString());
           }
         }
+        break;
+      case "S_HISTORY_DROPOUT":
+        window.toggleExpansion();
         break;
       default:
         break;
