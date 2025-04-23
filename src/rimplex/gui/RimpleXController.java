@@ -678,42 +678,6 @@ public class RimpleXController implements ActionListener
   }
 
   /**
-   * Set the window to reference and control.
-   * 
-   * @param window
-   *          The GUI window to control.
-   */
-  public void setWindow(final RimpleXWindow window)
-  {
-    this.window = window;
-  }
-
-  /**
-   * Set the calculator displays to reference and control.
-   * 
-   * @param display
-   *          The bottom display of the calculator.
-   * @param upperDisplay
-   *          The top display of the calculator.
-   */
-  public void setDisplays(final JLabel display, final JLabel upperDisplay)
-  {
-    this.bottomDisplay = display;
-    this.topDisplay = upperDisplay;
-  }
-
-  /**
-   * Get the last character of the bottom display.
-   * 
-   * @return Return the last character.
-   */
-  private char lastChar()
-  {
-    String txt = bottomDisplay.getText();
-    return txt.charAt(txt.length() - 1);
-  }
-
-  /**
    * Check if a digit can be placed based on display length and presence of imaginary unit.
    *
    * @param display
@@ -730,6 +694,59 @@ public class RimpleXController implements ActionListener
       }
     }
     return true;
+  }
+
+  /**
+   * Check if an operator can be inputed onto the display.
+   * 
+   * @param display
+   *          The display to reference.
+   * @return Return true if operator can be placed.
+   */
+  private boolean checkOperatorPlacement(final JLabel display)
+  {
+    char lastChar = display.getText().charAt(display.getText().length() - 1);
+    if (lastChar == '+' || lastChar == '—' || lastChar == '^' || lastChar == '×' || lastChar == '÷'
+        || lastChar == '÷')
+    {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Get the result of the current complex number for complex plane.
+   * 
+   * @return Return the complex number.
+   */
+  public Complex getResult()
+  {
+    return result;
+  }
+
+  /**
+   * Get the last character of the bottom display.
+   * 
+   * @return Return the last character.
+   */
+  private char lastChar()
+  {
+    String txt = bottomDisplay.getText();
+    return txt.charAt(txt.length() - 1);
+  }
+
+  /**
+   * Set the calculator displays to reference and control.
+   * 
+   * @param display
+   *          The bottom display of the calculator.
+   * @param upperDisplay
+   *          The top display of the calculator.
+   */
+  public void setDisplays(final JLabel display, final JLabel upperDisplay)
+  {
+    this.bottomDisplay = display;
+    this.topDisplay = upperDisplay;
   }
 
   /**
@@ -803,30 +820,13 @@ public class RimpleXController implements ActionListener
   }
 
   /**
-   * Check if an operator can be inputed onto the display.
+   * Set the window to reference and control.
    * 
-   * @param display
-   *          The display to reference.
-   * @return Return true if operator can be placed.
+   * @param window
+   *          The GUI window to control.
    */
-  private boolean checkOperatorPlacement(final JLabel display)
+  public void setWindow(final RimpleXWindow window)
   {
-    char lastChar = display.getText().charAt(display.getText().length() - 1);
-    if (lastChar == '+' || lastChar == '—' || lastChar == '^' || lastChar == '×' || lastChar == '÷'
-        || lastChar == '÷')
-    {
-      return false;
-    }
-    return true;
-  }
-
-  /**
-   * Get the result of the current complex number for complex plane.
-   * 
-   * @return Return the complex number.
-   */
-  public Complex getResult()
-  {
-    return result;
+    this.window = window;
   }
 }
