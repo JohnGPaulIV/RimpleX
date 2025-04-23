@@ -409,9 +409,9 @@ public class Complex
       if (real == 0.0)
       {
         // If there is only a negative imaginary number.
-        if (sign.equals(" - "))
+        if (sign.equals(NEGATIVE))
         {
-          result = NEGATIVE + String.valueOf(this.imaginary) + unit;
+          result = NEGATIVE + String.valueOf(Math.abs(this.imaginary)) + unit;
         }
         else
         {
