@@ -5,10 +5,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.StringTokenizer;
 import javax.swing.JLabel;
 
 import utilities.Complex;
 import utilities.Evaluator;
+import static rimplex.RimpleX.*;
 
 /**
  * The observer of all GUI components of the RimpleX application.
@@ -43,6 +49,7 @@ public class RimpleXController implements ActionListener
   private boolean equalsPresent = false;
   private String fullExpression;
   private boolean runningCalc = true;
+  
   private Complex result;
   private boolean polarFormEnabled = false;
   private Complex polarizedComplex;
@@ -219,14 +226,6 @@ public class RimpleXController implements ActionListener
             }
           }
         }
-        else
-        {
-          if (topDisplay.getText().length() != 0)
-          {
-            bottomDisplay.setText(topDisplay.getText());
-            topDisplay.setText("");
-          }
-        }
         break;
       case "DECIMAL":
         // This is a temporary solution since this won't work when operators are in the current
@@ -330,7 +329,7 @@ public class RimpleXController implements ActionListener
         System.exit(0);
         break;
       case "ACTION_HELP":
-        File htmlFile = new File("help.html");
+        File htmlFile = new File(rb.getString("Help_File"));
         try
         {
           Desktop.getDesktop().browse(htmlFile.toURI());
@@ -774,6 +773,10 @@ public class RimpleXController implements ActionListener
   private void setOperator(final JLabel display, final JLabel upperDisplay, final String op)
   {
     String topDisplayValue = upperDisplay.getText();
+    if (topDisplayValue.isBlank() && display.getText().isBlank())
+    {
+      return;
+    }
     if (equalsPresent)
     {
       upperDisplay

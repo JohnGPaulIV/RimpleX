@@ -1,5 +1,9 @@
 package utilities;
 
+import static rimplex.RimpleX.rb;
+
+import javax.swing.JOptionPane;
+
 /**
  * Represents a number in complex form consisting of a real part and an imaginary part.
  * 
@@ -68,7 +72,9 @@ public class Complex
     double denominator = other.real * other.real + other.imaginary * other.imaginary;
     if (denominator == 0)
     {
-      throw new ArithmeticException("Cannot divide by zero");
+      JOptionPane.showMessageDialog(null, rb.getString("Divide_By_Zero_Error"), rb.getString("Error"),
+          JOptionPane.ERROR_MESSAGE);
+      // throw new ArithmeticException("Cannot divide by zero");
     }
     double realPart = Math.floor(
         ((this.real * other.real + this.imaginary * -(other.imaginary)) / denominator) * 1000)

@@ -12,6 +12,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import static rimplex.RimpleX.*;
+
 /**
  * The 'About' Window for RimpleX.
  * 
@@ -23,7 +25,7 @@ public class RimpleXAboutWindow extends JFrame
 
   public RimpleXAboutWindow() throws IOException
   {
-    setTitle("About RimpleX");
+    setTitle(rb.getString("About") + " RimpleX");
     setSize(400, 275);
     setLocationRelativeTo(null);
     setLayout(null);
@@ -32,7 +34,7 @@ public class RimpleXAboutWindow extends JFrame
     try
     {
       // Add title and RimpleX icon to the About Window.
-      JLabel titleLabel = new JLabel("About", JLabel.CENTER);
+      JLabel titleLabel = new JLabel(rb.getString("About"), JLabel.CENTER);
       titleLabel.setFont(new Font("Sans-Serif", Font.PLAIN, 16));
       titleLabel.setBounds(0, 10, 400, 20);
       add(titleLabel);
@@ -61,16 +63,11 @@ public class RimpleXAboutWindow extends JFrame
       add(versionLabel);
 
       // About description
-      String description = "<html><div style='text-align: center;'>"
-          + "Rimplex is a modern, easy-to-use calculator<br>"
-          + "that works with real, imaginary, and complex numbers.<br>"
-          + "It is a product of Sagacious Media that was<br>"
-          + "developed by: Benjamin Bonnell, Kalani Johnson,<br>"
-          + "Sofia Miller, John Paul, and Joseph Pogoretskiy." + "</div></html>";
+      String description = rb.getString("RimpleX_About");
 
       JLabel descLabel = new JLabel(description, JLabel.CENTER);
       descLabel.setFont(new Font("Sans-Serif", Font.PLAIN, 14));
-      descLabel.setBounds(10, 35 + iconHeight + 25, 360, 120);
+      descLabel.setBounds(10, 35 + iconHeight + 25, 360, 130);
       add(descLabel);
 
     }

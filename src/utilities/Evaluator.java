@@ -1,4 +1,5 @@
 package utilities;
+import static rimplex.RimpleX.*;
 
 /**
  * This class evaluates given operands and operators recursively given a string of input.
@@ -202,7 +203,7 @@ public final class Evaluator
    */
   private static String evaluatePower(final Complex leftOperand, final Complex rightOperand)
   {
-    String result = "evaluatePower() Error";
+    String result = "evaluatePower() " + rb.getString("Error");
     if (rightOperand.getImaginary() != 0.0 && rightOperand.getReal() == 0.0)
     {
       if (isComplex(leftOperand) || leftOperand.getImaginary() != 0.0)
@@ -219,14 +220,7 @@ public final class Evaluator
     }
     else if (rightOperand.getImaginary() == 0.0 && rightOperand.getReal() != 0.0)
     {
-      if (isComplex(rightOperand))
-      {
-        result = leftOperand.toString() + POWER + rightOperand.toString();
-      }
-      else
-      {
-        result = leftOperand.exponentiate(rightOperand).toString();
-      }
+      result = leftOperand.exponentiate(rightOperand).toString();
     }
     else
     {

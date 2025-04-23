@@ -8,6 +8,15 @@ import javax.swing.JPanel;
 
 import utilities.Complex;
 
+import static rimplex.RimpleX.*;
+
+/**
+ * The Complex Plane Window.
+ * 
+ * @author Sofia Miller
+ * 
+ *         This work complies with JMU Honor Code.
+ */
 public class ComplexPlaneWindow extends JFrame
 {
   private static final long serialVersionUID = 1L;
@@ -15,7 +24,7 @@ public class ComplexPlaneWindow extends JFrame
 
   public ComplexPlaneWindow(Complex number)
   {
-    super("Complex Plane");
+    super(rb.getString("Complex_Plane"));
     this.number = number;
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setSize(400, 400);
@@ -57,7 +66,7 @@ public class ComplexPlaneWindow extends JFrame
       g.drawLine(0, centerY, width, centerY); // x-axis
       g.drawString("Re", width - 30, centerY - 5);
       g.drawString("Im", centerX + 5, 15);
-      // X-axis
+      // x-axis
       double realStart = -((double) width / (2 * scale));
       double realEnd = (double) width / (2 * scale);
       int startXTick = (int) Math.floor(realStart / tickInterval) * tickInterval;
@@ -71,7 +80,7 @@ public class ComplexPlaneWindow extends JFrame
           g.drawString(Integer.toString(i), screenX - 5, centerY + 15);
         }
       }
-      // Y-axis
+      // y-axis
       double imaginaryStart = -((double) height / (2 * scale));
       double imaginaryEnd = (double) height / (2 * scale);
       int startYTick = (int) Math.floor(imaginaryStart / tickInterval) * tickInterval;

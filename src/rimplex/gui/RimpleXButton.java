@@ -44,15 +44,16 @@ public class RimpleXButton extends JButton
     this.setBounds(xPos, yPos, width, height);
     this.setMargin(new Insets(2, 2, 2, 2));  // Smaller than default
     
+    System.out.println(text);
     if (text.length() < 3) {
       this.setFont(new Font("Sans-Serif", Font.PLAIN, 24));
-    }
+    } 
     else {
       this.setFont(new Font("Sans-Serif", Font.PLAIN, 14));
     }
     
     // parse multiple phrases, if too long
-    if (text.length() > 10) {
+   if (text.length() > 10) {
       String[] phrases = text.split(" ");
       if (phrases.length > 1) {
         String buttonText = new String();

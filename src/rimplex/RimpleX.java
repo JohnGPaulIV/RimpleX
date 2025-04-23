@@ -2,8 +2,12 @@ package rimplex;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import rimplex.gui.*;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
@@ -18,6 +22,7 @@ import javax.swing.SwingUtilities;
  */
 public class RimpleX implements Runnable
 {
+  public static ResourceBundle rb;
   /**
    * Main driver.
    * 
@@ -36,6 +41,27 @@ public class RimpleX implements Runnable
   @Override
   public void run()
   {
+    Locale locale = Locale.of("en", "US");
+    String[] languageOptions = {"English", "русский язык", "Español"};
+    String selection = (String) JOptionPane.showInputDialog(
+        null,
+        "Pick a language:",
+        "Language selector",
+        JOptionPane.QUESTION_MESSAGE,
+        null,
+        languageOptions,
+        languageOptions[0]);
+    if (selection.equals("English"))
+    {
+      locale = Locale.of("en", "US");
+    } else if (selection.equals("русский язык"))
+    {
+      locale = Locale.of("ru", "RU");
+    } else if (selection.equals("Español"))
+    {
+      locale = Locale.of("es", "ES");
+    }
+    rb = ResourceBundle.getBundle("rimplex.gui.languages.Strings", locale);
     RimpleXController controller = new RimpleXController();
     RimpleXWindow window = null;
     try
