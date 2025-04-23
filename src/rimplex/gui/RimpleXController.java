@@ -576,13 +576,31 @@ public class RimpleXController implements ActionListener
       {
         if (!topDisplay.getText().isBlank())
         {
-          String leftOperand = topDisplay.getText().replace(" ", "").substring(0,
-              topDisplay.getText().length() - 2);
+          String leftOperand;
+          if (polarFormEnabled)
+          {
+            leftOperand = polarizedComplex.toString();
+          }
+          else
+          {
+            leftOperand = topDisplay.getText().replace(" ", "").substring(0,
+                topDisplay.getText().length() - 2);
+          }
           String prevOperator = topDisplay.getText().substring(topDisplay.getText().length() - 1);
           String rightOperand = display.getText();
 
           String evaluation = Evaluator.evaluate(leftOperand, prevOperator, rightOperand);
-          topDisplay.setText(evaluation + " " + operator);
+          if (polarFormEnabled)
+          {
+            Complex evaluated = Complex.parse(evaluation);
+            String polarForm = evaluated.getPolarForm();
+            topDisplay.setText(polarForm + " " + operator);
+            polarizedComplex = evaluated;
+          }
+          else
+          {
+            topDisplay.setText(evaluation + " " + operator);
+          }
         }
         else
         {
