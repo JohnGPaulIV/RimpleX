@@ -770,6 +770,10 @@ public class RimpleXController implements ActionListener
   private void setOperator(final JLabel display, final JLabel upperDisplay, final String op)
   {
     String topDisplayValue = upperDisplay.getText();
+    if (topDisplayValue.isBlank() && display.getText().isBlank())
+    {
+      return;
+    }
     if (equalsPresent)
     {
       upperDisplay
