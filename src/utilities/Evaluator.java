@@ -219,14 +219,7 @@ public final class Evaluator
     }
     else if (rightOperand.getImaginary() == 0.0 && rightOperand.getReal() != 0.0)
     {
-      if (isComplex(rightOperand))
-      {
-        result = leftOperand.toString() + POWER + rightOperand.toString();
-      }
-      else
-      {
-        result = leftOperand.exponentiate(rightOperand).toString();
-      }
+      result = leftOperand.exponentiate(rightOperand).toString();
     }
     else
     {

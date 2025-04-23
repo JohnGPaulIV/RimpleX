@@ -22,11 +22,21 @@ class EvaluatorTest
   static final String DIVISION = "÷";
   static final String NEGATIVE = "-";
   static final String POWER = "^";
+  static final String CONJUGATE = "Conjugate";
+  static final String SQUARE_ROOT = "Square root";
+  static final String LOG = "Log";
+  static final String INVERT = "Invert";
 
   @Test
   void testEvaluatingBasicSubtraction()
   {
     assertEquals("5.0", Evaluator.evaluate("4", SUBTRACTION, "-1"));
+  }
+  
+  @Test
+  void testEvaluatingNonExistentOperators()
+  {
+    assertEquals("8.0", Evaluator.evaluate("8", "Bruh", "2"));
   }
   
   @Test
@@ -89,6 +99,44 @@ class EvaluatorTest
   }
   
   @Test
+  void testEvaluatingSquareRoots()
+  {
+    assertEquals("9.0", Evaluator.evaluate("50+31", SQUARE_ROOT, ""));
+    assertEquals("9.0𝑖", Evaluator.evaluate("-50—31", SQUARE_ROOT, ""));
+    assertEquals("2.121+2.121𝑖", Evaluator.evaluate("9𝑖", SQUARE_ROOT, ""));
+    assertEquals("2.121—2.122𝑖", Evaluator.evaluate("-9𝑖", SQUARE_ROOT, ""));
+    assertEquals("3.466+1.009𝑖", Evaluator.evaluate("3+8+9𝑖—2𝑖", SQUARE_ROOT, ""));
+  }
+  
+  @Test
+  void testEvaluatingLogarithms()
+  {
+    assertEquals("1.908", Evaluator.evaluate("50+31", LOG, ""));
+    assertEquals("1.908", Evaluator.evaluate("-50—31", LOG, ""));
+    assertEquals("0.954+0.682𝑖", Evaluator.evaluate("9𝑖", LOG, ""));
+    assertEquals("0.954—0.683𝑖", Evaluator.evaluate("-9𝑖", LOG, ""));
+    assertEquals("1.115+0.246𝑖", Evaluator.evaluate("3+8+9𝑖—2𝑖", LOG, ""));
+  }
+  
+  @Test
+  void testEvaluatingConjugate()
+  {
+    assertEquals("2.0—2.0𝑖", Evaluator.evaluate("2+2𝑖", CONJUGATE, ""));
+    assertEquals("2.0+2.0𝑖", Evaluator.evaluate("2—2𝑖", CONJUGATE, ""));
+    assertEquals("-3.0𝑖", Evaluator.evaluate("3𝑖", CONJUGATE, ""));
+    assertEquals("3.0", Evaluator.evaluate("3", CONJUGATE, ""));
+  }
+ 
+  @Test
+  void testEvaluatingInverse()
+  {
+    assertEquals("0.25—0.25𝑖", Evaluator.evaluate("2+2𝑖", INVERT, ""));
+    assertEquals("0.25+0.25𝑖", Evaluator.evaluate("2—2𝑖", INVERT, ""));
+    assertEquals("-0.334𝑖", Evaluator.evaluate("3𝑖", INVERT, ""));
+    assertEquals("0.333", Evaluator.evaluate("3", INVERT, ""));
+  }
+  
+  @Test
   void testEvaluatingParenthesizedImaginaryUnits()
   {
     assertEquals("4.0+5.0𝑖", Evaluator.evaluate("2+2𝑖", ADDITION, "2+3𝑖"));
@@ -108,12 +156,13 @@ class EvaluatorTest
     assertEquals("-64.0^-𝑖", Evaluator.evaluate("-4", POWER, "-3𝑖")); // Should return simplified.
     assertEquals("-64.0^𝑖", Evaluator.evaluate("-4", POWER, "3𝑖")); // Should return simplified.
     assertEquals("2.0^𝑖", Evaluator.evaluate("4", POWER, "0.5𝑖")); // Should return simplified.
-    assertEquals("4.0𝑖^3.0𝑖", Evaluator.evaluate("4𝑖", POWER, "3𝑖")); // Should return as is.
+    assertEquals("3.0+4.0𝑖^3.0𝑖", Evaluator.evaluate("3+4𝑖", POWER, "3𝑖")); // Should return as is.
     assertEquals("-3.0𝑖", Evaluator.evaluate("3𝑖", POWER, "3"));
     assertEquals("3.0", Evaluator.evaluate("3𝑖", POWER, "4"));
     assertEquals("3.0𝑖", Evaluator.evaluate("3𝑖", POWER, "5"));
     assertEquals("-3.0", Evaluator.evaluate("3𝑖", POWER, "6"));
-    assertEquals("4.0𝑖^2.0+3.0𝑖", Evaluator.evaluate("4𝑖", POWER, "3𝑖+2")); // Should return as is.
+    assertEquals("4.0𝑖^2.0+3.0𝑖", Evaluator.evaluate("4𝑖", POWER, "3𝑖+2")); 
+    assertEquals("4.0^2.0+3.0𝑖", Evaluator.evaluate("4", POWER, "3𝑖+2"));// Should return as is.
     assertEquals("-6.75—9.0𝑖", Evaluator.evaluate("1.5—3.0𝑖", POWER, "2"));
     assertEquals("0.011—0.039𝑖", Evaluator.evaluate("4+3𝑖", POWER, "-2"));
   }
