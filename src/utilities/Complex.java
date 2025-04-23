@@ -82,7 +82,7 @@ public class Complex
     {
       if (other.imaginary == 0.0)
       {
-        result = new Complex(Math.pow(this.real, other.real), 0.0);
+        result = new Complex(Math.floor((Math.pow(this.real, other.real) * 1000) / 1000), 0.0);
       }
     }
     else if (this.real == 0.0 && this.imaginary != 0.0)
