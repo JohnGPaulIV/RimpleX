@@ -1,4 +1,5 @@
 package utilities;
+import static rimplex.RimpleX.*;
 
 /**
  * This class evaluates given operands and operators recursively given a string of input.
@@ -9,6 +10,8 @@ package utilities;
  */
 public final class Evaluator
 {
+  private static final String CONJUGATE = "Conjugate";
+  private static final String INVERT = "Invert";
   private static final String SUBTRACTION = "—";
   private static final String ADDITION = "+";
   private static final String MULTIPLICATION = "×";
@@ -32,22 +35,57 @@ public final class Evaluator
    */
   private static String checkOperators(final String operand)
   {
-    // Fix this to do operations in order from left to right (PEMDAS)
-    if (operand.contains(SUBTRACTION))
+    if (operand.contains(SUBTRACTION) || operand.contains(ADDITION))
     {
-      return SUBTRACTION;
+      boolean hasSubtraction = operand.contains(SUBTRACTION);
+      boolean hasAddition = operand.contains(ADDITION);
+      if (hasAddition && hasSubtraction)
+      {
+        int indexOfSubtraction = operand.indexOf(SUBTRACTION);
+        int indexOfAddition = operand.indexOf(ADDITION);
+        if (indexOfSubtraction > indexOfAddition)
+        {
+          return SUBTRACTION;
+        }
+        else
+        {
+          return ADDITION;
+        }
+      }
+      else if (hasAddition)
+      {
+        return ADDITION;
+      }
+      else
+      {
+        return SUBTRACTION;
+      }
     }
-    else if (operand.contains(ADDITION))
+    else if (operand.contains(DIVISION) || operand.contains(MULTIPLICATION))
     {
-      return ADDITION;
-    }
-    else if (operand.contains(DIVISION))
-    {
-      return DIVISION;
-    }
-    else if (operand.contains(MULTIPLICATION))
-    {
-      return MULTIPLICATION;
+      boolean hasMultiplication = operand.contains(MULTIPLICATION);
+      boolean hasDivision = operand.contains(DIVISION);
+      if (hasMultiplication && hasDivision)
+      {
+        int indexOfMultiplication = operand.indexOf(MULTIPLICATION);
+        int indexOfDivision = operand.indexOf(DIVISION);
+        if (indexOfMultiplication > indexOfDivision)
+        {
+          return MULTIPLICATION;
+        }
+        else
+        {
+          return DIVISION;
+        }
+      }
+      else if (hasMultiplication)
+      {
+        return MULTIPLICATION;
+      }
+      else
+      {
+        return DIVISION;
+      }
     }
     else if (operand.contains(POWER))
     {
@@ -102,22 +140,7 @@ public final class Evaluator
     // Create new Complex numbers based on presence of imaginary units.
     Complex leftComplex;
     Complex rightComplex;
-//    if (leftResult.contains(IMAGINARY_UNIT))
-//    {
-//      leftComplex = new Complex(0.0, Double.parseDouble(leftResult.replace(IMAGINARY_UNIT, "")));
-//    }
-//    else
-//    {
-//      leftComplex = new Complex(Double.parseDouble(leftResult), 0.0);
-//    }
-//    if (rightResult.contains(IMAGINARY_UNIT))
-//    {
-//      rightComplex = new Complex(0.0, Double.parseDouble(rightResult.replace(IMAGINARY_UNIT, "")));
-//    }
-//    else
-//    {
-//      rightComplex = new Complex(Double.parseDouble(rightResult), 0.0);
-//    }
+
     leftComplex = Complex.parse(leftResult);
     rightComplex = Complex.parse(rightResult);
     
@@ -138,8 +161,15 @@ public final class Evaluator
       case POWER:
         result = evaluatePower(leftComplex, rightComplex);
         break;
+      case CONJUGATE:
+        leftComplex.conjugate();
+        result = leftComplex.toString();
+        break;
+      case INVERT:
+        leftComplex.inverse();
+        result = leftComplex.toString();
       default:
-        result = "Error"; // For debugging
+        result = leftComplex.toString();
         break;
     }
     return result;
@@ -154,7 +184,7 @@ public final class Evaluator
    */
   private static String evaluatePower(final Complex leftOperand, final Complex rightOperand)
   {
-    String result = "evaluatePower() Error";
+    String result = "evaluatePower() " + rb.getString("Error");
     if (rightOperand.getImaginary() != 0.0 && rightOperand.getReal() == 0.0)
     {
       if (isComplex(leftOperand) || leftOperand.getImaginary() != 0.0)

@@ -1,5 +1,9 @@
 package utilities;
 
+import static rimplex.RimpleX.rb;
+
+import javax.swing.JOptionPane;
+
 /**
  * Represents a number in complex form consisting of a real part and an imaginary part.
  * 
@@ -34,7 +38,9 @@ public class Complex
    */
   public Complex add(final Complex other)
   {
-    return new Complex(this.real + other.real, this.imaginary + other.imaginary);
+    double realNum = Math.floor((this.real + other.real) * 1000) / 1000;
+    double imaginaryNum = Math.floor((this.imaginary + other.imaginary) * 1000) / 1000;
+    return new Complex(realNum, imaginaryNum);
   }
   
   /**
@@ -59,11 +65,13 @@ public class Complex
     double denominator = other.real * other.real + other.imaginary * other.imaginary;
     if (denominator == 0)
     {
-      throw new ArithmeticException("Cannot divide by zero");
+      JOptionPane.showMessageDialog(null, rb.getString("Divide_By_Zero_Error"), rb.getString("Error"),
+          JOptionPane.ERROR_MESSAGE);
+      // throw new ArithmeticException("Cannot divide by zero");
     }
-    double realPart = (this.real * other.real + this.imaginary * -(other.imaginary)) / denominator;
-    double imaginaryPart = (this.imaginary * other.real - this.real * other.imaginary)
-        / denominator;
+    double realPart = Math.floor(((this.real * other.real + this.imaginary * -(other.imaginary)) / denominator) * 1000) / 1000;
+    double imaginaryPart = Math.floor(((this.imaginary * other.real - this.real * other.imaginary)
+        / denominator) * 1000) / 1000;
     return new Complex(realPart, imaginaryPart);
   }
   
@@ -102,6 +110,28 @@ public class Complex
           case 3:
             result = new Complex(0.0, -(this.imaginary));
             break;
+        }
+      }
+    }
+    else
+    {
+      if (other.imaginary == 0.0)
+      {
+        if (other.real == 0.0)
+        {
+          result = new Complex(1.0, 0.0);
+        }
+        else if (other.real % 1 == 0)
+        {
+          result = new Complex(this.real, this.imaginary);
+          for (int i = 1; i < (int) Math.abs(other.real); i++)
+          {
+            result = result.multiply(this);
+          }
+          if (other.real < 0.0)
+          {
+            result.inverse();
+          }
         }
       }
     }
@@ -165,8 +195,8 @@ public class Complex
     {
       imaginaryUnitPresent = !imaginaryUnitPresent;
     }
-    double realPart = this.real * other.real - this.imaginary * other.imaginary;
-    double imaginaryPart = this.real * other.imaginary + this.imaginary * other.real;
+    double realPart = Math.floor((this.real * other.real - this.imaginary * other.imaginary) * 1000) / 1000;
+    double imaginaryPart = Math.floor((this.real * other.imaginary + this.imaginary * other.real) * 1000) / 1000;
     return new Complex(realPart, imaginaryPart);
   }
 
@@ -226,6 +256,10 @@ public class Complex
     }
     else
     {
+      if (copy.isBlank())
+      {
+        return new Complex(0.0, 0.0);
+      }
       return new Complex(Double.parseDouble(copy), 0.0);
     }
   }
@@ -240,8 +274,8 @@ public class Complex
     String result = null;
     if (this.real != 0.0 && this.imaginary != 0.0)
     {
-      Double modulus = Math.sqrt((this.real * this.real) + (this.imaginary * this.imaginary));
-      Double argument = Math.atan(this.imaginary / this.real);
+      Double modulus = Math.floor(Math.sqrt((this.real * this.real) + (this.imaginary * this.imaginary)) * 1000) / 1000;
+      Double argument = Math.floor(Math.atan(this.imaginary / this.real) * 1000) / 1000;
       result = String.valueOf(modulus) + "(cos" + String.valueOf(argument) + ") + " + "i sin("
           + String.valueOf(argument) + "))";
     }
@@ -260,7 +294,7 @@ public class Complex
     else if (this.real == 0.0 && this.imaginary != 0.0)
     {
       String argument;
-      Double modulus = Math.sqrt(this.imaginary + this.imaginary);
+      Double modulus = Math.floor(Math.sqrt(this.imaginary + this.imaginary) * 1000) / 1000;
       if (this.imaginary > 0.0)
       {
         argument = "π/2";
@@ -301,7 +335,9 @@ public class Complex
    */
   public Complex subtract(final Complex other)
   {
-    return new Complex(this.real - other.real, this.imaginary - other.imaginary);
+    double realNum = Math.floor((this.real - other.real) * 1000) / 1000;
+    double imaginaryNum = Math.floor((this.imaginary - other.imaginary) * 1000) / 1000;
+    return new Complex(realNum, imaginaryNum);
   }
 
   @Override

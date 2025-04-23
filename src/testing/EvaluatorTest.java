@@ -66,6 +66,14 @@ class EvaluatorTest
   }
   
   @Test
+  void testEvaluatingPEMDASOrder()
+  {
+    assertEquals("12.0", Evaluator.evaluate("4+2×3—2", ADDITION, "2+8÷4"));
+    assertEquals("12.0", Evaluator.evaluate("9—3+4", ADDITION, "3—2+1"));
+    assertEquals("18.0", Evaluator.evaluate("20÷4×3", ADDITION, "4×3÷4"));
+  }
+  
+  @Test
   void testEvaluatingBasicImaginaryUnits()
   {
     assertEquals("3.0𝑖", Evaluator.evaluate("-5𝑖", ADDITION, "8𝑖"));
@@ -77,7 +85,7 @@ class EvaluatorTest
     assertEquals("-3.0", Evaluator.evaluate("6𝑖", DIVISION, "2𝑖"));
     assertEquals("3.0", Evaluator.evaluate("6𝑖", DIVISION, "-2𝑖"));
     assertEquals("-3.0𝑖", Evaluator.evaluate("-6𝑖", DIVISION, "2"));
-    assertEquals("0.3333333333333333𝑖", Evaluator.evaluate("2𝑖", DIVISION, "6"));
+    assertEquals("0.333𝑖", Evaluator.evaluate("2𝑖", DIVISION, "6"));
   }
   
   @Test
@@ -88,8 +96,8 @@ class EvaluatorTest
     assertEquals("2.0+6.0𝑖", Evaluator.evaluate("2+4𝑖", ADDITION, "2𝑖"));
     assertEquals("8.0+3.0𝑖", Evaluator.evaluate("8+6𝑖", SUBTRACTION, "3𝑖"));
     assertEquals("3.0—9.0𝑖", Evaluator.evaluate("3—6𝑖", SUBTRACTION, "3𝑖"));
-    assertEquals("9.0+3.0𝑖", Evaluator.evaluate("8+6𝑖", ADDITION, "2—3𝑖+1"));
-    assertEquals("8.0+2.5999999999999996𝑖", Evaluator.evaluate("8—6𝑖", ADDITION, "4×2𝑖+3𝑖÷5"));
+    assertEquals("11.0+3.0𝑖", Evaluator.evaluate("8+6𝑖", ADDITION, "2—3𝑖+1"));
+    assertEquals("8.0+2.599𝑖", Evaluator.evaluate("8—6𝑖", ADDITION, "4×2𝑖+3𝑖÷5"));
     assertEquals("-0.075+0.15𝑖", Evaluator.evaluate("-3÷4𝑖", DIVISION, "2𝑖+4"));
   }
 
@@ -106,5 +114,7 @@ class EvaluatorTest
     assertEquals("3.0𝑖", Evaluator.evaluate("3𝑖", POWER, "5"));
     assertEquals("-3.0", Evaluator.evaluate("3𝑖", POWER, "6"));
     assertEquals("4.0𝑖^2.0+3.0𝑖", Evaluator.evaluate("4𝑖", POWER, "3𝑖+2")); // Should return as is.
+    assertEquals("-6.75—9.0𝑖", Evaluator.evaluate("1.5—3.0𝑖", POWER, "2"));
+    assertEquals("0.011—0.039𝑖", Evaluator.evaluate("4+3𝑖", POWER, "-2"));
   }
 }

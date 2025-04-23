@@ -11,6 +11,7 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -20,15 +21,21 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
+
+import utilities.Complex;
+import static rimplex.RimpleX.*;
 
 /**
  * The main window for the RimpleX application.
  * 
  * General structure taken from Dr. Bernstein's Serialization Lab:
  * (https://w3.cs.jmu.edu/bernstdh/web/common/labs/experience_serialization/tempz/index.php)
+ * 
+ * @author Joseph Pogoretskiy, Benjamin Bonnell, Kalani Johnson, John Paul, Sofia Miller
  * 
  * This work complies with JMU Honor Code.
  */
@@ -37,6 +44,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
   private static final long serialVersionUID = 1L;
 
   private RimpleXController controller;
+  // private ResourceBundle rb;
 
   /**
    * Explicit window constructor.
@@ -48,6 +56,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
   public RimpleXWindow(final RimpleXController controller) throws IOException
   {
     super();
+    // rb = ResourceBundle.getBundle("rimplex.gui.languages.Strings", locale);
 
     // Set the controller to refer to this instance.
     this.controller = controller;
@@ -86,22 +95,39 @@ public class RimpleXWindow extends JFrame implements KeyListener
     // File menu
     JMenuBar menuBar = new JMenuBar();
 
-    JMenu fileMenu = new JMenu("File");
-    JMenuItem printItem = new JMenuItem("Print Session");
+    JMenu fileMenu = new JMenu(rb.getString("File"));
+    JMenuItem printItem = new JMenuItem(rb.getString("Print_Session"));
     printItem.setActionCommand("ACTION_PRINT");
     printItem.addActionListener(controller);
     fileMenu.add(printItem);
     menuBar.add(fileMenu);
-    JMenuItem exitItem = new JMenuItem("Exit");
+    JMenuItem exitItem = new JMenuItem(rb.getString("Exit"));
     exitItem.setActionCommand("ACTION_EXIT");
     exitItem.addActionListener(controller);
     fileMenu.add(exitItem);
+    // View menu
+    JMenu viewMenu = new JMenu(rb.getString("View"));
+    JMenuItem complexPlaneItem = new JMenuItem(rb.getString("Complex_Plane"));
+    complexPlaneItem.addActionListener(e -> {
+      Complex resultComplex = controller.getResult();
+      if (resultComplex != null)
+      {
+        new ComplexPlaneWindow(resultComplex);
+      }
+      else
+      {
+        JOptionPane.showMessageDialog(this, rb.getString("No_Result"), rb.getString("Error"),
+            JOptionPane.ERROR_MESSAGE);
+      }
+    });
+    viewMenu.add(complexPlaneItem);
+    menuBar.add(viewMenu);
     // Help menu
-    JMenu helpMenu = new JMenu("Help");
-    JMenuItem helpItem = new JMenuItem("Help");
+    JMenu helpMenu = new JMenu(rb.getString("Help"));
+    JMenuItem helpItem = new JMenuItem(rb.getString("Help"));
     helpItem.setActionCommand("ACTION_HELP");
     helpItem.addActionListener(controller);
-    JMenuItem aboutItem = new JMenuItem("About");
+    JMenuItem aboutItem = new JMenuItem(rb.getString("About"));
     aboutItem.setActionCommand("ACTION_ABOUT");
     aboutItem.addActionListener(controller);
     helpMenu.add(aboutItem);
@@ -111,8 +137,6 @@ public class RimpleXWindow extends JFrame implements KeyListener
 
     addKeyListener(this);
     setFocusable(true);
-    // TODO: Add Java GUI Components to the main window here
-    // TODO: Set size, layout, all those goodies. Helper functions can be utilized.
   }
 
   /**
@@ -120,16 +144,16 @@ public class RimpleXWindow extends JFrame implements KeyListener
    */
   private void setupSoftKeyboard()
   {
-    getContentPane().add(new RimpleXButton("SEVEN", "7", controller, 10, 200, 45, 45));
-    getContentPane().add(new RimpleXButton("EIGHT", "8", controller, 60, 200, 45, 45));
-    getContentPane().add(new RimpleXButton("NINE", "9", controller, 110, 200, 45, 45));
-    getContentPane().add(new RimpleXButton("FOUR", "4", controller, 10, 250, 45, 45));
-    getContentPane().add(new RimpleXButton("FIVE", "5", controller, 60, 250, 45, 45));
-    getContentPane().add(new RimpleXButton("SIX", "6", controller, 110, 250, 45, 45));
-    getContentPane().add(new RimpleXButton("ONE", "1", controller, 10, 300, 45, 45));
-    getContentPane().add(new RimpleXButton("TWO", "2", controller, 60, 300, 45, 45));
-    getContentPane().add(new RimpleXButton("THREE", "3", controller, 110, 300, 45, 45));
-    getContentPane().add(new RimpleXButton("ZERO", "0", controller, 10, 350, 95, 45));
+    getContentPane().add(new RimpleXButton("SEVEN",rb.getString("Seven"), controller, 10, 200, 45, 45));
+    getContentPane().add(new RimpleXButton("EIGHT", rb.getString("Eight"), controller, 60, 200, 45, 45));
+    getContentPane().add(new RimpleXButton("NINE", rb.getString("Nine"), controller, 110, 200, 45, 45));
+    getContentPane().add(new RimpleXButton("FOUR", rb.getString("Four"), controller, 10, 250, 45, 45));
+    getContentPane().add(new RimpleXButton("FIVE", rb.getString("Five"), controller, 60, 250, 45, 45));
+    getContentPane().add(new RimpleXButton("SIX", rb.getString("Six"), controller, 110, 250, 45, 45));
+    getContentPane().add(new RimpleXButton("ONE", rb.getString("One"), controller, 10, 300, 45, 45));
+    getContentPane().add(new RimpleXButton("TWO", rb.getString("Two"), controller, 60, 300, 45, 45));
+    getContentPane().add(new RimpleXButton("THREE", rb.getString("Three"), controller, 110, 300, 45, 45));
+    getContentPane().add(new RimpleXButton("ZERO", rb.getString("Zero"), controller, 10, 350, 95, 45));
     getContentPane().add(new RimpleXButton("DECIMAL", ".", controller, 210, 350, 45, 45));
 
     getContentPane().add(new RimpleXButton("BACKSPACE", "←", controller, 110, 150, 45, 45));
@@ -138,39 +162,39 @@ public class RimpleXWindow extends JFrame implements KeyListener
 
     // Adding parenthesis to GUI - John
 
-    getContentPane().add(new RimpleXButton("OPEN_PARENTHESIS", "(", controller, 210, 250, 45, 45));
+    getContentPane().add(new RimpleXButton("OPEN_PARENTHESIS", rb.getString("Open_Paren"), controller, 210, 250, 45, 45));
     getContentPane()
-        .add(new RimpleXButton("CLOSED_PARENTHESIS", ")", controller, 210, 300, 45, 45));
+        .add(new RimpleXButton("CLOSED_PARENTHESIS", rb.getString("Closed_Paren"), controller, 210, 300, 45, 45));
 
     // Adding Clear button to GUI - Ben
-    getContentPane().add(new RimpleXButton("EQUALS", "=", controller, 160, 350, 45, 45));
+    getContentPane().add(new RimpleXButton("EQUALS", rb.getString("Equals"), controller, 160, 350, 45, 45));
 
-    getContentPane().add(new RimpleXButton("CLEAR", "C", controller, 60, 150, 45, 45));
-    getContentPane().add(new RimpleXButton("RESET", "R", controller, 210, 150, 45, 45));
-    getContentPane().add(new RimpleXButton("SIGN", "±", controller, 10, 150, 45, 45));
-    getContentPane().add(new RimpleXButton("UNIT", "𝑖", controller, 110, 350, 45, 45));
+    getContentPane().add(new RimpleXButton("CLEAR", rb.getString("Clear"), controller, 60, 150, 45, 45));
+    getContentPane().add(new RimpleXButton("RESET", rb.getString("Reset"), controller, 210, 150, 45, 45));
+    getContentPane().add(new RimpleXButton("SIGN", rb.getString("Sign"), controller, 10, 150, 45, 45));
+    getContentPane().add(new RimpleXButton("UNIT", rb.getString("Unit"), controller, 110, 350, 45, 45));
 
     // Adding operator buttons
-    getContentPane().add(new RimpleXButton("ADD", "+", controller, 160, 150, 45, 45));
+    getContentPane().add(new RimpleXButton("ADD", rb.getString("Add"), controller, 160, 150, 45, 45));
     // NOTE! This "subtraction" sign is a MINUS character. Not a hyphen.
-    getContentPane().add(new RimpleXButton("SUBTRACT", "−", controller, 160, 200, 45, 45));
+    getContentPane().add(new RimpleXButton("SUBTRACT", rb.getString("Subtract"), controller, 160, 200, 45, 45));
 
-    getContentPane().add(new RimpleXButton("INVERT", "Inv", controller, 210, 200, 45, 45));
+    getContentPane().add(new RimpleXButton("INVERT", rb.getString("Invert"), controller, 210, 200, 45, 45));
 
-    getContentPane().add(new RimpleXButton("MULTIPLY", "×", controller, 160, 250, 45, 45));
-    getContentPane().add(new RimpleXButton("DIVIDE", "÷", controller, 160, 300, 45, 45));
+    getContentPane().add(new RimpleXButton("MULTIPLY", rb.getString("Multiply"), controller, 160, 250, 45, 45));
+    getContentPane().add(new RimpleXButton("DIVIDE", rb.getString("Divide"), controller, 160, 300, 45, 45));
 
     // Sprint 2 additional buttons.
     getContentPane()
-        .add(new RimpleXButton("IMAGINARY_PART", "Imaginary Part", controller, 260, 150, 95, 45));
-    getContentPane().add(new RimpleXButton("REAL_PART", "Real Part", controller, 260, 200, 95, 45));
+        .add(new RimpleXButton("IMAGINARY_PART", rb.getString("Imaginary_Part"), controller, 260, 150, 95, 45));
+    getContentPane().add(new RimpleXButton("REAL_PART", rb.getString("Real_Part"), controller, 260, 200, 95, 45));
     getContentPane()
-        .add(new RimpleXButton("POLAR_FORM", "Polar Form", controller, 260, 250, 95, 45));
+        .add(new RimpleXButton("POLAR_FORM", rb.getString("Polar_Form"), controller, 260, 250, 95, 45));
 
-    getContentPane().add(new RimpleXButton("CONJUGATE", "z̄", controller, 260, 300, 45, 45));
-    getContentPane().add(new RimpleXButton("SQUARE_ROOT", "√", controller, 310, 300, 45, 45));
-    getContentPane().add(new RimpleXButton("EXPONENT", "^", controller, 260, 350, 45, 45));
-    getContentPane().add(new RimpleXButton("LOGARITHM", "Log", controller, 310, 350, 45, 45));
+    getContentPane().add(new RimpleXButton("CONJUGATE", rb.getString("Conjugate"), controller, 260, 300, 45, 45));
+    getContentPane().add(new RimpleXButton("SQUARE_ROOT", rb.getString("Square_Root"), controller, 310, 300, 45, 45));
+    getContentPane().add(new RimpleXButton("EXPONENT", rb.getString("Exponent"), controller, 260, 350, 45, 45));
+    getContentPane().add(new RimpleXButton("LOGARITHM", rb.getString("Logarithm"), controller, 310, 350, 45, 45));
   }
 
   /**

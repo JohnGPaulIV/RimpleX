@@ -3,6 +3,7 @@ package rimplex;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import rimplex.gui.*;
 
@@ -15,10 +16,13 @@ import javax.swing.SwingUtilities;
  * General structure taken from Dr. Bernstein's Serialization Lab:
  * (https://w3.cs.jmu.edu/bernstdh/web/common/labs/experience_serialization/tempz/index.php)
  * 
+ * @author Joseph Pogoretskiy
+ * 
  * This work complies with JMU Honor Code.
  */
 public class RimpleX implements Runnable
 {
+  public static ResourceBundle rb;
   /**
    * Main driver.
    * 
@@ -39,7 +43,6 @@ public class RimpleX implements Runnable
   {
     Locale locale = Locale.of("en", "US");
     String[] languageOptions = {"English", "русский язык", "Español"};
-    Locale[] locals = {Locale.of("en","US"), Locale.of("ru", "RU"), Locale.of("es", "ES")};
     String selection = (String) JOptionPane.showInputDialog(
         null,
         "Pick a language:",
@@ -58,7 +61,8 @@ public class RimpleX implements Runnable
     {
       locale = Locale.of("es", "ES");
     }
-    RimpleXController controller = new RimpleXController(locale);
+    rb = ResourceBundle.getBundle("rimplex.gui.languages.Strings", locale);
+    RimpleXController controller = new RimpleXController();
     RimpleXWindow window = null;
     try
     {
