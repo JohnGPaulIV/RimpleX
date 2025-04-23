@@ -270,7 +270,7 @@ public class Complex
     {
       Double modulus = Math.floor(Math.sqrt((this.real * this.real) + (this.imaginary * this.imaginary)) * 1000) / 1000;
       Double argument = Math.floor(Math.atan(this.imaginary / this.real) * 1000) / 1000;
-      result = String.valueOf(modulus) + "(cos" + String.valueOf(argument) + ") + " + "i sin("
+      result = String.valueOf(modulus) + "((cos" + String.valueOf(argument) + ") + " + "i sin("
           + String.valueOf(argument) + "))";
     }
     else if (this.real != 0.0 && this.imaginary == 0.0)
@@ -307,18 +307,27 @@ public class Complex
    */
   public void squareRoot()
   {
-    if (this.real != 0.0 && this.imaginary == 0.0)
+    double magnitude = Math.sqrt(this.real * this.real + this.imaginary * this.imaginary);
+    double realPart = Math.sqrt((this.real + magnitude) / 2);
+    double imaginaryPart;
+    if (this.imaginary != 0.0)
+    {
+      imaginaryPart = this.imaginary / (2 * realPart);
+    }
+    else
     {
       if (this.real >= 0.0)
       {
-        this.real = Math.sqrt(this.real);
+        imaginaryPart = 0.0;
       }
       else
       {
-        this.real = 0.0;
-        this.imaginary = -(this.real);
+        realPart = 0.0;
+        imaginaryPart = Math.sqrt(-this.real);
       }
     }
+    this.real = Math.floor((realPart) * 1000) / 1000;
+    this.imaginary = Math.floor((imaginaryPart) * 1000) / 1000;
   }
 
   /**

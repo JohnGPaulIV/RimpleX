@@ -18,6 +18,7 @@ public final class Evaluator
   private static final String NEGATIVE = "-";
   private static final String POWER = "^";
   private static final String IMAGINARY_UNIT = "𝑖";
+  private static final String SQUARE_ROOT = "Square root";
 
   /**
    * Initialize static Evaluator.
@@ -167,6 +168,11 @@ public final class Evaluator
       case INVERT:
         leftComplex.inverse();
         result = leftComplex.toString();
+        break;
+      case SQUARE_ROOT:
+        leftComplex.squareRoot();
+        result = leftComplex.toString();
+        break;
       default:
         result = leftComplex.toString();
         break;

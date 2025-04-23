@@ -493,9 +493,20 @@ public class RimpleXController implements ActionListener
         }
         break;
       case "SQUARE_ROOT":
-        if (display.getText().length() == 0 && !runningCalc)
-          break;
-        display.setText("√(" + display.getText() + ")");
+        if (parenClosed || (!parenPresent && !parenClosed && !display.getText().isEmpty()))
+        {
+          String evaluated = Evaluator.evaluate(display.getText(), "Square root", "");
+          topDisplay.setText(display.getText() + " = " + evaluated);
+          display.setText("");
+          parenClosed = false;
+          equalsPresent = true;
+        }
+        else if (equalsPresent)
+        {
+          Complex complexNum = Complex.parse(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 1));
+          complexNum.squareRoot();
+          topDisplay.setText(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 2) + " = " + complexNum.toString());
+        }
         break;
       case "EXPONENT":
         if (display.getText().length() == 0 && !runningCalc)
