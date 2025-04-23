@@ -297,14 +297,21 @@ public class RimpleXController implements ActionListener
         break;
       case "SIGN":
         // This is a HYPHEN, not a DASH
-        if (bottomDisplay.getText().charAt(0) == '-')
-          bottomDisplay.setText(bottomDisplay.getText().substring(1));
-        else
-          bottomDisplay.setText(NEGATIVE + bottomDisplay.getText());
-        fullExpression = fullExpression.substring(0,
-            fullExpression.length() - bottomDisplay.getText().length()) + "-1*("
-            + fullExpression.substring(fullExpression.length() - bottomDisplay.getText().length())
-            + CLOSED_PAREN;
+        if (parenClosed || (!parenClosed && !parenPresent && !bottomDisplay.getText().isBlank()))
+        {
+          String displayText = bottomDisplay.getText();
+          displayText = displayText.replace(ADD, SUBTRACTION).replace(SUBTRACTION, ADD).replace(MULTIPLICATION, MULTIPLICATION + NEGATIVE)
+          .replace(DIVIDE, DIVIDE + NEGATIVE).replace(POWER, POWER + NEGATIVE);
+          if (displayText.charAt(0) == '-')
+          {
+            displayText = displayText.substring(1);
+          }
+          else
+          {
+            displayText = NEGATIVE + displayText;
+          }
+          bottomDisplay.setText(displayText);
+        }
         break;
       case "ADD":
         setOperator(bottomDisplay, topDisplay, ADD);
