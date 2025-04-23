@@ -182,6 +182,10 @@ public class Complex
    */
   public void logarithm()
   {
+    if (this.real == 0 && this.imaginary == 0)
+    {
+      throw new ArithmeticException("Cannot log by zero.");
+    }
     double magnitude = Math.sqrt(this.real * this.real + this.imaginary * this.imaginary);
     double argument = (Math.atan(this.imaginary / this.real));
     
