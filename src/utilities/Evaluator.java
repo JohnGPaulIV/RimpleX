@@ -19,6 +19,7 @@ public final class Evaluator
   private static final String POWER = "^";
   private static final String IMAGINARY_UNIT = "𝑖";
   private static final String SQUARE_ROOT = "Square root";
+  private static final String LOG = "Log";
 
   /**
    * Initialize static Evaluator.
@@ -171,6 +172,10 @@ public final class Evaluator
         break;
       case SQUARE_ROOT:
         leftComplex.squareRoot();
+        result = leftComplex.toString();
+        break;
+      case LOG:
+        leftComplex.logarithm();
         result = leftComplex.toString();
         break;
       default:

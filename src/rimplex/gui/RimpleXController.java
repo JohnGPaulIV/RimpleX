@@ -515,9 +515,20 @@ public class RimpleXController implements ActionListener
         fullExpression += "^";
         break;
       case "LOGARITHM":
-        if (display.getText().length() == 0 && !runningCalc)
-          break;
-        display.setText("log(" + display.getText() + ")");
+        if (parenClosed || (!parenPresent && !parenClosed && !display.getText().isEmpty()))
+        {
+          String evaluated = Evaluator.evaluate(display.getText(), "Log", "");
+          topDisplay.setText(display.getText() + " = " + evaluated);
+          display.setText("");
+          parenClosed = false;
+          equalsPresent = true;
+        }
+        else if (equalsPresent)
+        {
+          Complex complexNum = Complex.parse(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 1));
+          complexNum.logarithm();
+          topDisplay.setText(topDisplay.getText().substring(topDisplay.getText().indexOf("=") + 2) + " = " + complexNum.toString());
+        }
         break;
       default:
         break;

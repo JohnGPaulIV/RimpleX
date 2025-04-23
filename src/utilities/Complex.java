@@ -176,6 +176,21 @@ public class Complex
   {
     return real;
   }
+  
+  /**
+   * Calculate the logarithm (base 10) of the current complex number.
+   */
+  public void logarithm()
+  {
+    double magnitude = Math.sqrt(this.real * this.real + this.imaginary * this.imaginary);
+    double argument = (Math.atan(this.imaginary / this.real));
+    
+    double naturalLogReal = Math.log(magnitude);
+    double naturalLogImaginary = argument;
+    
+    this.real = Math.floor((naturalLogReal / Math.log(10)) * 1000) / 1000;
+    this.imaginary = Math.floor((naturalLogImaginary / Math.log(10)) * 1000) / 1000;
+  }
 
   /**
    * Multiply two complex numbers together.
@@ -307,8 +322,8 @@ public class Complex
    */
   public void squareRoot()
   {
-    double magnitude = Math.sqrt(this.real * this.real + this.imaginary * this.imaginary);
-    double realPart = Math.sqrt((this.real + magnitude) / 2);
+    double modulus = Math.sqrt(this.real * this.real + this.imaginary * this.imaginary);
+    double realPart = Math.sqrt((this.real + modulus) / 2);
     double imaginaryPart;
     if (this.imaginary != 0.0)
     {
