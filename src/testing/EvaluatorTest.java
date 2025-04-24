@@ -63,6 +63,7 @@ class EvaluatorTest
   void testEvaluatingBasicExponentiation()
   {
     assertEquals("64.0", Evaluator.evaluate("8", POWER, "2"));
+    assertEquals("0.015", Evaluator.evaluate("8", POWER, "-2"));
   }
   
   @Test

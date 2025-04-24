@@ -72,8 +72,8 @@ public class Complex
     double denominator = other.real * other.real + other.imaginary * other.imaginary;
     if (denominator == 0)
     {
-      JOptionPane.showMessageDialog(null, rb.getString("Divide_By_Zero_Error"), rb.getString("Error"),
-          JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog(null, rb.getString("Divide_By_Zero_Error"),
+          rb.getString("Error"), JOptionPane.ERROR_MESSAGE);
       // throw new ArithmeticException("Cannot divide by zero");
     }
     double realPart = Math.floor(
@@ -98,7 +98,7 @@ public class Complex
     {
       if (other.imaginary == 0.0)
       {
-        result = new Complex(Math.floor((Math.pow(this.real, other.real) * 1000) / 1000), 0.0);
+        result = new Complex(Math.floor((Math.pow(this.real, other.real)) * 1000) / 1000, 0.0);
       }
     }
     else if (this.real == 0.0 && this.imaginary != 0.0)
@@ -318,17 +318,17 @@ public class Complex
       {
         copy = copy.substring(1);
         index = copy.indexOf(SUBTRACTION, 1);
-//        if (index == -1)
-//        {
+        // if (index == -1)
+        // {
         copy = copy.replace(IMAGINARY_UNIT, "");
         result = new Complex(-Double.parseDouble(copy), 0);
-//        }
-//        else
-//        {
-//          copy = copy.replace(IMAGINARY_UNIT, "");
-//          result = new Complex(-Double.parseDouble(copy.substring(0, index)),
-//              -Double.parseDouble(copy.substring(index + 1)));
-//        }
+        // }
+        // else
+        // {
+        // copy = copy.replace(IMAGINARY_UNIT, "");
+        // result = new Complex(-Double.parseDouble(copy.substring(0, index)),
+        // -Double.parseDouble(copy.substring(index + 1)));
+        // }
       }
       else
       {

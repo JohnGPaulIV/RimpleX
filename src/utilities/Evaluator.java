@@ -1,5 +1,4 @@
 package utilities;
-import static rimplex.RimpleX.*;
 
 /**
  * This class evaluates given operands and operators recursively given a string of input.
