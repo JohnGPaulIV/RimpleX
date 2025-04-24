@@ -203,7 +203,7 @@ public final class Evaluator
    */
   private static String evaluatePower(final Complex leftOperand, final Complex rightOperand)
   {
-    String result = "evaluatePower() " + rb.getString("Error");
+    String result = null;
     if (rightOperand.getImaginary() != 0.0 && rightOperand.getReal() == 0.0)
     {
       if (isComplex(leftOperand) || leftOperand.getImaginary() != 0.0)

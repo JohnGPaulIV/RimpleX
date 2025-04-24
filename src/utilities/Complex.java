@@ -318,17 +318,17 @@ public class Complex
       {
         copy = copy.substring(1);
         index = copy.indexOf(SUBTRACTION, 1);
-        if (index == -1)
-        {
-          copy = copy.replace(IMAGINARY_UNIT, "");
-          result = new Complex(-Double.parseDouble(copy), 0);
-        }
-        else
-        {
-          copy = copy.replace(IMAGINARY_UNIT, "");
-          result = new Complex(-Double.parseDouble(copy.substring(0, index)),
-              -Double.parseDouble(copy.substring(index + 1)));
-        }
+//        if (index == -1)
+//        {
+        copy = copy.replace(IMAGINARY_UNIT, "");
+        result = new Complex(-Double.parseDouble(copy), 0);
+//        }
+//        else
+//        {
+//          copy = copy.replace(IMAGINARY_UNIT, "");
+//          result = new Complex(-Double.parseDouble(copy.substring(0, index)),
+//              -Double.parseDouble(copy.substring(index + 1)));
+//        }
       }
       else
       {
