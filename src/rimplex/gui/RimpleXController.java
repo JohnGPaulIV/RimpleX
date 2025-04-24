@@ -298,10 +298,23 @@ public class RimpleXController implements ActionListener
         // This is a HYPHEN, not a DASH
         if (parenClosed || (!parenClosed && !parenPresent && !bottomDisplay.getText().isBlank()))
         {
+          String temp = "TEMP";
           String displayText = bottomDisplay.getText();
-          displayText = displayText.replace(ADD, SUBTRACTION).replace(SUBTRACTION, ADD)
-              .replace(MULTIPLICATION, MULTIPLICATION + NEGATIVE).replace(DIVIDE, DIVIDE + NEGATIVE)
-              .replace(POWER, POWER + NEGATIVE);
+//          displayText = displayText.replace(ADD, SUBTRACTION).replace(SUBTRACTION, ADD)
+//              .replace(MULTIPLICATION, MULTIPLICATION + NEGATIVE).replace(DIVIDE, DIVIDE + NEGATIVE)
+//              .replace(POWER, POWER + NEGATIVE);
+          displayText = displayText.replace(ADD, temp);
+          displayText = displayText.replace(SUBTRACTION, ADD);
+          displayText = displayText.replace(temp, SUBTRACTION);
+          displayText = displayText.replace(MULTIPLICATION + NEGATIVE, temp);
+          displayText = displayText.replace(MULTIPLICATION, MULTIPLICATION + NEGATIVE);
+          displayText = displayText.replace(temp, MULTIPLICATION);
+          displayText = displayText.replace(DIVIDE + NEGATIVE, temp);
+          displayText = displayText.replace(DIVIDE, DIVIDE + NEGATIVE);
+          displayText = displayText.replace(temp, DIVIDE);
+          displayText = displayText.replace(POWER + NEGATIVE, temp);
+          displayText = displayText.replace(POWER, POWER + NEGATIVE);
+          displayText = displayText.replace(temp, POWER);
           if (displayText.charAt(0) == '-')
           {
             displayText = displayText.substring(1);
