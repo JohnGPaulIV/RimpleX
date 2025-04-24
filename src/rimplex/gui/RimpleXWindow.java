@@ -80,6 +80,10 @@ public class RimpleXWindow extends JFrame implements KeyListener
 
     Container contentPane = this.getContentPane();
     contentPane.setLayout(null);
+    
+    // sets the window icon.
+    ImageIcon img = new ImageIcon(getClass().getResource("/icons/iconRimplex.png"));
+    setIconImage(img.getImage());
 
     setupAnimationTimer();
     setupSessionHistoryDropout();
@@ -88,7 +92,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
     setupDisplay();
     sessionHistory.setVisible(isExpanded);
 
-    BufferedImage myPicture = ImageIO.read(new File("logoRimplex.png"));
+    BufferedImage myPicture = ImageIO.read(getClass().getResource("/icons/logoRimplex.png"));
 
     // Calculate scaled dimensions
     int scaledWidth = myPicture.getWidth() / 2;

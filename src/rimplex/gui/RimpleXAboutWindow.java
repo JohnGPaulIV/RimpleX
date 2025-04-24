@@ -39,7 +39,11 @@ public class RimpleXAboutWindow extends JFrame
       titleLabel.setBounds(0, 10, 400, 20);
       add(titleLabel);
 
-      BufferedImage icon = ImageIO.read(new File("iconRimplex.png"));
+      BufferedImage icon = ImageIO.read(getClass().getResource("/icons/iconRimplex.png"));
+      
+      // sets the window icon.
+      ImageIcon img = new ImageIcon(getClass().getResource("/icons/iconRimplex.png"));
+      setIconImage(img.getImage());
 
       int iconWidth = icon.getWidth() / 2;
       int iconHeight = icon.getHeight() / 2;
