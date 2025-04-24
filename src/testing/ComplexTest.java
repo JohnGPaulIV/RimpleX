@@ -211,16 +211,46 @@ public class ComplexTest
     Complex result2 = base2.exponentiate(exp2);
     assertEquals(-1.0, result2.getReal(), 0.001);
     assertEquals(0.0, result2.getImaginary(), 0.001);
-
-    Complex result3 = a.exponentiate(new Complex(0, 0));
-    assertEquals(1.0, result3.getReal(), 0.001);
-    assertEquals(0.0, result3.getImaginary(), 0.001);
-
+    
     Complex base4 = new Complex(2, 0);
     Complex exp4 = new Complex(-3, 0);
     Complex result4 = base4.exponentiate(exp4);
     assertEquals(0.125, result4.getReal(), 0.001);
     assertEquals(0.0, result4.getImaginary(), 0.001);
+
+    Complex baseCases = new Complex(0, 4);
+
+    Complex expC0 = new Complex(4, 0);
+    Complex resultC0 = baseCases.exponentiate(expC0);
+    assertEquals(4.0, resultC0.getReal(), 0.001);
+    
+    Complex expC1 = new Complex(5, 0);
+    Complex resultC1 = baseCases.exponentiate(expC1);
+    assertEquals(0.0, resultC1.getReal(), 0.001);
+    
+    Complex expC3 = new Complex(7, 0);
+    Complex resultC3 = baseCases.exponentiate(expC3);
+    assertEquals(0.0, resultC3.getReal(), 0.001);
+    
+    Complex expCDefault = new Complex(-1, 0);
+    Complex resultCDefault = baseCases.exponentiate(expCDefault);
+    assertEquals(0.0, resultCDefault.getReal(), 0.001);  
+    
+    Complex baseZero = new Complex(0, 0);
+    
+    Complex expAllZero = new Complex(0, 0);
+    Complex resultAllZero = baseZero.exponentiate(expAllZero);
+    assertEquals(1.0, resultAllZero.getReal(), 0.001);
+    
+    Complex expZeroImag = new Complex(3, 0);
+    Complex resultZeroImag = baseZero.exponentiate(expZeroImag);
+    assertEquals(0.0, resultZeroImag.getImaginary(), 0.001);
+    
+    Complex baseNonZero = new Complex(2, 3);
+    Complex expNegReal = new Complex(-1, 0);
+    Complex resultZeroReal = baseNonZero.exponentiate(expNegReal);
+    assertEquals(0.153, resultZeroReal.getReal(), 0.001);
+    
   }
 
   @Test
