@@ -1,47 +1,63 @@
 package utilities;
-import javax.swing.JEditorPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.text.MessageFormat;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
 import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
+import java.io.BufferedReader;
+
+import java.io.FileReader;
+import java.io.IOException;
+
+
 
 public class PrintHelper {
-    /**
-     * Opens a print dialog for the given HTML file.
-     */
+    
     public static void printHtmlFile() {
-      // SessionHistory.print();
-      SwingUtilities.invokeLater(() -> {
-        try {
-            // Read the entire text file
-            String content = Files.readString(Path.of("Session_History"));
+      PrinterJob printJob = PrinterJob.getPrinterJob();
+      printJob.setJobName("Session_History.txt");
 
-            // Load into a JTextArea
-            JTextArea ta = new JTextArea(content);
-            ta.setEditable(false);
-            ta.setLineWrap(true);
-            ta.setWrapStyleWord(true);
+      printJob.setPrintable(new Printable() {
+          @Override
+          public int print(Graphics graphics, PageFormat pf, int pageIndex)
+                  throws PrinterException {
+              if (pageIndex > 0) {
+                  return NO_SUCH_PAGE;
+              }
 
-            // Optional headers/footers
-            MessageFormat header = new MessageFormat("Session History");
-            MessageFormat footer = new MessageFormat("Page {0}");
+              Graphics2D g2 = (Graphics2D) graphics;
+              g2.translate(pf.getImageableX(), pf.getImageableY());
 
-            // Show dialog and print
-            boolean showDialog = true;
-            ta.print(header, footer, showDialog, null, null, true);
+              float y = 0;
+              float lineHeight = g2.getFontMetrics().getHeight();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (PrinterException e) {
-            e.printStackTrace();
-        }
-    });
-    }
+              try (BufferedReader reader = new BufferedReader(
+                       new FileReader("Session_History.txt"))) {
+                  String line;
+                  while ((line = reader.readLine()) != null) {
+                      y += lineHeight;
+                      g2.drawString(line, 0, y);
+                  }
+              } catch (IOException e) {
+                  throw new PrinterException("Error reading file: " + e.getMessage());
+              }
+
+              return PAGE_EXISTS;
+          }
+      });
+
+      if (!printJob.printDialog()) {
+          System.out.println("Printing canceled by user.");
+          return;
+      }
+
+      try {
+          printJob.print();
+          System.out.println("Print job sent.");
+      } catch (PrinterException exc) {
+          exc.printStackTrace();
+      }
+  }
 }
