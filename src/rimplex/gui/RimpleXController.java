@@ -731,10 +731,11 @@ public class RimpleXController implements ActionListener
       case "S_HISTORY_DROPOUT":
         window.toggleExpansion();
         break;
-      default:
-        break;
       case "ACTION_PRINT":
         PrintHelper.printHtmlFile();
+        break;
+      default:
+        break;
     }
     window.requestFocusInWindow();
     

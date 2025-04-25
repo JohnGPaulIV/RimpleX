@@ -6,55 +6,76 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
+/**
+ * Helper class for the Session History.
+ *
+ * @author John Paul
+ * @version 1
+ */
 public class SessionHistory
 {
   private static JLabel historyBox;
   private static StringBuilder historyContent = new StringBuilder();
   private static int numOp = 1;
+  private static String FILE = "Session_History.txt";
   
   private SessionHistory()
   {
     
   }
   
-  public static void setLabel(JLabel label)
+  /**
+   * Sets the JLabel to act upon.
+   * @param label JLabel to add session history to.
+   */
+  public static void setLabel(final JLabel label)
   {
     historyBox = label;
     historyContent.setLength(0);
     SwingUtilities.invokeLater(() -> historyBox.setText("<html></html>"));
-    Path sessionHistory = Paths.get("Session_History.txt");
+    Path sessionHistory = Paths.get(FILE);
     try (BufferedWriter writer = Files.newBufferedWriter(sessionHistory,
         StandardOpenOption.CREATE,
-        StandardOpenOption.TRUNCATE_EXISTING)) {
-    } catch (IOException e) {
-    e.printStackTrace();
+        StandardOpenOption.TRUNCATE_EXISTING))
+    {
+      writer.write("Session History: ");
+      writer.newLine();
+    } catch (IOException e) 
+    {
+      e.printStackTrace();
     }
     
   }
   
-  public static void add(String calculation)
+  /**
+   * Adder method to add calculations to the session history box and file.
+   * @param calculation Calculation to be added.
+   */
+  public static void add(final String calculation)
   {
-    Path sessionHistory = Paths.get("Session_History.txt");
+    Path sessionHistory = Paths.get(FILE);
     try (BufferedWriter writer = Files.newBufferedWriter(sessionHistory,
             StandardOpenOption.CREATE,
-            StandardOpenOption.APPEND)) {
-        writer.write(String.valueOf(numOp) + ". " + calculation);
-        writer.newLine();
-        writer.newLine();
-        numOp++;
-    } catch (IOException e) {
-        e.printStackTrace();
+            StandardOpenOption.APPEND))
+    {
+      writer.write(String.valueOf(numOp) + ". " + calculation);
+      writer.newLine();
+      writer.newLine();
+      numOp++;
+    } catch (IOException e) 
+    {
+      e.printStackTrace();
     }
-    if (historyBox != null) {
+    if (historyBox != null) 
+    {
       historyContent.append(calculation).append("<br>");
       String html = "<html>" + historyContent.toString() + "</html>";
       SwingUtilities.invokeLater(() -> historyBox.setText(html));
-  }
+    }
   }
   
 }

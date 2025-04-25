@@ -6,7 +6,7 @@ import java.awt.Insets;
 import javax.swing.JButton;
 
 /**
- * Represents the button to extend the session history
+ * Represents the button to extend the session history.
  * 
  * @author Joseph Pogoretskiy, Benjamin Bonnell
  * 
@@ -18,8 +18,10 @@ public class SessionHistoryDropoutBar extends JButton
   private static final long serialVersionUID = 1L;
 
 
-//   @param controller observer of the button.
-
+  /**
+   * Session History Drop-out Bar constructor.
+   * @param controller Controller object that the drop-out uses.
+   */
   public SessionHistoryDropoutBar(final RimpleXController controller)
   {
     this.setActionCommand("S_HISTORY_DROPOUT");

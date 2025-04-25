@@ -23,6 +23,15 @@ import javax.swing.SwingUtilities;
 public class RimpleX implements Runnable
 {
   public static ResourceBundle rb;
+  private static String en = "en";
+  private static String es = "es";
+  private static String ru = "ru";
+  private static String US = "US";
+  private static String ES = "ES";
+  private static String RU = "RU";
+  private static String English = "English";
+  private static String Russian = "русский язык";
+  private static String Spanish = "Español";
   /**
    * Main driver.
    * 
@@ -41,8 +50,8 @@ public class RimpleX implements Runnable
   @Override
   public void run()
   {
-    Locale locale = Locale.of("en", "US");
-    String[] languageOptions = {"English", "русский язык", "Español"};
+    Locale locale = Locale.of(en, US);
+    String[] languageOptions = {English, Russian, Spanish};
     String selection = (String) JOptionPane.showInputDialog(
         null,
         "Pick a language:",
@@ -51,15 +60,15 @@ public class RimpleX implements Runnable
         null,
         languageOptions,
         languageOptions[0]);
-    if (selection.equals("English"))
+    if (selection.equals(English))
     {
-      locale = Locale.of("en", "US");
-    } else if (selection.equals("русский язык"))
+      locale = Locale.of(en, US);
+    } else if (selection.equals(Russian))
     {
-      locale = Locale.of("ru", "RU");
-    } else if (selection.equals("Español"))
+      locale = Locale.of(ru, RU);
+    } else if (selection.equals(Spanish))
     {
-      locale = Locale.of("es", "ES");
+      locale = Locale.of(es, ES);
     }
     rb = ResourceBundle.getBundle("rimplex.gui.languages.Strings", locale);
     RimpleXController controller = new RimpleXController();
