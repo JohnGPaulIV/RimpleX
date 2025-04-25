@@ -5,6 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -52,7 +55,7 @@ public class RimpleXController implements ActionListener
   private boolean equalsPresent = false;
   private String fullExpression;
   private boolean runningCalc = true;
-  
+
   private Complex result;
   private boolean polarFormEnabled = false;
   private Complex polarizedComplex;
@@ -231,7 +234,8 @@ public class RimpleXController implements ActionListener
         }
         break;
       case "DECIMAL":
-        // This is a temporary solution since this won't work when operators are in the current
+        // This is a temporary solution since this won't work when operators are in the
+        // current
         // expression.
         boolean canPlace = !(bottomDisplay.getText().length() == 0) && Character
             .isDigit(bottomDisplay.getText().charAt(bottomDisplay.getText().length() - 1));
@@ -303,9 +307,9 @@ public class RimpleXController implements ActionListener
         {
           String temp = "TEMP";
           String displayText = bottomDisplay.getText();
-//          displayText = displayText.replace(ADD, SUBTRACTION).replace(SUBTRACTION, ADD)
-//              .replace(MULTIPLICATION, MULTIPLICATION + NEGATIVE).replace(DIVIDE, DIVIDE + NEGATIVE)
-//              .replace(POWER, POWER + NEGATIVE);
+          // displayText = displayText.replace(ADD, SUBTRACTION).replace(SUBTRACTION, ADD)
+          // .replace(MULTIPLICATION, MULTIPLICATION + NEGATIVE).replace(DIVIDE, DIVIDE + NEGATIVE)
+          // .replace(POWER, POWER + NEGATIVE);
           displayText = displayText.replace(ADD, temp);
           displayText = displayText.replace(SUBTRACTION, ADD);
           displayText = displayText.replace(temp, SUBTRACTION);
@@ -345,26 +349,26 @@ public class RimpleXController implements ActionListener
         System.exit(0);
         break;
       case "ACTION_HELP":
-        File htmlFile = new File(rb.getString("Help_File"));
-        try
+        String htmlFilePath = rb.getString("Help_File_Path");
+        try (InputStream in = getClass().getResourceAsStream(htmlFilePath))
         {
-          Desktop.getDesktop().browse(htmlFile.toURI());
+          File tempFile = File.createTempFile("help", ".html");
+          tempFile.deleteOnExit();
+          Files.copy(in, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+          try
+          {
+            Desktop.getDesktop().browse(tempFile.toURI());
+          }
+          catch (UnsupportedOperationException e)
+          {
+            // we have to do this on linux
+            Runtime.getRuntime().exec(new String[] {"xdg-open", tempFile.getAbsolutePath()});
+          }
         }
         catch (IOException e)
         {
-          System.out.println("HTML help file lost.");
-        }
-        catch (UnsupportedOperationException e)
-        {
-          // on linux this will likely happen.
-          try
-          {
-            Runtime.getRuntime().exec(new String[] {"xdg-open", htmlFile.getAbsolutePath()});
-          }
-          catch (IOException e1)
-          {
-            System.out.println("HTML help file lost");
-          }
+          System.err.println("cant find help file " + e.getMessage());
         }
         break;
       case "ACTION_ABOUT":

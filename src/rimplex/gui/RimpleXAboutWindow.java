@@ -22,10 +22,15 @@ import static rimplex.RimpleX.*;
 public class RimpleXAboutWindow extends JFrame
 {
   private static final long serialVersionUID = 1L;
-
+  private final String sansSerif = "Sans-Serif";
+  private final String about = "About";
+  
+  /**
+   * Constructs "About" Window for Rimplex.
+   */
   public RimpleXAboutWindow() throws IOException
   {
-    setTitle(rb.getString("About") + " RimpleX");
+    setTitle(rb.getString(about) + " RimpleX");
     setSize(400, 275);
     setLocationRelativeTo(null);
     setLayout(null);
@@ -34,12 +39,16 @@ public class RimpleXAboutWindow extends JFrame
     try
     {
       // Add title and RimpleX icon to the About Window.
-      JLabel titleLabel = new JLabel(rb.getString("About"), JLabel.CENTER);
-      titleLabel.setFont(new Font("Sans-Serif", Font.PLAIN, 16));
+      JLabel titleLabel = new JLabel(rb.getString(about), JLabel.CENTER);
+      titleLabel.setFont(new Font(sansSerif, Font.PLAIN, 16));
       titleLabel.setBounds(0, 10, 400, 20);
       add(titleLabel);
 
-      BufferedImage icon = ImageIO.read(new File("iconRimplex.png"));
+      BufferedImage icon = ImageIO.read(getClass().getResource("/icons/iconRimplex.png"));
+      
+      // sets the window icon.
+      ImageIcon img = new ImageIcon(getClass().getResource("/icons/iconRimplex.png"));
+      setIconImage(img.getImage());
 
       int iconWidth = icon.getWidth() / 2;
       int iconHeight = icon.getHeight() / 2;
@@ -66,12 +75,12 @@ public class RimpleXAboutWindow extends JFrame
       String description = rb.getString("RimpleX_About");
 
       JLabel descLabel = new JLabel(description, JLabel.CENTER);
-      descLabel.setFont(new Font("Sans-Serif", Font.PLAIN, 14));
+      descLabel.setFont(new Font(sansSerif, Font.PLAIN, 14));
       descLabel.setBounds(10, 35 + iconHeight + 25, 360, 130);
       add(descLabel);
 
     }
-    catch (Exception e)
+    catch (IOException e)
     {
       e.printStackTrace();
     }
