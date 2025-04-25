@@ -27,7 +27,7 @@ public class SessionHistory
     historyBox = label;
     historyContent.setLength(0);
     SwingUtilities.invokeLater(() -> historyBox.setText("<html></html>"));
-    Path sessionHistory = Paths.get("Session_History");
+    Path sessionHistory = Paths.get("Session_History.txt");
     try (BufferedWriter writer = Files.newBufferedWriter(sessionHistory,
         StandardOpenOption.CREATE,
         StandardOpenOption.TRUNCATE_EXISTING)) {
@@ -39,7 +39,7 @@ public class SessionHistory
   
   public static void add(String calculation)
   {
-    Path sessionHistory = Paths.get("Session_History");
+    Path sessionHistory = Paths.get("Session_History.txt");
     try (BufferedWriter writer = Files.newBufferedWriter(sessionHistory,
             StandardOpenOption.CREATE,
             StandardOpenOption.APPEND)) {
