@@ -5,30 +5,48 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Locale;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.TransferHandler;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
 
 import utilities.Complex;
 import utilities.SessionHistory;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
 
 import static rimplex.RimpleX.*;
 
@@ -264,6 +282,53 @@ public class RimpleXWindow extends JFrame implements KeyListener
     Border compound = new CompoundBorder(border, padding);
 
     sessionHistory.setBorder(compound);
+    sessionHistory.setTransferHandler(new TransferHandler("text"));
+
+    sessionHistory.setFocusable(true);
+
+    int menuMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+    KeyStroke copyKS = KeyStroke.getKeyStroke(KeyEvent.VK_C, menuMask);
+    sessionHistory.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                  .put(copyKS, "copyPlainText");
+    sessionHistory.getActionMap()
+                  .put("copyPlainText", new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String html = sessionHistory.getText();
+            try {
+                HTMLEditorKit kit = new HTMLEditorKit();
+                HTMLDocument doc = (HTMLDocument) kit.createDefaultDocument();
+                doc.putProperty("IgnoreCharsetDirective", Boolean.TRUE);
+                kit.read(new StringReader(html), doc, 0);
+
+                String plain = doc.getText(0, doc.getLength());
+
+                StringSelection sel = new StringSelection(plain);
+                Toolkit.getDefaultToolkit()
+                       .getSystemClipboard()
+                       .setContents(sel, null);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    });
+
+    JPopupMenu popup = new JPopupMenu();
+    JMenuItem copyItem = new JMenuItem("Copy");
+    copyItem.addActionListener(evt ->
+        sessionHistory.getActionMap()
+                      .get("copyPlainText")
+                      .actionPerformed(new ActionEvent(sessionHistory, 0, null))
+    );
+    popup.add(copyItem);
+    sessionHistory.setComponentPopupMenu(popup);
+
+    sessionHistory.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            sessionHistory.requestFocusInWindow();
+        }
+    });
     SessionHistory.setLabel(sessionHistory);
     getContentPane().add(sessionHistory);
     
