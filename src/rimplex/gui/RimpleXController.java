@@ -14,6 +14,9 @@ import javax.swing.JLabel;
 
 import utilities.Complex;
 import utilities.Evaluator;
+import utilities.PrintHelper;
+import utilities.SessionHistory;
+
 import static rimplex.RimpleX.*;
 
 /**
@@ -399,7 +402,7 @@ public class RimpleXController implements ActionListener
           result = Complex.parse(evaluation);
           topDisplay.setText(
               leftOperand + operator + SPACE + rightOperand + SPACE + EQUALS + SPACE + evaluation);
-
+          SessionHistory.add(topDisplay.getText());
           if (polarFormEnabled)
           {
             Complex evaluated = Complex.parse(evaluation);
@@ -430,6 +433,7 @@ public class RimpleXController implements ActionListener
         {
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Invert", "");
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + evaluated);
+          SessionHistory.add("Inv(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1) + ")" + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           bottomDisplay.setText("");
           parenClosed = false;
           equalsPresent = true;
@@ -453,22 +457,29 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + polarizedComplex.getPolarForm());
+            SessionHistory.add("Inv(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1) + ")" + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+
           }
           else
           {
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + complexNum.toString());
+            SessionHistory.add("Inv(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1) + ")" + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+
           }
         }
         break;
       case "IMAGINARY_PART":
+        String top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1) + ")";
         if (parenClosed || (!parenPresent && !parenClosed && !bottomDisplay.getText().isEmpty()))
         {
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "", "");
+          
           Complex imaginary = new Complex(0.0, Complex.parse(evaluated).getImaginary());
           topDisplay
               .setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + imaginary.toString());
+          SessionHistory.add("Imag" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           bottomDisplay.setText("");
           parenClosed = false;
           equalsPresent = true;
@@ -492,21 +503,25 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + polarizedComplex.toString());
-          }
+            SessionHistory.add("Imag" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            }
           else
           {
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + imaginary.toString());
-          }
+            SessionHistory.add("Imag" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            }
         }
         break;
       case "REAL_PART":
+        top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1) + ")";
         if (parenClosed || (!parenPresent && !parenClosed && !bottomDisplay.getText().isEmpty()))
         {
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "", "");
           Complex real = new Complex(Complex.parse(evaluated).getReal(), 0.0);
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + real.toString());
+          SessionHistory.add("Real" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           bottomDisplay.setText("");
           parenClosed = false;
           equalsPresent = true;
@@ -530,16 +545,19 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + polarizedComplex.toString());
+            SessionHistory.add("Real" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           }
           else
           {
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + real.toString());
+            SessionHistory.add("Real" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           }
         }
         break;
       case "POLAR_FORM":
+        top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1) + ")";
         if (parenClosed || (!parenPresent && !parenClosed && !bottomDisplay.getText().isEmpty()))
         {
           if (!polarFormEnabled)
@@ -548,6 +566,7 @@ public class RimpleXController implements ActionListener
             polarizedComplex = Complex.parse(evaluated);
             topDisplay.setText(
                 bottomDisplay.getText() + SPACE + EQUALS + SPACE + polarizedComplex.getPolarForm());
+            SessionHistory.add("Plr" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
             bottomDisplay.setText("");
             parenClosed = false;
             equalsPresent = true;
@@ -564,6 +583,7 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + polarForm);
+            SessionHistory.add("Plr" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
             polarFormEnabled = true;
           }
           else
@@ -571,15 +591,18 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + polarizedComplex.toString());
+            SessionHistory.add("Plr" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
             polarFormEnabled = false;
           }
         }
         break;
       case "CONJUGATE":
+        top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1) + ")";
         if (parenClosed || (!parenPresent && !parenClosed && !bottomDisplay.getText().isEmpty()))
         {
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Conjugate", "");
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + evaluated);
+          SessionHistory.add("Conj" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           bottomDisplay.setText("");
           parenClosed = false;
           equalsPresent = true;
@@ -603,20 +626,24 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + polarizedComplex.getPolarForm());
+            SessionHistory.add("Conj" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           }
           else
           {
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + complexNum.toString());
+            SessionHistory.add("Conj" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           }
         }
         break;
       case "SQUARE_ROOT":
+        top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1) + ")";
         if (parenClosed || (!parenPresent && !parenClosed && !bottomDisplay.getText().isEmpty()))
         {
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Square root", "");
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + evaluated);
+          SessionHistory.add("Sqrt" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           bottomDisplay.setText("");
           parenClosed = false;
           equalsPresent = true;
@@ -640,12 +667,14 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + polarizedComplex.getPolarForm());
+            SessionHistory.add("Sqrt" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           }
           else
           {
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + complexNum.toString());
+            SessionHistory.add("Sqrt" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           }
         }
         break;
@@ -655,10 +684,12 @@ public class RimpleXController implements ActionListener
         setOperator(bottomDisplay, topDisplay, POWER);
         break;
       case "LOGARITHM":
+        top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1) + ")";
         if (parenClosed || (!parenPresent && !parenClosed && !bottomDisplay.getText().isEmpty()))
         {
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Log", "");
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + evaluated);
+          SessionHistory.add("Log" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           bottomDisplay.setText("");
           parenClosed = false;
           equalsPresent = true;
@@ -682,12 +713,14 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + polarizedComplex.getPolarForm());
+            SessionHistory.add("Log" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           }
           else
           {
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + complexNum.toString());
+            SessionHistory.add("Log" + top + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           }
         }
         break;
@@ -696,8 +729,11 @@ public class RimpleXController implements ActionListener
         break;
       default:
         break;
+      case "ACTION_PRINT":
+        PrintHelper.printHtmlFile();
     }
     window.requestFocusInWindow();
+    
   }
 
   /**
@@ -822,11 +858,19 @@ public class RimpleXController implements ActionListener
             Complex evaluated = Complex.parse(evaluation);
             String polarForm = evaluated.getPolarForm();
             upperDisplay.setText(polarForm + SPACE + op);
+            if (!display.getText().isBlank())
+            {
+              SessionHistory.add(topDisplayValue + " " + display.getText() + " = " + evaluation);
+            }
             polarizedComplex = evaluated;
           }
           else
           {
             upperDisplay.setText(evaluation + SPACE + op);
+            if (!display.getText().isBlank())
+            {
+              SessionHistory.add(topDisplayValue + " " + display.getText() + " = " + evaluation);
+            }
           }
         }
         else

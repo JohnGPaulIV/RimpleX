@@ -28,6 +28,8 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 
 import utilities.Complex;
+import utilities.SessionHistory;
+
 import static rimplex.RimpleX.*;
 
 /**
@@ -249,8 +251,8 @@ public class RimpleXWindow extends JFrame implements KeyListener
   }
   
   public void setupSessionHistoryDisplay() {
-    sessionHistory = new JLabel("history here!");
-    sessionHistory.setVerticalAlignment(SwingConstants.BOTTOM);
+    sessionHistory = new JLabel("Session History:");
+    sessionHistory.setVerticalAlignment(SwingConstants.TOP);
     sessionHistory.setVerticalTextPosition(SwingConstants.BOTTOM);
     sessionHistory.setBounds(365, 10, 220, 390);
     Border padding = BorderFactory.createEmptyBorder(5, 5, 5, 5);
@@ -258,7 +260,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
     Border compound = new CompoundBorder(border, padding);
 
     sessionHistory.setBorder(compound);
-    
+    SessionHistory.setLabel(sessionHistory);
     getContentPane().add(sessionHistory);
     
   }
