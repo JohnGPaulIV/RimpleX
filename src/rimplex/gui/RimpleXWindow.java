@@ -284,6 +284,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
     sessionHistory.setBorder(compound);
     sessionHistory.setTransferHandler(new TransferHandler("text"));
 
+    //made session history copiable
     sessionHistory.setFocusable(true);
 
     int menuMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
