@@ -50,7 +50,7 @@ public class RimpleX implements Runnable
   @Override
   public void run()
   {
-    Locale locale = Locale.of(en, US);
+    /* Locale locale = Locale.of(en, US);
     String[] languageOptions = {English, Russian, Spanish};
     String selection = (String) JOptionPane.showInputDialog(
         null,
@@ -69,7 +69,8 @@ public class RimpleX implements Runnable
     } else if (selection.equals(Spanish))
     {
       locale = Locale.of(es, ES);
-    }
+    } */
+    Locale locale = Locale.getDefault();
     rb = ResourceBundle.getBundle("rimplex.gui.languages.Strings", locale);
     RimpleXController controller = new RimpleXController();
     RimpleXWindow window = null;
