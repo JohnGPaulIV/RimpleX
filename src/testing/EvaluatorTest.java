@@ -203,4 +203,21 @@ class EvaluatorTest
     assertEquals("-6.75—9.0𝑖", Evaluator.evaluate("1.5—3.0𝑖", POWER, "2"));
     assertEquals("0.011—0.039𝑖", Evaluator.evaluate("4+3𝑖", POWER, "-2"));
   }
+  
+  @Test
+  void testEvaluatingOperandsContainingParentheses()
+  {
+    assertEquals("11.0", Evaluator.evaluate("4", ADDITION, "(4+3)"));
+    assertEquals("10.0", Evaluator.evaluate("(5+2)", ADDITION, "3"));
+    assertEquals("71.0", Evaluator.evaluate("(5+2×7)", ADDITION, "(4+6×8)"));
+  }
+  
+  @Test
+  void testEvaluatingOperandsContainingMultiplieParentheses()
+  {
+    assertEquals("11.5", Evaluator.evaluate("4", ADDITION, "(4+3+(4+2))×0.5"));
+    assertEquals("20.0", Evaluator.evaluate("5+2+((2+8)×2)", ADDITION, "3"));
+    assertEquals("71.0", Evaluator.evaluate("2×(8÷4)+(4+8)", ADDITION, "4×(8×2—(1+1))"));
+    assertEquals("10.0 + 8.0𝑖", Evaluator.evaluate("2+3𝑖+(2𝑖+(4+2𝑖))—1", ADDITION, "(3𝑖^2)+(1+3𝑖+(5—2𝑖))+2"));
+  }
 }
