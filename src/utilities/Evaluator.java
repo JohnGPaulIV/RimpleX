@@ -20,6 +20,8 @@ public final class Evaluator
   private static final String IMAGINARY_UNIT = "𝑖";
   private static final String SQUARE_ROOT = "Square root";
   private static final String LOG = "Log";
+  private static final String GREATER_THAN = "Greater than";
+  private static final String LESS_THAN = "Less than";
 
   /**
    * Initialize static Evaluator.
@@ -183,6 +185,12 @@ public final class Evaluator
       case LOG:
         leftComplex.logarithm();
         result = leftComplex.toString();
+        break;
+      case GREATER_THAN:
+        result = Boolean.toString(leftComplex.greaterThan(rightComplex));
+        break;
+      case LESS_THAN:
+        result = Boolean.toString(leftComplex.lessThan(rightComplex));
         break;
       default:
         result = leftComplex.toString();

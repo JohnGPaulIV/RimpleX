@@ -48,6 +48,66 @@ public class Complex
     double imaginaryNum = Math.floor((this.imaginary + other.imaginary) * 1000) / 1000;
     return new Complex(realNum, imaginaryNum);
   }
+  
+  /**
+   * Calculate whether one complex number is greater than the other.
+   * 
+   * @return Return whether the complex number is greater than the other.
+   */
+  public boolean greaterThan(final Complex other)
+  {
+    boolean result;
+    if (this.real > other.real)
+    {
+      result = true;
+    } 
+    else if (this.real == other.real)
+    {
+      if (this.imaginary >= other.imaginary)
+      {
+        result = true;
+      }
+      else
+      {
+        result = false;
+      }
+    }
+    else
+    {
+      result = false;
+    }
+    return result;
+  }
+  
+  /**
+   * Calculate whether one complex number is less than the other.
+   * 
+   * @return Return whether the complex number is less than the other.
+   */
+  public boolean lessThan(final Complex other)
+  {
+    boolean result;
+    if (this.real < other.real)
+    {
+      result = true;
+    } 
+    else if (this.real == other.real)
+    {
+      if (this.imaginary <= other.imaginary)
+      {
+        result = true;
+      }
+      else
+      {
+        result = false;
+      }
+    }
+    else
+    {
+      result = false;
+    }
+    return result;
+  }
 
   /**
    * Conjugate the complex number.

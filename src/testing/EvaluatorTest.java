@@ -26,6 +26,8 @@ class EvaluatorTest
   static final String SQUARE_ROOT = "Square root";
   static final String LOG = "Log";
   static final String INVERT = "Invert";
+  static final String GREATER_THAN = "Greater than";
+  static final String LESS_THAN = "Less than";
 
   @Test
   void testEvaluatingBasicSubtraction()
@@ -135,6 +137,40 @@ class EvaluatorTest
     assertEquals("0.25+0.25𝑖", Evaluator.evaluate("2—2𝑖", INVERT, ""));
     assertEquals("-0.334𝑖", Evaluator.evaluate("3𝑖", INVERT, ""));
     assertEquals("0.333", Evaluator.evaluate("3", INVERT, ""));
+  }
+  
+  @Test
+  void testEvaluatingGreaterThanComplexes()
+  {
+    assertEquals("true", Evaluator.evaluate("3.001", GREATER_THAN, "3"));
+    assertEquals("false", Evaluator.evaluate("3", GREATER_THAN, "3.001"));
+    assertEquals("true", Evaluator.evaluate("3+2𝑖", GREATER_THAN, "3"));
+    assertEquals("true", Evaluator.evaluate("3+2𝑖", GREATER_THAN, "3+2𝑖"));
+    assertEquals("true", Evaluator.evaluate("3+2𝑖", GREATER_THAN, "3—2𝑖"));
+    assertEquals("false", Evaluator.evaluate("3—2𝑖", GREATER_THAN, "3+2𝑖"));
+    assertEquals("false", Evaluator.evaluate("3", GREATER_THAN, "3+2𝑖"));
+    assertEquals("true", Evaluator.evaluate("3𝑖", GREATER_THAN, "2𝑖"));
+    assertEquals("true", Evaluator.evaluate("3𝑖", GREATER_THAN, "3𝑖"));
+    assertEquals("true", Evaluator.evaluate("3𝑖", GREATER_THAN, "-3𝑖"));
+    assertEquals("false", Evaluator.evaluate("3𝑖", GREATER_THAN, "4"));
+    assertEquals("false", Evaluator.evaluate("3𝑖", GREATER_THAN, "3"));
+  }
+  
+  @Test
+  void testEvaluatingLesserThanComplexes()
+  {
+    assertEquals("false", Evaluator.evaluate("3.001", LESS_THAN, "3"));
+    assertEquals("true", Evaluator.evaluate("3", LESS_THAN, "3.001"));
+    assertEquals("false", Evaluator.evaluate("3+2𝑖", LESS_THAN, "3"));
+    assertEquals("true", Evaluator.evaluate("3+2𝑖", LESS_THAN, "3+2𝑖"));
+    assertEquals("false", Evaluator.evaluate("3+2𝑖", LESS_THAN, "3—2𝑖"));
+    assertEquals("true", Evaluator.evaluate("3—2𝑖", LESS_THAN, "3+2𝑖"));
+    assertEquals("true", Evaluator.evaluate("3", LESS_THAN, "3+2𝑖"));
+    assertEquals("false", Evaluator.evaluate("3𝑖", LESS_THAN, "2𝑖"));
+    assertEquals("true", Evaluator.evaluate("3𝑖", LESS_THAN, "3𝑖"));
+    assertEquals("false", Evaluator.evaluate("3𝑖", LESS_THAN, "-3𝑖"));
+    assertEquals("true", Evaluator.evaluate("3𝑖", LESS_THAN, "4"));
+    assertEquals("true", Evaluator.evaluate("3𝑖", LESS_THAN, "3"));
   }
   
   @Test
