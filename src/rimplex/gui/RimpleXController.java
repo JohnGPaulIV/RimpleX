@@ -46,6 +46,8 @@ public class RimpleXController implements ActionListener
   private static final String CLOSED_PAREN = ")";
   private static final String SPACE = " ";
   private static final String DECIMAL = ".";
+  private static final String GREATER_THAN = "≥";
+  private static final String LESSER_THAN = "≤";
 
   private RimpleXWindow window;
   private JLabel topDisplay;

@@ -20,8 +20,8 @@ public final class Evaluator
   private static final String IMAGINARY_UNIT = "𝑖";
   private static final String SQUARE_ROOT = "Square root";
   private static final String LOG = "Log";
-  private static final String GREATER_THAN = "Greater than";
-  private static final String LESS_THAN = "Less than";
+  private static final String GREATER_THAN = "≥";
+  private static final String LESS_THAN = "≤";
 
   /**
    * Initialize static Evaluator.

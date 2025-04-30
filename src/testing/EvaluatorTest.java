@@ -26,8 +26,8 @@ class EvaluatorTest
   static final String SQUARE_ROOT = "Square root";
   static final String LOG = "Log";
   static final String INVERT = "Invert";
-  static final String GREATER_THAN = "Greater than";
-  static final String LESS_THAN = "Less than";
+  static final String GREATER_THAN = "≥";
+  static final String LESS_THAN = "≤";
 
   @Test
   void testEvaluatingBasicSubtraction()
