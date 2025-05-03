@@ -91,124 +91,64 @@ public class RimpleXController implements ActionListener
     switch (ac)
     {
       case "ONE":
-        if (!checkDigitPlacement(bottomDisplay))
+        if (updateDisplayingDigit())
         {
-          break;
+          bottomDisplay.setText(bottomDisplay.getText() + "1");
         }
-        if (equalsPresent)
-        {
-          topDisplay.setText("");
-          equalsPresent = false;
-        }
-        bottomDisplay.setText(bottomDisplay.getText() + "1");
         break;
       case "TWO":
-        if (!checkDigitPlacement(bottomDisplay))
+        if (updateDisplayingDigit())
         {
-          break;
+          bottomDisplay.setText(bottomDisplay.getText() + "2");
         }
-        if (equalsPresent)
-        {
-          topDisplay.setText("");
-          equalsPresent = false;
-        }
-        bottomDisplay.setText(bottomDisplay.getText() + "2");
         break;
       case "THREE":
-        if (!checkDigitPlacement(bottomDisplay))
+        if (updateDisplayingDigit())
         {
-          break;
+          bottomDisplay.setText(bottomDisplay.getText() + "3");
         }
-        if (equalsPresent)
-        {
-          topDisplay.setText("");
-          equalsPresent = false;
-        }
-        bottomDisplay.setText(bottomDisplay.getText() + "3");
         break;
       case "FOUR":
-        if (!checkDigitPlacement(bottomDisplay))
+        if (updateDisplayingDigit())
         {
-          break;
+          bottomDisplay.setText(bottomDisplay.getText() + "4");
         }
-        if (equalsPresent)
-        {
-          topDisplay.setText("");
-          equalsPresent = false;
-        }
-        bottomDisplay.setText(bottomDisplay.getText() + "4");
         break;
       case "FIVE":
-        if (!checkDigitPlacement(bottomDisplay))
+        if (updateDisplayingDigit())
         {
-          break;
+          bottomDisplay.setText(bottomDisplay.getText() + "5");
         }
-        if (equalsPresent)
-        {
-          topDisplay.setText("");
-          equalsPresent = false;
-        }
-        bottomDisplay.setText(bottomDisplay.getText() + "5");
         break;
       case "SIX":
-        if (!checkDigitPlacement(bottomDisplay))
+        if (updateDisplayingDigit())
         {
-          break;
+          bottomDisplay.setText(bottomDisplay.getText() + "6");
         }
-        if (equalsPresent)
-        {
-          topDisplay.setText("");
-          equalsPresent = false;
-        }
-        bottomDisplay.setText(bottomDisplay.getText() + "6");
         break;
       case "SEVEN":
-        if (!checkDigitPlacement(bottomDisplay))
+        if (updateDisplayingDigit())
         {
-          break;
+          bottomDisplay.setText(bottomDisplay.getText() + "7");
         }
-        if (equalsPresent)
-        {
-          topDisplay.setText("");
-          equalsPresent = false;
-        }
-        bottomDisplay.setText(bottomDisplay.getText() + "7");
         break;
       case "EIGHT":
-        if (!checkDigitPlacement(bottomDisplay))
+        if (updateDisplayingDigit())
         {
-          break;
+          bottomDisplay.setText(bottomDisplay.getText() + "8");
         }
-        if (equalsPresent)
-        {
-          topDisplay.setText("");
-          equalsPresent = false;
-        }
-        bottomDisplay.setText(bottomDisplay.getText() + "8");
         break;
       case "NINE":
-        if (!checkDigitPlacement(bottomDisplay))
+        if (updateDisplayingDigit())
         {
-          break;
+          bottomDisplay.setText(bottomDisplay.getText() + "9");
         }
-        if (equalsPresent)
-        {
-          topDisplay.setText("");
-          equalsPresent = false;
-        }
-        bottomDisplay.setText(bottomDisplay.getText() + "9");
         break;
       case "ZERO":
-        if (!checkDigitPlacement(bottomDisplay))
+        if (updateDisplayingDigit())
         {
-          break;
+          bottomDisplay.setText(bottomDisplay.getText() + "0");
         }
-        if (equalsPresent)
-        {
-          topDisplay.setText("");
-          equalsPresent = false;
-        }
-        bottomDisplay.setText(bottomDisplay.getText() + "0");
         break;
       case "BACKSPACE":
         if (bottomDisplay.getText().length() != 0)
@@ -958,6 +898,23 @@ public class RimpleXController implements ActionListener
         }
       }
     }
+  }
+  
+  /**
+   * Update the display when digit is entered.
+   */
+  private boolean updateDisplayingDigit()
+  {
+    if (!checkDigitPlacement(bottomDisplay))
+    {
+      return false;
+    }
+    if (equalsPresent)
+    {
+      topDisplay.setText("");
+      equalsPresent = false;
+    }
+    return true;
   }
 
   /**
