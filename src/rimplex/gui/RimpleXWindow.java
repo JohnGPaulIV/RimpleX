@@ -198,6 +198,23 @@ public class RimpleXWindow extends JFrame implements KeyListener
     helpMenu.add(aboutItem);
     helpMenu.add(helpItem);
     menuBar.add(helpMenu);
+    
+    // Preferences menu
+    JMenu preferencesMenu = new JMenu(rb.getString("Preferences"));
+    JMenuItem editItem = new JMenuItem(rb.getString("Edit"));
+    editItem.setActionCommand("EDIT_PREFERENCES");
+    editItem.addActionListener(controller);
+    JMenuItem openItem = new JMenuItem(rb.getString("Open"));
+    openItem.setActionCommand("OPEN_PREFERENCES");
+    openItem.addActionListener(controller);
+    JMenuItem saveItem = new JMenuItem(rb.getString("Save"));
+    saveItem.setActionCommand("SAVE_PREFERENCES");
+    saveItem.addActionListener(controller);
+    preferencesMenu.add(editItem);
+    preferencesMenu.add(openItem);
+    preferencesMenu.add(saveItem);
+    menuBar.add(preferencesMenu);
+    
     setJMenuBar(menuBar);
 
     addKeyListener(this);
