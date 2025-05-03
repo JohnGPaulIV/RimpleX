@@ -5,7 +5,7 @@ package utilities;
  * 
  * @author Joseph Pogoretskiy
  * 
- * This work complies with JMU Honor Code.
+ *         This work complies with JMU Honor Code.
  */
 public final class Evaluator
 {
@@ -22,6 +22,8 @@ public final class Evaluator
   private static final String LOG = "Log";
   private static final String GREATER_THAN = "≥";
   private static final String LESS_THAN = "≤";
+  private static final String OPEN_PARENTHESIS = "(";
+  private static final String CLOSED_PARENTHESIS = ")";
 
   /**
    * Initialize static Evaluator.
@@ -40,7 +42,11 @@ public final class Evaluator
   private static String checkOperators(final String operand)
   {
     String result;
-    if (operand.contains(SUBTRACTION) || operand.contains(ADDITION))
+    if (operand.contains(OPEN_PARENTHESIS))
+    {
+      result = OPEN_PARENTHESIS;
+    }
+    else if (operand.contains(SUBTRACTION) || operand.contains(ADDITION))
     {
       boolean hasSubtraction = operand.contains(SUBTRACTION);
       boolean hasAddition = operand.contains(ADDITION);
@@ -130,15 +136,13 @@ public final class Evaluator
     // If there is an operator in the left operand, evaluate it.
     if (leftOperator != null)
     {
-      leftResult = evaluate(leftOperand.substring(0, leftOperand.indexOf(leftOperator)),
-          leftOperator, leftOperand.substring(leftOperand.indexOf(leftOperator) + 1));
+      leftResult = evaluateFurther(leftResult, leftOperator);
     }
 
     // If there is an operator in the right operand, evaluate it.
     if (rightOperator != null)
     {
-      rightResult = evaluate(rightOperand.substring(0, rightOperand.indexOf(rightOperator)),
-          rightOperator, rightOperand.substring(rightOperand.indexOf(rightOperator) + 1));
+      rightResult = evaluateFurther(rightResult, rightOperator);
     }
 
     // Replace the negative symbols with subtractions symbols so the Double parser can parse
@@ -233,6 +237,98 @@ public final class Evaluator
     {
       result = leftOperand.toString() + POWER + rightOperand.toString();
     }
+    return result;
+  }
+
+  /**
+   * Check if the operand has an open parenthesis recursively.
+   * 
+   * @param operand
+   *          The operand to check
+   * @param operator
+   *          The operand's operator
+   * @return The innermost parenthesized expression
+   */
+  private static String evaluateFurther(final String operand, final String operator)
+  {
+    String operandCopy = new String(operand);
+    String operatorCopy = new String(operator);
+    String result;
+    // If operand contains parenthesis, fetch it and evaluate it first.
+    if (operand.contains(OPEN_PARENTHESIS))
+    {
+      String parenthesizedExpr = fetchParenthesizedExpression(operandCopy);
+      String unparenthesizedExpr = new String(parenthesizedExpr).substring(1, parenthesizedExpr.length() - 1);
+      operatorCopy = checkOperators(unparenthesizedExpr);
+      if (operatorCopy != null)
+      {
+        // Get result and replace parenthesized operand with its result.
+        result = evaluateFurther(unparenthesizedExpr, operatorCopy);
+        operandCopy = new String(operandCopy.replace(parenthesizedExpr, result));
+        operatorCopy = checkOperators(operandCopy);
+        // Keep evaluating as long as there is a operator.
+        if (operatorCopy != null)
+        {
+          result = evaluateFurther(operandCopy, operatorCopy);
+        }
+        else
+        {
+          result = operandCopy;
+        }
+      }
+      else
+      {
+        return unparenthesizedExpr;
+      }
+    }
+    else
+    {
+      // Evaluate based off of present operator.
+      operatorCopy = checkOperators(operandCopy);
+      result = evaluate(operandCopy.substring(0, operandCopy.indexOf(operatorCopy)), operatorCopy,
+          operandCopy.substring(operandCopy.indexOf(operatorCopy) + 1));
+      return result;
+    }
+    return result;
+  }
+
+  /**
+   * Fetch the first and outermost parenthesized expression within the operand.
+   * 
+   * @param operand
+   *          The operand with the parentheses
+   * @return The outermost parenthesized expression
+   */
+  private static String fetchParenthesizedExpression(final String operand)
+  {
+    int openParenCount = 0;
+    int closedParenCount = 0;
+    int indexOfClosedParen = 0;
+    int indexOfOpenParen = 0;
+    boolean firstOpenParen = true;
+    char[] operandCharArray = operand.toCharArray();
+    for (int i = 0; i < operandCharArray.length; i++)
+    {
+      if (operandCharArray[i] == '(')
+      {
+        if (firstOpenParen)
+        {
+          indexOfOpenParen = i;
+          firstOpenParen = false;
+        }
+        openParenCount++;
+      }
+      if (operandCharArray[i] == ')')
+      {
+        closedParenCount++;
+      }
+      if (openParenCount == closedParenCount && !firstOpenParen)
+      {
+        indexOfClosedParen = i;
+        break;
+      }
+    }
+    String result = operand.substring(indexOfOpenParen, indexOfClosedParen + 1);
     return result;
   }
 
