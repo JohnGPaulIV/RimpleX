@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import javax.swing.JLabel;
 
+import rimplex.RimpleX;
 import utilities.Complex;
 import utilities.Evaluator;
 import utilities.PrintHelper;
@@ -61,7 +62,8 @@ public class RimpleXController implements ActionListener
   private Complex result;
   private boolean polarFormEnabled = false;
   private Complex polarizedComplex;
-
+  private ResourceBundle rb;
+  
   /**
    * Constructor for a RimpleXController.
    */
@@ -736,6 +738,9 @@ public class RimpleXController implements ActionListener
         break;
       case "ACTION_PRINT":
         PrintHelper.printHtmlFile();
+        break;
+      case "ACTION_NEWCALC":
+        new RimpleX().run();
         break;
       default:
         break;

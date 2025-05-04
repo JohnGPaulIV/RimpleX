@@ -158,17 +158,21 @@ public class RimpleXWindow extends JFrame implements KeyListener
     // Adding menu bar
     // File menu
     JMenuBar menuBar = new JMenuBar();
-
+    
     JMenu fileMenu = new JMenu(rb.getString("File"));
     JMenuItem printItem = new JMenuItem(rb.getString("Print_Session"));
     printItem.setActionCommand("ACTION_PRINT");
     printItem.addActionListener(controller);
     fileMenu.add(printItem);
-    menuBar.add(fileMenu);
+    JMenuItem newCalcItem = new JMenuItem(rb.getString("New_Calculator"));
+    newCalcItem.setActionCommand("ACTION_NEWCALC");
+    newCalcItem.addActionListener(controller);
+    fileMenu.add(newCalcItem);
     JMenuItem exitItem = new JMenuItem(rb.getString("Exit"));
     exitItem.setActionCommand("ACTION_EXIT");
     exitItem.addActionListener(controller);
     fileMenu.add(exitItem);
+    menuBar.add(fileMenu);
     // View menu
     JMenu viewMenu = new JMenu(rb.getString("View"));
     JMenuItem complexPlaneItem = new JMenuItem(rb.getString("Complex_Plane"));
