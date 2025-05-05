@@ -52,6 +52,7 @@ public class RimpleXController implements ActionListener
   private static final String GREATER_THAN = "≥";
   private static final String LESSER_THAN = "≤";
 
+  private RimpleXRelationalOperation relationalWindow = new RimpleXRelationalOperation();
   private RimpleXWindow window;
   private JLabel topDisplay;
   private JLabel bottomDisplay;
@@ -226,7 +227,8 @@ public class RimpleXController implements ActionListener
         {
           break;
         }
-        if (Character.isDigit(lastChar()) || !checkDigitPlacement(bottomDisplay) || lastChar() == ')')
+        if (Character.isDigit(lastChar()) || !checkDigitPlacement(bottomDisplay)
+            || lastChar() == ')')
         {
           bottomDisplay.setText(bottomDisplay.getText() + MULTIPLICATION + OPEN_PAREN);
           openParenCount++;
@@ -242,7 +244,8 @@ public class RimpleXController implements ActionListener
         {
           break;
         }
-        if ((Character.isDigit(lastChar()) || !checkDigitPlacement(bottomDisplay)) && (openParenCount > closedParenCount))
+        if ((Character.isDigit(lastChar()) || !checkDigitPlacement(bottomDisplay))
+            && (openParenCount > closedParenCount))
         {
           bottomDisplay.setText(bottomDisplay.getText() + CLOSED_PAREN);
           closedParenCount++;
@@ -275,7 +278,8 @@ public class RimpleXController implements ActionListener
           String temp = "TEMP";
           String displayText = bottomDisplay.getText();
           // displayText = displayText.replace(ADD, SUBTRACTION).replace(SUBTRACTION, ADD)
-          // .replace(MULTIPLICATION, MULTIPLICATION + NEGATIVE).replace(DIVIDE, DIVIDE + NEGATIVE)
+          // .replace(MULTIPLICATION, MULTIPLICATION + NEGATIVE).replace(DIVIDE, DIVIDE +
+          // NEGATIVE)
           // .replace(POWER, POWER + NEGATIVE);
           displayText = displayText.replace(ADD, temp);
           displayText = displayText.replace(SUBTRACTION, ADD);
@@ -389,26 +393,20 @@ public class RimpleXController implements ActionListener
           }
           else
           {
-            RimpleXRelationalOperation evaluationWindow;
-            try
-            {
-              evaluationWindow = new RimpleXRelationalOperation(leftOperand + operator + SPACE + rightOperand + " is " + evaluation);
-              evaluationWindow.setVisible(true);
-              topDisplay.setText("");
-              bottomDisplay.setText("");
-              polarFormEnabled = false;
-              polarizedComplex = null;
-              bracketPresent = false;
-              bracketClosed = false;
-              relationalOpPresent = false;
-              openParenCount = 0;
-              closedParenCount = 0;
-              break;
-            }
-            catch (IOException e)
-            {
-              e.printStackTrace();
-            }
+            relationalWindow.setResult(
+                leftOperand + SPACE + operator + SPACE + leftOperand + " is " + evaluation);
+            relationalWindow.setVisible(true);
+
+            topDisplay.setText("");
+            bottomDisplay.setText("");
+            polarFormEnabled = false;
+            polarizedComplex = null;
+            bracketPresent = false;
+            bracketClosed = false;
+            relationalOpPresent = false;
+            openParenCount = 0;
+            closedParenCount = 0;
+            break;
           }
           topDisplay.setText(
               leftOperand + operator + SPACE + rightOperand + SPACE + EQUALS + SPACE + evaluation);
@@ -1059,8 +1057,7 @@ public class RimpleXController implements ActionListener
               upperDisplay.getText().length() - 2);
         }
 
-        String prevOperator = upperDisplay.getText()
-            .substring(upperDisplay.getText().length() - 1);
+        String prevOperator = upperDisplay.getText().substring(upperDisplay.getText().length() - 1);
         String rightOperand = display.getText();
 
         String evaluation = Evaluator.evaluate(leftOperand, prevOperator, rightOperand);

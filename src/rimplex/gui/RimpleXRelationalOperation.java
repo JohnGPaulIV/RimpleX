@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.io.IOException;
 
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -14,21 +15,23 @@ import static rimplex.RimpleX.*;
  * 
  * @author Joseph Pogoretskiy
  */
-public class RimpleXRelationalOperation extends JFrame
+public class RimpleXRelationalOperation extends JDialog
 {
   private static final long serialVersionUID = 1L;
   private final String sansSerif = "Sans-Serif";
+  private String result = "";
 
   /**
    * Constructs "About" Window for Rimplex.
    */
-  public RimpleXRelationalOperation(final String evaluation) throws IOException
+  public RimpleXRelationalOperation()
   {
     setTitle("Relational Operation Result");
     setSize(400, 150);
     setLocationRelativeTo(null);
     setLayout(null);
     setResizable(false);
+    setModal(true);
 
     // Add title and RimpleX icon to the About Window.
     JLabel titleLabel = new JLabel("Relational Operation Result", JLabel.CENTER);
@@ -39,11 +42,14 @@ public class RimpleXRelationalOperation extends JFrame
     // sets the window icon.
     ImageIcon img = new ImageIcon(getClass().getResource("/icons/iconRimplex.png"));
     setIconImage(img.getImage());
-
-    JLabel descLabel = new JLabel(evaluation, JLabel.CENTER);
+  }
+  
+  public void setResult(final String result)
+  {
+    this.result = result;
+    JLabel descLabel = new JLabel(this.result, JLabel.CENTER);
     descLabel.setFont(new Font(sansSerif, Font.PLAIN, 14));
     descLabel.setBounds(10, 35 + 25, 360, 60);
     add(descLabel);
-
   }
 }
