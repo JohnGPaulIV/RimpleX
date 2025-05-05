@@ -45,6 +45,8 @@ public class RimpleXController implements ActionListener
   private static final String IMAGINARY_UNIT = "\uD835\uDC56";
   private static final String OPEN_PAREN = "(";
   private static final String CLOSED_PAREN = ")";
+  private static final String OPEN_BRACKET = "[";
+  private static final String CLOSED_BRACKET = "]";
   private static final String SPACE = " ";
   private static final String DECIMAL = ".";
   private static final String GREATER_THAN = "≥";
@@ -53,8 +55,8 @@ public class RimpleXController implements ActionListener
   private RimpleXWindow window;
   private JLabel topDisplay;
   private JLabel bottomDisplay;
-  private boolean parenPresent;
-  private boolean parenClosed = false;
+  private boolean bracketPresent;
+  private boolean bracketClosed = false;
   private boolean equalsPresent = false;
   private boolean relationalOpPresent = false;
   private boolean runningCalc = true;
@@ -160,19 +162,19 @@ public class RimpleXController implements ActionListener
             bottomDisplay.setText(
                 bottomDisplay.getText().substring(0, bottomDisplay.getText().length() - 2));
           }
-          else if (parenClosed)
+          else if (bracketClosed)
           {
             bottomDisplay.setText(OPEN_PAREN
                 + bottomDisplay.getText().substring(0, bottomDisplay.getText().length()));
-            parenClosed = false;
+            bracketClosed = false;
           }
           else
           {
             bottomDisplay.setText(
                 bottomDisplay.getText().substring(0, bottomDisplay.getText().length() - 1));
-            if (bottomDisplay.getText().length() == 0 && parenPresent)
+            if (bottomDisplay.getText().length() == 0 && bracketPresent)
             {
-              parenPresent = false;
+              bracketPresent = false;
             }
           }
         }
@@ -208,30 +210,8 @@ public class RimpleXController implements ActionListener
           break;
         }
       case "OPEN_PARENTHESIS":
-        if (bottomDisplay.getText().length() == 0)
-        {
-          bottomDisplay.setText(bottomDisplay.getText() + OPEN_PAREN);
-          if (equalsPresent)
-          {
-            topDisplay.setText("");
-            equalsPresent = false;
-          }
-          parenPresent = true;
-        }
         break;
       case "CLOSED_PARENTHESIS":
-        String dispText = bottomDisplay.getText();
-        if (dispText.length() == 0)
-        {
-          break;
-        }
-        char lastVal = dispText.charAt(dispText.length() - 1);
-        if (parenPresent && (Character.isDigit(lastVal) || !checkDigitPlacement(bottomDisplay)))
-        {
-          bottomDisplay.setText(bottomDisplay.getText().replace(OPEN_PAREN, ""));
-          parenPresent = false;
-          parenClosed = true;
-        }
         break;
       case "CLEAR":
         bottomDisplay.setText("");
@@ -242,13 +222,13 @@ public class RimpleXController implements ActionListener
         equalsPresent = false;
         polarFormEnabled = false;
         polarizedComplex = null;
-        parenPresent = false;
-        parenClosed = false;
+        bracketPresent = false;
+        bracketClosed = false;
         relationalOpPresent = false;
         break;
       case "SIGN":
         // This is a HYPHEN, not a DASH
-        if (parenClosed || (!parenClosed && !parenPresent && !bottomDisplay.getText().isBlank()))
+        if (bracketClosed || (!bracketClosed && !bracketPresent && !bottomDisplay.getText().isBlank()))
         {
           String temp = "TEMP";
           String displayText = bottomDisplay.getText();
@@ -338,7 +318,7 @@ public class RimpleXController implements ActionListener
         //TODO implement save recording window.
         break;
       case "EQUALS":
-        if (!parenPresent && checkOperatorPlacement(bottomDisplay))
+        if (!bracketPresent && checkOperatorPlacement(bottomDisplay))
         {
           String leftOperand;
           if (polarFormEnabled)
@@ -378,7 +358,7 @@ public class RimpleXController implements ActionListener
           bottomDisplay.setText("");
 
           equalsPresent = true;
-          parenClosed = false;
+          bracketClosed = false;
         }
         break;
       case "UNIT":
@@ -388,7 +368,7 @@ public class RimpleXController implements ActionListener
         }
         break;
       case "INVERT":
-        if (parenClosed || (!parenPresent && !parenClosed && !bottomDisplay.getText().isEmpty()))
+        if (bracketClosed || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
         {
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Invert", "");
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + evaluated);
@@ -396,7 +376,7 @@ public class RimpleXController implements ActionListener
               + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1) + ")"
               + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           bottomDisplay.setText("");
-          parenClosed = false;
+          bracketClosed = false;
           equalsPresent = true;
         }
         else if (equalsPresent)
@@ -437,7 +417,7 @@ public class RimpleXController implements ActionListener
         break;
       case "IMAGINARY_PART":
         String top;
-        if (parenClosed || (!parenPresent && !parenClosed && !bottomDisplay.getText().isEmpty()))
+        if (bracketClosed || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
         {
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "", "");
 
@@ -449,7 +429,7 @@ public class RimpleXController implements ActionListener
           SessionHistory.add("IM" + top + " "
               + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           bottomDisplay.setText("");
-          parenClosed = false;
+          bracketClosed = false;
           equalsPresent = true;
         }
         else if (equalsPresent)
@@ -489,7 +469,7 @@ public class RimpleXController implements ActionListener
         }
         break;
       case "REAL_PART":
-        if (parenClosed || (!parenPresent && !parenClosed && !bottomDisplay.getText().isEmpty()))
+        if (bracketClosed || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
         {
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "", "");
           Complex real = new Complex(Complex.parse(evaluated).getReal(), 0.0);
@@ -499,7 +479,7 @@ public class RimpleXController implements ActionListener
           SessionHistory.add("RE" + top + " "
               + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           bottomDisplay.setText("");
-          parenClosed = false;
+          bracketClosed = false;
           equalsPresent = true;
         }
         else if (equalsPresent)
@@ -539,7 +519,7 @@ public class RimpleXController implements ActionListener
         }
         break;
       case "POLAR_FORM":
-        if (parenClosed || (!parenPresent && !parenClosed && !bottomDisplay.getText().isEmpty()))
+        if (bracketClosed || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
         {
           if (!polarFormEnabled)
           {
@@ -552,7 +532,7 @@ public class RimpleXController implements ActionListener
             SessionHistory.add("Plr" + top + " "
                 + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
             bottomDisplay.setText("");
-            parenClosed = false;
+            bracketClosed = false;
             equalsPresent = true;
             polarFormEnabled = true;
           }
@@ -587,7 +567,7 @@ public class RimpleXController implements ActionListener
         }
         break;
       case "CONJUGATE":
-        if (parenClosed || (!parenPresent && !parenClosed && !bottomDisplay.getText().isEmpty()))
+        if (bracketClosed || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
         {
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Conjugate", "");
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + evaluated);
@@ -596,7 +576,7 @@ public class RimpleXController implements ActionListener
           SessionHistory.add("Conj" + top + " "
               + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           bottomDisplay.setText("");
-          parenClosed = false;
+          bracketClosed = false;
           equalsPresent = true;
         }
         else if (equalsPresent)
@@ -637,7 +617,7 @@ public class RimpleXController implements ActionListener
         break;
       case "SQUARE_ROOT":
 
-        if (parenClosed || (!parenPresent && !parenClosed && !bottomDisplay.getText().isEmpty()))
+        if (bracketClosed || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
         {
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Square root", "");
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + evaluated);
@@ -646,7 +626,7 @@ public class RimpleXController implements ActionListener
           SessionHistory.add("Sqrt" + top + " "
               + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           bottomDisplay.setText("");
-          parenClosed = false;
+          bracketClosed = false;
           equalsPresent = true;
         }
         else if (equalsPresent)
@@ -692,7 +672,7 @@ public class RimpleXController implements ActionListener
         break;
       case "LOGARITHM":
 
-        if (parenClosed || (!parenPresent && !parenClosed && !bottomDisplay.getText().isEmpty()))
+        if (bracketClosed || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
         {
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Log", "");
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + evaluated);
@@ -701,7 +681,7 @@ public class RimpleXController implements ActionListener
           SessionHistory.add("Log" + top + " "
               + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           bottomDisplay.setText("");
-          parenClosed = false;
+          bracketClosed = false;
           equalsPresent = true;
         }
         else if (equalsPresent)
@@ -738,6 +718,32 @@ public class RimpleXController implements ActionListener
             SessionHistory.add("Log" + top + " "
                 + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
           }
+        }
+        break;
+      case "OPEN_BRACKET":
+        if (bottomDisplay.getText().length() == 0)
+        {
+          bottomDisplay.setText(bottomDisplay.getText() + OPEN_BRACKET);
+          if (equalsPresent)
+          {
+            topDisplay.setText("");
+            equalsPresent = false;
+          }
+          bracketPresent = true;
+        }
+        break;
+      case "CLOSED_BRACKET":
+        String dispText = bottomDisplay.getText();
+        if (dispText.length() == 0)
+        {
+          break;
+        }
+        char lastVal = dispText.charAt(dispText.length() - 1);
+        if (bracketPresent && (Character.isDigit(lastVal) || !checkDigitPlacement(bottomDisplay)))
+        {
+          bottomDisplay.setText(bottomDisplay.getText().replace(OPEN_BRACKET, ""));
+          bracketPresent = false;
+          bracketClosed = true;
         }
         break;
       case "S_HISTORY_DROPOUT":
@@ -854,7 +860,7 @@ public class RimpleXController implements ActionListener
     }
     else
     {
-      if (!parenPresent && !relationalOpPresent)
+      if (!bracketPresent && !relationalOpPresent)
       {
         // Evaluate when doing running calculations
         if (!upperDisplay.getText().isBlank())
@@ -900,7 +906,7 @@ public class RimpleXController implements ActionListener
           upperDisplay.setText(display.getText() + SPACE + op);
         }
         display.setText("");
-        parenClosed = false;
+        bracketClosed = false;
       }
       else
       {
@@ -953,7 +959,7 @@ public class RimpleXController implements ActionListener
     }
     else if (topDisplayValue.isBlank())
     {
-      if (parenClosed || (!parenPresent && !parenClosed && !bottomDisplay.getText().isEmpty()))
+      if (bracketClosed || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
       {
         upperDisplay.setText(display.getText() + SPACE + op);
       }
