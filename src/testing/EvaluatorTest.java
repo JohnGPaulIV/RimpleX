@@ -224,4 +224,10 @@ class EvaluatorTest
     assertEquals("72.0", Evaluator.evaluate("2×(8÷4)+(4+8)", ADDITION, "4×(8×2—(1+1))"));
     assertEquals("10.0+8.0𝑖", Evaluator.evaluate("2+3𝑖+(2𝑖+(4+2𝑖))—1", ADDITION, "(3𝑖^2)+(1+3𝑖+(5—2𝑖))+2"));
   }
+  
+  @Test
+  void testEvaluatingOperandsContainingParenthesizedDigits()
+  {
+    assertEquals("18.0+4.0𝑖", Evaluator.evaluate("(5+1)+4+(4𝑖)", ADDITION, "4+(4)"));
+  }
 }

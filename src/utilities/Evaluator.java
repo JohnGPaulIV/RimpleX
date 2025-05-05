@@ -278,7 +278,17 @@ public final class Evaluator
       }
       else
       {
-        return unparenthesizedExpr;
+        operandCopy = new String(operandCopy.replace(parenthesizedExpr, unparenthesizedExpr));
+        operatorCopy = checkOperators(operandCopy);
+        // Keep evaluating as long as there is a operator.
+        if (operatorCopy != null)
+        {
+          result = evaluateFurther(operandCopy, operatorCopy);
+        }
+        else
+        {
+          result = operandCopy;
+        }
       }
     }
     else
