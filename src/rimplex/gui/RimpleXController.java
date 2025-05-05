@@ -330,6 +330,13 @@ public class RimpleXController implements ActionListener
           e.printStackTrace();
         }
         break;
+      case "OPEN_RECORDING":
+        RimpleXPlaybackWindow playbackWindow = RimpleXPlaybackWindow.getInstance(this);
+        playbackWindow.setVisible(true);
+        break;
+      case "SAVE_RECORDING":
+        //TODO implement save recording window.
+        break;
       case "EQUALS":
         if (!parenPresent && checkOperatorPlacement(bottomDisplay))
         {
