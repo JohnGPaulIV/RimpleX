@@ -303,7 +303,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
 
     // Sprint 2 additional buttons.
     getContentPane().add(new RimpleXButton("IMAGINARY_PART", "IP", controller, 260, 150, 45, 45));
-    getContentPane().add(new RimpleXButton("REAL_PART", "RP", controller, 260, 200, 45, 45));
+    getContentPane().add(new RimpleXButton("REAL_PART", "RE", controller, 260, 200, 45, 45));
     // getContentPane().add(new RimpleXButton("CONJUGATE",
     // rb.getString("Conjugate"), controller, 260, 300, 45, 45));
 
@@ -320,8 +320,8 @@ public class RimpleXWindow extends JFrame implements KeyListener
 
     getContentPane().add(new RimpleXButton("OPEN_BRACKET", "[", controller, 260, 250, 45, 45));
     getContentPane().add(new RimpleXButton("CLOSED_BRACKET", "]", controller, 260, 300, 45, 45));
-    getContentPane().add(new RimpleXButton("GREATER_THAN", ">=", controller, 310, 200, 45, 45));
-    getContentPane().add(new RimpleXButton("LESS_THAN", "<=", controller, 310, 250, 45, 45));
+    getContentPane().add(new RimpleXButton("GREATER_THAN", "≥", controller, 310, 200, 45, 45));
+    getContentPane().add(new RimpleXButton("LESS_THAN", "≤", controller, 310, 250, 45, 45));
 
     getContentPane().add(
         new RimpleXButton("CONJUGATE", rb.getString("Conjugate"), controller, 310, 150, 45, 45));
