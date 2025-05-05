@@ -315,6 +315,9 @@ public class RimpleXController implements ActionListener
       case "GREATER_THAN":
         setRelationalOperator(bottomDisplay, topDisplay, GREATER_THAN);
         break;
+      case "LESS_THAN":
+        setRelationalOperator(bottomDisplay, topDisplay, LESSER_THAN);
+        break;
       case "ACTION_EXIT":
         System.exit(0);
         break;
@@ -380,7 +383,33 @@ public class RimpleXController implements ActionListener
           // System.out.println("rightOperand: " + rightOperand);
 
           String evaluation = Evaluator.evaluate(leftOperand, operator, rightOperand);
-          result = Complex.parse(evaluation);
+          if (!relationalOpPresent)
+          {
+            result = Complex.parse(evaluation);
+          }
+          else
+          {
+            RimpleXRelationalOperation evaluationWindow;
+            try
+            {
+              evaluationWindow = new RimpleXRelationalOperation(leftOperand + operator + SPACE + rightOperand + " is " + evaluation);
+              evaluationWindow.setVisible(true);
+              topDisplay.setText("");
+              bottomDisplay.setText("");
+              polarFormEnabled = false;
+              polarizedComplex = null;
+              bracketPresent = false;
+              bracketClosed = false;
+              relationalOpPresent = false;
+              openParenCount = 0;
+              closedParenCount = 0;
+              break;
+            }
+            catch (IOException e)
+            {
+              e.printStackTrace();
+            }
+          }
           topDisplay.setText(
               leftOperand + operator + SPACE + rightOperand + SPACE + EQUALS + SPACE + evaluation);
           SessionHistory.add(topDisplay.getText());
@@ -1006,18 +1035,54 @@ public class RimpleXController implements ActionListener
     {
       return;
     }
-    if (equalsPresent)
-    {
-      upperDisplay
-          .setText(topDisplayValue.substring(topDisplayValue.indexOf(EQUALS) + 2) + SPACE + op);
-      equalsPresent = false;
-    }
-    else if (topDisplayValue.isBlank())
+    if (topDisplayValue.isBlank())
     {
       if (bracketClosed
           || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
       {
         upperDisplay.setText(display.getText() + SPACE + op);
+      }
+    }
+    else if (!relationalOpPresent && !bracketPresent)
+    {
+      // Evaluate when doing running calculations
+      if (!upperDisplay.getText().isBlank())
+      {
+        String leftOperand;
+        if (polarFormEnabled)
+        {
+          leftOperand = polarizedComplex.toString();
+        }
+        else
+        {
+          leftOperand = upperDisplay.getText().replace(SPACE, "").substring(0,
+              upperDisplay.getText().length() - 2);
+        }
+
+        String prevOperator = upperDisplay.getText()
+            .substring(upperDisplay.getText().length() - 1);
+        String rightOperand = display.getText();
+
+        String evaluation = Evaluator.evaluate(leftOperand, prevOperator, rightOperand);
+        if (polarFormEnabled)
+        {
+          Complex evaluated = Complex.parse(evaluation);
+          String polarForm = evaluated.getPolarForm();
+          upperDisplay.setText(polarForm + SPACE + op);
+          if (!display.getText().isBlank())
+          {
+            SessionHistory.add(topDisplayValue + " " + display.getText() + " = " + evaluation);
+          }
+          polarizedComplex = evaluated;
+        }
+        else
+        {
+          upperDisplay.setText(evaluation + SPACE + op);
+          if (!display.getText().isBlank())
+          {
+            SessionHistory.add(topDisplayValue + " " + display.getText() + " = " + evaluation);
+          }
+        }
       }
     }
     relationalOpPresent = true;
