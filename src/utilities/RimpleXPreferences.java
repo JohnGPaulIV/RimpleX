@@ -2,6 +2,7 @@ package utilities;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
@@ -178,6 +179,25 @@ public final class RimpleXPreferences
 
   public void savePreferences()
   {
+    try
+    {
+      String preferencesFilePath = "src/rimplex.gui.preferences/Preferences.properties";
+      FileInputStream prefInput = new FileInputStream(preferencesFilePath);
+      Properties preferences = new Properties();
+      preferences.load(prefInput);
+      prefInput.close();
+
+      preferences.setProperty("Num_Decimals", String.valueOf(numOfDecimals));
+      preferences.setProperty("Trailing_Zeroes", String.valueOf(trailingZeroes));
+      preferences.setProperty("Thousands_Separator", String.valueOf(displaySeparators));
+
+      FileOutputStream prefOutput = new FileOutputStream(preferencesFilePath);
+      preferences.store(prefOutput, null);
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
   }
 
   public void getPreferences()
