@@ -68,7 +68,6 @@ public class RimpleXController implements ActionListener
   private Complex result;
   private boolean polarFormEnabled = false;
   private Complex polarizedComplex;
-  private ResourceBundle rb;
 
   /**
    * Constructor for a RimpleXController.
@@ -394,7 +393,7 @@ public class RimpleXController implements ActionListener
           else
           {
             relationalWindow.setResult(
-                leftOperand + SPACE + operator + SPACE + rightOperand + " is " + evaluation);
+                leftOperand + SPACE + operator + SPACE + rightOperand + SPACE + EQUALS + SPACE + rb.getString(evaluation));
             relationalWindow.setVisible(true);
 
             topDisplay.setText("");

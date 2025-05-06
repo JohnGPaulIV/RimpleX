@@ -19,7 +19,6 @@ public class RimpleXRelationalOperation extends JDialog
 {
   private static final long serialVersionUID = 1L;
   private final String sansSerif = "Sans-Serif";
-  private String result = "";
   
   JLabel descLabel;
 
@@ -28,7 +27,7 @@ public class RimpleXRelationalOperation extends JDialog
    */
   public RimpleXRelationalOperation()
   {
-    setTitle("Relational Operation Result");
+    setTitle(rb.getString("Relational_Operation_Result"));
     setSize(400, 150);
     setLocationRelativeTo(null);
     setLayout(null);
@@ -36,7 +35,7 @@ public class RimpleXRelationalOperation extends JDialog
     setModal(true);
 
     // Add title and RimpleX icon to the About Window.
-    JLabel titleLabel = new JLabel("Relational Operation Result", JLabel.CENTER);
+    JLabel titleLabel = new JLabel(rb.getString("Relational_Operation_Result"), JLabel.CENTER);
     titleLabel.setFont(new Font(sansSerif, Font.PLAIN, 16));
     titleLabel.setBounds(0, 10, 400, 20);
     add(titleLabel);
@@ -53,7 +52,6 @@ public class RimpleXRelationalOperation extends JDialog
   
   public void setResult(final String result)
   {
-    this.result = result;
     descLabel.setText(result);
   }
 }
