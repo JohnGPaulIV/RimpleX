@@ -16,8 +16,8 @@ import java.util.Properties;
  */
 public final class RimpleXPreferences
 {
-  private static int numOfDecimals = 0;
-  private static int trailingZeroes = 0;
+  private static int numOfDecimals = 3;
+  private static int trailingZeroes = 1;
   private static boolean displaySeparators = false;
 
   private static String openRecordingShortcut;
