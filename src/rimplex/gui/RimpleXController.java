@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+import java.util.prefs.Preferences;
+
 import javax.swing.JLabel;
 
 import rimplex.RimpleX;
@@ -20,6 +22,7 @@ import utilities.Complex;
 import utilities.Evaluator;
 import utilities.PrintHelper;
 import utilities.SessionHistory;
+import utilities.RimpleXPreferences;
 
 import static rimplex.RimpleX.*;
 
@@ -323,6 +326,7 @@ public class RimpleXController implements ActionListener
         setRelationalOperator(bottomDisplay, topDisplay, LESSER_THAN);
         break;
       case "ACTION_EXIT":
+        System.out.println(RimpleXPreferences.toStrings());
         System.exit(0);
         break;
       case "ACTION_HELP":

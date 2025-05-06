@@ -13,11 +13,11 @@ import java.util.Properties;
  * 
  * @author Joseph Pogoretskiy
  */
-public final class Preferences
+public final class RimpleXPreferences
 {
-  private static int numOfDecimals;
-  private static int trailingZeroes;
-  private static boolean displaySeparators;
+  private static int numOfDecimals = 0;
+  private static int trailingZeroes = 0;
+  private static boolean displaySeparators = false;
 
   private static String openRecordingShortcut;
   private static String saveRecordingShortcut;
@@ -32,7 +32,7 @@ public final class Preferences
   private static String startStopRecordingShortcut;
   private static String pauseRecordingShortcut;
 
-  private Preferences()
+  private RimpleXPreferences()
   {
   };
 
@@ -202,5 +202,15 @@ public final class Preferences
     {
       e.printStackTrace();
     }
+  }
+  
+  public static String toStrings()
+  {
+    String numOfDecimals = "Number of decimals: " + RimpleXPreferences.numOfDecimals;
+    String trailingZeroes = "Trailing zeroes: " + RimpleXPreferences.trailingZeroes;
+    String displaySeparators = "Display separators:" + String.valueOf(RimpleXPreferences.displaySeparators);
+    
+    return numOfDecimals + '\n' + trailingZeroes + '\n' + displaySeparators;
+    
   }
 }

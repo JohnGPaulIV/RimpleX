@@ -18,7 +18,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import utilities.Preferences;
+import utilities.RimpleXPreferences;
 
 import static rimplex.RimpleX.*;
 
@@ -64,7 +64,7 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     // https://docs.oracle.com/javase/8/docs/api/javax/swing/SpinnerNumberModel.html
     JLabel trailingZeroesLabel = new JLabel("Trailing Zeroes:");
     SpinnerNumberModel trailingZeroesSpinner = new SpinnerNumberModel(
-        Preferences.getTrailingZeroes(), 0, 6, 1);
+        RimpleXPreferences.getTrailingZeroes(), 0, 6, 1);
     trailingZeroesInput = new JSpinner(trailingZeroesSpinner);
     trailingZeroesInput.addChangeListener(this);
 
@@ -76,7 +76,7 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
 
     // Set input for number of decimals
     JLabel numDecimalsLabel = new JLabel("Number of Decimal Places:");
-    SpinnerNumberModel numDecimalsSpinner = new SpinnerNumberModel(Preferences.getNumOfDecimals(),
+    SpinnerNumberModel numDecimalsSpinner = new SpinnerNumberModel(RimpleXPreferences.getNumOfDecimals(),
         0, 6, 1);
     numDecimalsInput = new JSpinner(numDecimalsSpinner);
     numDecimalsInput.addChangeListener(this);
@@ -88,7 +88,7 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     // Set checkbox for display thousands separators
     JLabel displaySeparatorsLabel = new JLabel("Display Separators:");
     displaySeparatorsCheckBox = new JCheckBox();
-    displaySeparatorsCheckBox.setSelected(Preferences.getDisplaySeparators());
+    displaySeparatorsCheckBox.setSelected(RimpleXPreferences.getDisplaySeparators());
     displaySeparatorsCheckBox.addItemListener(this);
     
     // Set absolute positioning within component.
@@ -115,7 +115,7 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     if (e.getSource() == displaySeparatorsCheckBox)
     {
       boolean boxChecked = (e.getStateChange() == 1) ? true : false;
-      Preferences.setDisplaySeparators(boxChecked);
+      RimpleXPreferences.setDisplaySeparators(boxChecked);
     }
   }
 
@@ -124,11 +124,11 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
   {
     if (e.getSource() == numDecimalsInput)
     {
-      Preferences.setNumOfDecimals((int) numDecimalsInput.getValue());
+      RimpleXPreferences.setNumOfDecimals((int) numDecimalsInput.getValue());
     }
     else if (e.getSource() == trailingZeroesInput)
     {
-      Preferences.setTrailingZeroes((int) trailingZeroesInput.getValue());
+      RimpleXPreferences.setTrailingZeroes((int) trailingZeroesInput.getValue());
     }
   }
 }
