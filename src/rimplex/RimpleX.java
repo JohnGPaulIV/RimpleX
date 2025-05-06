@@ -6,9 +6,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import rimplex.gui.*;
+import utilities.RimpleXPreferences;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+
 
 /**
  * The main class for the RimpleX application. This is where the process begins.
@@ -72,6 +74,7 @@ public class RimpleX implements Runnable
     } */
     Locale locale = Locale.getDefault();
     rb = ResourceBundle.getBundle("rimplex.gui.languages.Strings", locale);
+    RimpleXPreferences.getPreferences();
     RimpleXController controller = new RimpleXController();
     RimpleXWindow window = null;
     try

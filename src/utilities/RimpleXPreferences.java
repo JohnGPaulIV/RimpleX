@@ -32,6 +32,8 @@ public final class RimpleXPreferences
   private static String savePreferencesShortcut;
   private static String startStopRecordingShortcut;
   private static String pauseRecordingShortcut;
+  
+  private static String preferencesFilePath = "src/rimplex/gui/preferences/Preferences.properties";
 
   private RimpleXPreferences()
   {
@@ -177,11 +179,10 @@ public final class RimpleXPreferences
     savePreferencesShortcut = shortcut;
   }
 
-  public void savePreferences()
+  public static void savePreferences()
   {
     try
     {
-      String preferencesFilePath = "src/rimplex.gui.preferences/Preferences.properties";
       FileInputStream prefInput = new FileInputStream(preferencesFilePath);
       Properties preferences = new Properties();
       preferences.load(prefInput);
@@ -193,6 +194,7 @@ public final class RimpleXPreferences
 
       FileOutputStream prefOutput = new FileOutputStream(preferencesFilePath);
       preferences.store(prefOutput, null);
+      prefOutput.close();
     }
     catch (IOException e)
     {
@@ -200,13 +202,12 @@ public final class RimpleXPreferences
     }
   }
 
-  public void getPreferences()
+  public static void getPreferences()
   {
     // Fetching properties using the Properties class, thanks to the following article:
     // https://sybernix.medium.com/how-to-add-a-config-file-to-a-java-project-99fd9b6cebca.
     try
     {
-      String preferencesFilePath = "src/rimplex.gui.preferences/Preferences.properties";
       FileInputStream prefInput = new FileInputStream(preferencesFilePath);
       Properties preferences = new Properties();
       preferences.load(prefInput);

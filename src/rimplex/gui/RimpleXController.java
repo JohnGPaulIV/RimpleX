@@ -841,6 +841,9 @@ public class RimpleXController implements ActionListener
       case "EDIT_PREFERENCES":
         prefWindow.setVisible(true);
         break;
+      case "SAVE_PREFERENCES":
+        RimpleXPreferences.savePreferences();
+        break;
       default:
         break;
     }
