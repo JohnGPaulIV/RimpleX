@@ -1,8 +1,10 @@
 package utilities;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Represents the current configuration of the RimpleX application
@@ -27,6 +29,8 @@ public final class Preferences
   private static String editPreferencesShortcut;
   private static String openPreferencesShortcut;
   private static String savePreferencesShortcut;
+  private static String startStopRecordingShortcut;
+  private static String pauseRecordingShortcut;
 
   private Preferences()
   {
@@ -96,6 +100,16 @@ public final class Preferences
   {
     return savePreferencesShortcut;
   }
+  
+  public static String getStartStopRecordingShortcut()
+  {
+    return startStopRecordingShortcut;
+  }
+  
+  public static String getPauseRecordingShortcut()
+  {
+    return pauseRecordingShortcut;
+  }
 
   public static void setNumOfDecimals(int num)
   {
@@ -164,20 +178,28 @@ public final class Preferences
 
   public void savePreferences()
   {
-    try 
+  }
+  
+  
+  public void getPreferences()
+  {
+    // Fetching properties using the Properties class, thanks to the following article:
+    // https://sybernix.medium.com/how-to-add-a-config-file-to-a-java-project-99fd9b6cebca.
+    try
     {
-      File preferencesConfig = new File("Preferences.txt");
-      preferencesConfig.createNewFile();
+      String preferencesFilePath = "src/rimplex.gui.preferences/Preferences.properties";
+      FileInputStream prefInput = new FileInputStream(preferencesFilePath);
+      Properties preferences = new Properties();
+      preferences.load(prefInput);
+      
+      numOfDecimals = Integer.parseInt(preferences.getProperty("Num_Decimals"));
+      trailingZeroes = Integer.parseInt(preferences.getProperty("Trailing_Zeroes"));
+      displaySeparators = Boolean.parseBoolean(preferences.getProperty("Thousands_Separator"));
+      
+      prefInput.close();
     }
     catch (IOException e)
     {
-      e.printStackTrace();
-    }
-    try {
-      FileWriter myWriter = new FileWriter("Preferences.txt");
-      myWriter.write("This is a test");
-      myWriter.close();
-    } catch (IOException e) {
       e.printStackTrace();
     }
   }
