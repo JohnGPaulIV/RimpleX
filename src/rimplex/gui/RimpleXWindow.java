@@ -5,10 +5,12 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.HeadlessException;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 
 import java.awt.event.KeyEvent;
@@ -43,6 +45,8 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Highlighter.Highlight;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
 
 import utilities.Complex;
 import utilities.SessionHistory;
@@ -139,6 +143,16 @@ public class RimpleXWindow extends JFrame implements KeyListener
     setupDisplay();
     sessionHistory.setVisible(isExpanded);
     scroller.setVisible(isExpanded);
+    getContentPane().addMouseListener(new MouseAdapter() {
+      @Override
+      public void mousePressed(MouseEvent e) {
+          Point p = e.getPoint();
+          if (!scroller.getBounds().contains(p)) {
+              // click was outside the JTextArea’s scroll pane
+              getContentPane().requestFocusInWindow();
+          }
+      }
+  });
 
     BufferedImage myPicture = ImageIO.read(getClass().getResource("/icons/logoRimplex.png"));
 
@@ -350,6 +364,17 @@ public class RimpleXWindow extends JFrame implements KeyListener
     JLabel display = new JLabel("", SwingConstants.RIGHT);
     JLabel topDisplay = new JLabel("");
     this.controller.setDisplays(display, topDisplay);
+    topDisplay.setFocusable(true);
+    topDisplay.addMouseListener(new MouseAdapter() {
+      public void mousePressed(MouseEvent e) {
+        topDisplay.requestFocusInWindow();
+      }
+    });
+    display.addMouseListener(new MouseAdapter() {
+      public void mousePressed(MouseEvent e) {
+        topDisplay.requestFocusInWindow();
+      }
+    });
 
     // Set the font of the displayed text.
     display.setFont(new Font(SERIF, Font.PLAIN, 18));
@@ -365,11 +390,34 @@ public class RimpleXWindow extends JFrame implements KeyListener
     Border border = BorderFactory.createLineBorder(Color.BLACK);
     Border compound = new CompoundBorder(border, padding);
 
+    int menuMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+    KeyStroke pasteKs = KeyStroke.getKeyStroke(KeyEvent.VK_V, menuMask);
     display.setBorder(compound);
     topDisplay.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
     getContentPane().add(display);
     getContentPane().add(topDisplay);
+    
+    if (!scroller.hasFocus()) {
+      topDisplay.getInputMap(JComponent.WHEN_FOCUSED).put(pasteKs, "pastePlainText");
+    }
+    topDisplay.getActionMap().put("pastePlainText", new AbstractAction() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
+            Transferable contents = clip.getContents(null);
+            try {
+                if (contents != null && contents.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                    String text = (String) contents.getTransferData(DataFlavor.stringFlavor);
+                    topDisplay.setText(text);
+                }
+            } 
+            catch (UnsupportedFlavorException | IOException ex) {
+                ex.printStackTrace();
+            }
+          }
+    });
+    
   }
 
   /**
@@ -390,8 +438,10 @@ public class RimpleXWindow extends JFrame implements KeyListener
 
     int menuMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
     KeyStroke copyKs = KeyStroke.getKeyStroke(KeyEvent.VK_C, menuMask);
-    sessionHistory.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    KeyStroke pastKs = KeyStroke.getKeyStroke(KeyEvent.VK_P, menuMask);
+    sessionHistory.getInputMap(JComponent.WHEN_FOCUSED)
                   .put(copyKs, "copyPlainText");
+    
     sessionHistory.getActionMap().put("copyPlainText", new AbstractAction() {
         @Override public void actionPerformed(ActionEvent e) {
             sessionHistory.copy();

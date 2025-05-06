@@ -936,76 +936,62 @@ public class RimpleXController implements ActionListener
    */
   private void setOperator(final JLabel display, final JLabel upperDisplay, final String op)
   {
-    String topDisplayValue = upperDisplay.getText();
-    if (topDisplayValue.isBlank() && display.getText().isBlank())
-    {
+    String up = upperDisplay.getText();
+    String down = display.getText();
+    
+    if (up.isBlank() && down.isBlank()) {
       return;
     }
+    
     if (equalsPresent)
     {
-      upperDisplay
-          .setText(topDisplayValue.substring(topDisplayValue.indexOf(EQUALS) + 2) + SPACE + op);
+      int eq = up.indexOf(EQUALS);
+      String afterEq = (eq >= 0 && up.length() > eq+2) ? up.substring(eq + 2) : up;
+      upperDisplay.setText(afterEq + SPACE + op);
       equalsPresent = false;
+      return;
     }
+    
+    if (!bracketPresent && !relationalOpPresent)
+    {
+      if (!up.isBlank())
+      {
+        String exprPart = up;
+        if (up.contains(EQUALS))
+        {
+          String[] sides = up.split("=", 2);
+          exprPart = sides[0].trim();
+        }
+        String[] tokens = exprPart.split("\\s+");
+        if (tokens.length >= 3)
+        {
+          String leftOperand = tokens[0];
+          String prevOperator = tokens[1];
+          String rightOperand = tokens[2];
+          String evaluation = Evaluator.evaluate(leftOperand, prevOperator, rightOperand);
+          upperDisplay.setText(evaluation + SPACE + op);
+        } else
+        {
+          upperDisplay.setText(down + SPACE + op);
+        }
+      } else
+      {
+        upperDisplay.setText(down + SPACE + op);
+      }
+      display.setText("");
+      bracketClosed = false;
+    }
+    
     else
     {
-      if (!bracketPresent && !relationalOpPresent)
+      if (checkOperatorPlacement(display))
       {
-        // Evaluate when doing running calculations
-        if (!upperDisplay.getText().isBlank())
-        {
-          String leftOperand;
-          if (polarFormEnabled)
-          {
-            leftOperand = polarizedComplex.toString();
-          }
-          else
-          {
-            leftOperand = upperDisplay.getText().replace(SPACE, "").substring(0,
-                upperDisplay.getText().length() - 2);
-          }
-
-          String prevOperator = upperDisplay.getText()
-              .substring(upperDisplay.getText().length() - 1);
-          String rightOperand = display.getText();
-
-          String evaluation = Evaluator.evaluate(leftOperand, prevOperator, rightOperand);
-          if (polarFormEnabled)
-          {
-            Complex evaluated = Complex.parse(evaluation);
-            String polarForm = evaluated.getPolarForm();
-            upperDisplay.setText(polarForm + SPACE + op);
-            if (!display.getText().isBlank())
-            {
-              SessionHistory.add(topDisplayValue + " " + display.getText() + " = " + evaluation);
-            }
-            polarizedComplex = evaluated;
-          }
-          else
-          {
-            upperDisplay.setText(evaluation + SPACE + op);
-            if (!display.getText().isBlank())
-            {
-              SessionHistory.add(topDisplayValue + " " + display.getText() + " = " + evaluation);
-            }
-          }
-        }
-        else
-        {
-          upperDisplay.setText(display.getText() + SPACE + op);
-        }
-        display.setText("");
-        bracketClosed = false;
-      }
-      else
-      {
-        if (checkOperatorPlacement(display))
-        {
-          display.setText(display.getText() + op);
-        }
+        display.setText(down + op);
       }
     }
+    
   }
+
 
   /**
    * Update the display when digit is entered.
