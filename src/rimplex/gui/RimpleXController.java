@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.util.prefs.Preferences;
 
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 
 import rimplex.RimpleX;
@@ -843,6 +844,10 @@ public class RimpleXController implements ActionListener
         break;
       case "SAVE_PREFERENCES":
         RimpleXPreferences.savePreferences();
+        break;
+      case "OPEN_PREFERENCES":
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.showOpenDialog(null);
         break;
       default:
         break;
