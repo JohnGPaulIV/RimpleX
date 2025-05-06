@@ -100,12 +100,12 @@ public final class RimpleXPreferences
   {
     return savePreferencesShortcut;
   }
-  
+
   public static String getStartStopRecordingShortcut()
   {
     return startStopRecordingShortcut;
   }
-  
+
   public static String getPauseRecordingShortcut()
   {
     return pauseRecordingShortcut;
@@ -179,8 +179,7 @@ public final class RimpleXPreferences
   public void savePreferences()
   {
   }
-  
-  
+
   public void getPreferences()
   {
     // Fetching properties using the Properties class, thanks to the following article:
@@ -191,11 +190,11 @@ public final class RimpleXPreferences
       FileInputStream prefInput = new FileInputStream(preferencesFilePath);
       Properties preferences = new Properties();
       preferences.load(prefInput);
-      
+
       numOfDecimals = Integer.parseInt(preferences.getProperty("Num_Decimals"));
       trailingZeroes = Integer.parseInt(preferences.getProperty("Trailing_Zeroes"));
       displaySeparators = Boolean.parseBoolean(preferences.getProperty("Thousands_Separator"));
-      
+
       prefInput.close();
     }
     catch (IOException e)
@@ -203,14 +202,19 @@ public final class RimpleXPreferences
       e.printStackTrace();
     }
   }
-  
+
+  /**
+   * Format the state of the preferences for debugging.
+   * 
+   * @return The current state of preferences.
+   */
   public static String toStrings()
   {
     String numOfDecimals = "Number of decimals: " + RimpleXPreferences.numOfDecimals;
     String trailingZeroes = "Trailing zeroes: " + RimpleXPreferences.trailingZeroes;
-    String displaySeparators = "Display separators:" + String.valueOf(RimpleXPreferences.displaySeparators);
-    
+    String displaySeparators = "Display separators: "
+        + String.valueOf(RimpleXPreferences.displaySeparators);
+
     return numOfDecimals + '\n' + trailingZeroes + '\n' + displaySeparators;
-    
   }
 }
