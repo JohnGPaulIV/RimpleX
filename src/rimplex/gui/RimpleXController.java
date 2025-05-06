@@ -53,6 +53,7 @@ public class RimpleXController implements ActionListener
   private static final String LESSER_THAN = "≤";
 
   private RimpleXRelationalOperation relationalWindow = new RimpleXRelationalOperation();
+  private RimpleXPreferencesWindow prefWindow = new RimpleXPreferencesWindow();
   private RimpleXWindow window;
   private JLabel topDisplay;
   private JLabel bottomDisplay;
@@ -832,6 +833,9 @@ public class RimpleXController implements ActionListener
         break;
       case "ACTION_NEWCALC":
         new RimpleX().run();
+        break;
+      case "EDIT_PREFERENCES":
+        prefWindow.setVisible(true);
         break;
       default:
         break;
