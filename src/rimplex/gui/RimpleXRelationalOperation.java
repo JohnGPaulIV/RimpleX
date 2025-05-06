@@ -20,6 +20,8 @@ public class RimpleXRelationalOperation extends JDialog
   private static final long serialVersionUID = 1L;
   private final String sansSerif = "Sans-Serif";
   private String result = "";
+  
+  JLabel descLabel;
 
   /**
    * Constructs "About" Window for Rimplex.
@@ -42,14 +44,16 @@ public class RimpleXRelationalOperation extends JDialog
     // sets the window icon.
     ImageIcon img = new ImageIcon(getClass().getResource("/icons/iconRimplex.png"));
     setIconImage(img.getImage());
+    
+    descLabel = new JLabel("", JLabel.CENTER);
+    descLabel.setFont(new Font(sansSerif, Font.PLAIN, 14));
+    descLabel.setBounds(10, 35 + 25, 360, 60);
+    add(descLabel);
   }
   
   public void setResult(final String result)
   {
     this.result = result;
-    JLabel descLabel = new JLabel(this.result, JLabel.CENTER);
-    descLabel.setFont(new Font(sansSerif, Font.PLAIN, 14));
-    descLabel.setBounds(10, 35 + 25, 360, 60);
-    add(descLabel);
+    descLabel.setText(result);
   }
 }

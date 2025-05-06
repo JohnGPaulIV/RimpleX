@@ -394,7 +394,7 @@ public class RimpleXController implements ActionListener
           else
           {
             relationalWindow.setResult(
-                leftOperand + SPACE + operator + SPACE + leftOperand + " is " + evaluation);
+                leftOperand + SPACE + operator + SPACE + rightOperand + " is " + evaluation);
             relationalWindow.setVisible(true);
 
             topDisplay.setText("");
@@ -1040,6 +1040,12 @@ public class RimpleXController implements ActionListener
       {
         upperDisplay.setText(display.getText() + SPACE + op);
       }
+    }
+    else if (equalsPresent)
+    {
+      upperDisplay
+          .setText(topDisplayValue.substring(topDisplayValue.indexOf(EQUALS) + 2) + SPACE + op);
+      equalsPresent = false;
     }
     else if (!relationalOpPresent && !bracketPresent)
     {
