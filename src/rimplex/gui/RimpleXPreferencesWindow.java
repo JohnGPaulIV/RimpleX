@@ -54,6 +54,9 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
 
   }
 
+  /**
+   * Create labels and editable inputs for the preferences and add them to the window.
+   */
   private void makePreferencesInputsAndLabels()
   {
 
@@ -71,11 +74,6 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
         .getEditor();
     trailingZeroesEditor.getTextField().setEditable(false);
 
-    trailingZeroesInput.setBounds(275, 30, 100, 25);
-    trailingZeroesLabel.setBounds(25, 30, 200, 25);
-    add(trailingZeroesInput);
-    add(trailingZeroesLabel);
-
     // Set input for number of decimals
     JLabel numDecimalsLabel = new JLabel("Number of Decimal Places:");
     SpinnerNumberModel numDecimalsSpinner = new SpinnerNumberModel(Preferences.getNumOfDecimals(),
@@ -87,21 +85,28 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
         .getEditor();
     numDecimalsEditor.getTextField().setEditable(false);
 
-    numDecimalsInput.setBounds(275, 60, 100, 25);
-    numDecimalsLabel.setBounds(25, 60, 200, 25);
-    add(numDecimalsInput);
-    add(numDecimalsLabel);
-
     // Set checkbox for display thousands separators
     JLabel displaySeparatorsLabel = new JLabel("Display Separators:");
     displaySeparatorsCheckBox = new JCheckBox();
     displaySeparatorsCheckBox.setSelected(Preferences.getDisplaySeparators());
     displaySeparatorsCheckBox.addItemListener(this);
-
+    
+    // Set absolute positioning within component.
+    trailingZeroesInput.setBounds(275, 30, 100, 25);
+    trailingZeroesLabel.setBounds(25, 30, 200, 25);
+    numDecimalsInput.setBounds(275, 60, 100, 25);
+    numDecimalsLabel.setBounds(25, 60, 200, 25);
     displaySeparatorsLabel.setBounds(25, 90, 200, 25);
     displaySeparatorsCheckBox.setBounds(350, 90, 25, 25);
+    
+    // Add component to this window.
     add(displaySeparatorsLabel);
     add(displaySeparatorsCheckBox);
+    add(numDecimalsInput);
+    add(numDecimalsLabel);
+    add(trailingZeroesInput);
+    add(trailingZeroesLabel);
+
   }
 
   @Override
