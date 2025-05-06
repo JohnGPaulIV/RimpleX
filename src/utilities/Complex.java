@@ -48,7 +48,7 @@ public class Complex
     double imaginaryNum = this.imaginary + other.imaginary;
     return new Complex(realNum, imaginaryNum);
   }
-  
+
   /**
    * Calculate whether one complex number is greater than the other.
    * 
@@ -60,7 +60,7 @@ public class Complex
     if (this.real > other.real)
     {
       result = true;
-    } 
+    }
     else if (this.real == other.real)
     {
       if (this.imaginary >= other.imaginary)
@@ -78,7 +78,7 @@ public class Complex
     }
     return result;
   }
-  
+
   /**
    * Calculate whether one complex number is less than the other.
    * 
@@ -90,7 +90,7 @@ public class Complex
     if (this.real < other.real)
     {
       result = true;
-    } 
+    }
     else if (this.real == other.real)
     {
       if (this.imaginary <= other.imaginary)
@@ -136,10 +136,10 @@ public class Complex
           rb.getString("Error"), JOptionPane.ERROR_MESSAGE);
       // throw new ArithmeticException("Cannot divide by zero");
     }
-    double realPart = 
-        ((this.real * other.real + this.imaginary * -(other.imaginary)) / denominator);
-    double imaginaryPart = 
-        ((this.imaginary * other.real - this.real * other.imaginary) / denominator);
+    double realPart = ((this.real * other.real + this.imaginary * -(other.imaginary))
+        / denominator);
+    double imaginaryPart = ((this.imaginary * other.real - this.real * other.imaginary)
+        / denominator);
     return new Complex(realPart, imaginaryPart);
   }
 
@@ -243,8 +243,7 @@ public class Complex
     String result = null;
     if (this.real != 0.0 && this.imaginary != 0.0)
     {
-      Double modulus = 
-          Math.sqrt((this.real * this.real) + (this.imaginary * this.imaginary));
+      Double modulus = Math.sqrt((this.real * this.real) + (this.imaginary * this.imaginary));
       Double argument = Math.atan(this.imaginary / this.real);
       result = String.valueOf(modulus) + "((cos" + String.valueOf(argument) + ") + " + "i sin("
           + String.valueOf(argument) + doubleClosed;
@@ -468,40 +467,49 @@ public class Complex
         // If there is only a negative imaginary number.
         if (sign.equals(NEGATIVE))
         {
-          result = NEGATIVE + String.format(getDecimalFormat(), Math.abs(this.imaginary)) + unit;
+          result = NEGATIVE + String.format(getDecimalFormat(Math.abs(this.imaginary)), Math.abs(this.imaginary)) + unit;
         }
         else
         {
           // If there is only a positive imaginary number
-          result = String.format(getDecimalFormat(), this.imaginary) + unit;
+          result = String.format(getDecimalFormat(this.imaginary), this.imaginary) + unit;
         }
       }
       // If both parts are present, making it in complex number form.
       else if (sign.equals(ADDITION))
       {
-        result = String.format(getDecimalFormat(), this.real) + sign + String.format(getDecimalFormat(), this.imaginary) + unit;
+        result = String.format(getDecimalFormat(this.real), this.real) + sign
+            + String.format(getDecimalFormat(this.imaginary), this.imaginary) + unit;
       }
       else
       {
-        result = String.format(getDecimalFormat(), this.real) + SUBTRACTION + String.format(getDecimalFormat(), Math.abs(this.imaginary))
-            + unit;
+        result = String.format(getDecimalFormat(this.real), this.real) + SUBTRACTION
+            + String.format(getDecimalFormat(Math.abs(this.imaginary)), Math.abs(this.imaginary)) + unit;
       }
     }
     else
     {
-      result = String.format(getDecimalFormat(), this.real);
+      result = String.format(getDecimalFormat(this.real), this.real);
     }
     return result;
   }
-  
+
   /**
    * Get the decimal format based on current preferences.
    * 
    * @return The decimal format string for String formatting.
    */
-  private String getDecimalFormat()
+  private String getDecimalFormat(final double num)
   {
-    String format = "%." + String.valueOf(RimpleXPreferences.getNumOfDecimals()) + "f";
+    String format;
+    if (num % 1 == 0)
+    {
+      format = "%." + String.valueOf(RimpleXPreferences.getTrailingZeroes()) + "f";
+    }
+    else
+    {
+      format = "%." + String.valueOf(RimpleXPreferences.getNumOfDecimals()) + "f";
+    }
     return format;
   }
 }
