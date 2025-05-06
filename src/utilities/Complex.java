@@ -2,6 +2,8 @@ package utilities;
 
 import static rimplex.RimpleX.rb;
 
+import java.util.Locale;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -44,11 +46,11 @@ public class Complex
    */
   public Complex add(final Complex other)
   {
-    double realNum = Math.floor((this.real + other.real) * 1000) / 1000;
-    double imaginaryNum = Math.floor((this.imaginary + other.imaginary) * 1000) / 1000;
+    double realNum = this.real + other.real;
+    double imaginaryNum = this.imaginary + other.imaginary;
     return new Complex(realNum, imaginaryNum);
   }
-  
+
   /**
    * Calculate whether one complex number is greater than the other.
    * 
@@ -60,7 +62,7 @@ public class Complex
     if (this.real > other.real)
     {
       result = true;
-    } 
+    }
     else if (this.real == other.real)
     {
       if (this.imaginary >= other.imaginary)
@@ -78,7 +80,7 @@ public class Complex
     }
     return result;
   }
-  
+
   /**
    * Calculate whether one complex number is less than the other.
    * 
@@ -90,7 +92,7 @@ public class Complex
     if (this.real < other.real)
     {
       result = true;
-    } 
+    }
     else if (this.real == other.real)
     {
       if (this.imaginary <= other.imaginary)
@@ -136,11 +138,10 @@ public class Complex
           rb.getString("Error"), JOptionPane.ERROR_MESSAGE);
       // throw new ArithmeticException("Cannot divide by zero");
     }
-    double realPart = Math.floor(
-        ((this.real * other.real + this.imaginary * -(other.imaginary)) / denominator) * 1000)
-        / 1000;
-    double imaginaryPart = Math.floor(
-        ((this.imaginary * other.real - this.real * other.imaginary) / denominator) * 1000) / 1000;
+    double realPart = ((this.real * other.real + this.imaginary * -(other.imaginary))
+        / denominator);
+    double imaginaryPart = ((this.imaginary * other.real - this.real * other.imaginary)
+        / denominator);
     return new Complex(realPart, imaginaryPart);
   }
 
@@ -158,7 +159,7 @@ public class Complex
     {
       if (other.imaginary == 0.0)
       {
-        result = new Complex(Math.floor((Math.pow(this.real, other.real)) * 1000) / 1000, 0.0);
+        result = new Complex((Math.pow(this.real, other.real)), 0.0);
       }
     }
     else if (this.real == 0.0 && this.imaginary != 0.0)
@@ -244,9 +245,8 @@ public class Complex
     String result = null;
     if (this.real != 0.0 && this.imaginary != 0.0)
     {
-      Double modulus = Math.floor(
-          Math.sqrt((this.real * this.real) + (this.imaginary * this.imaginary)) * 1000) / 1000;
-      Double argument = Math.floor(Math.atan(this.imaginary / this.real) * 1000) / 1000;
+      Double modulus = Math.sqrt((this.real * this.real) + (this.imaginary * this.imaginary));
+      Double argument = Math.atan(this.imaginary / this.real);
       result = String.valueOf(modulus) + "((cos" + String.valueOf(argument) + ") + " + "i sin("
           + String.valueOf(argument) + doubleClosed;
     }
@@ -265,7 +265,7 @@ public class Complex
     else if (this.real == 0.0 && this.imaginary != 0.0)
     {
       String argument;
-      Double modulus = Math.floor(Math.sqrt(this.imaginary + this.imaginary) * 1000) / 1000;
+      Double modulus = Math.sqrt(this.imaginary + this.imaginary);
       if (this.imaginary > 0.0)
       {
         argument = "π/2";
@@ -320,8 +320,8 @@ public class Complex
     double naturalLogReal = Math.log(magnitude);
     double naturalLogImaginary = argument;
 
-    this.real = Math.floor((naturalLogReal / Math.log(10)) * 1000) / 1000;
-    this.imaginary = Math.floor((naturalLogImaginary / Math.log(10)) * 1000) / 1000;
+    this.real = naturalLogReal / Math.log(10);
+    this.imaginary = naturalLogImaginary / Math.log(10);
   }
 
   /**
@@ -337,10 +337,8 @@ public class Complex
     {
       imaginaryUnitPresent = !imaginaryUnitPresent;
     }
-    double realPart = Math.floor((this.real * other.real - this.imaginary * other.imaginary) * 1000)
-        / 1000;
-    double imaginaryPart = Math
-        .floor((this.real * other.imaginary + this.imaginary * other.real) * 1000) / 1000;
+    double realPart = this.real * other.real - this.imaginary * other.imaginary;
+    double imaginaryPart = this.real * other.imaginary + this.imaginary * other.real;
     return new Complex(realPart, imaginaryPart);
   }
 
@@ -354,7 +352,7 @@ public class Complex
   public static Complex parse(final String input)
   {
     // If in complex form.
-    String copy = new String(input);
+    String copy = new String(input).replace(",", "");
     Complex result;
     if (copy.contains(ADDITION))
     {
@@ -440,8 +438,8 @@ public class Complex
         imaginaryPart = Math.sqrt(-this.real);
       }
     }
-    this.real = Math.floor((realPart) * 1000) / 1000;
-    this.imaginary = Math.floor((imaginaryPart) * 1000) / 1000;
+    this.real = realPart;
+    this.imaginary = imaginaryPart;
   }
 
   /**
@@ -453,8 +451,8 @@ public class Complex
    */
   public Complex subtract(final Complex other)
   {
-    double realNum = Math.floor((this.real - other.real) * 1000) / 1000;
-    double imaginaryNum = Math.floor((this.imaginary - other.imaginary) * 1000) / 1000;
+    double realNum = this.real - other.real;
+    double imaginaryNum = this.imaginary - other.imaginary;
     return new Complex(realNum, imaginaryNum);
   }
 
@@ -471,29 +469,65 @@ public class Complex
         // If there is only a negative imaginary number.
         if (sign.equals(NEGATIVE))
         {
-          result = NEGATIVE + String.valueOf(Math.abs(this.imaginary)) + unit;
+          result = NEGATIVE + String.format(getDecimalFormat(Math.abs(this.imaginary)), Math.abs(this.imaginary)) + unit;
         }
         else
         {
           // If there is only a positive imaginary number
-          result = String.valueOf(this.imaginary) + unit;
+          result = String.format(getDecimalFormat(this.imaginary), this.imaginary) + unit;
         }
       }
       // If both parts are present, making it in complex number form.
       else if (sign.equals(ADDITION))
       {
-        result = String.valueOf(this.real) + sign + String.valueOf(this.imaginary) + unit;
+        result = String.format(getDecimalFormat(this.real), this.real) + sign
+            + String.format(getDecimalFormat(this.imaginary), this.imaginary) + unit;
       }
       else
       {
-        result = String.valueOf(this.real) + SUBTRACTION + String.valueOf(Math.abs(this.imaginary))
-            + unit;
+        result = String.format(getDecimalFormat(this.real), this.real) + SUBTRACTION
+            + String.format(getDecimalFormat(Math.abs(this.imaginary)), Math.abs(this.imaginary)) + unit;
       }
     }
     else
     {
-      result = String.valueOf(this.real);
+      result = String.format(getDecimalFormat(this.real), this.real);
     }
     return result;
+  }
+
+  /**
+   * Get the decimal format based on current preferences.
+   * 
+   * @return The decimal format string for String formatting.
+   */
+  private String getDecimalFormat(final double num)
+  {
+    String format;
+    String locale = Locale.getDefault().getLanguage();
+    String thousandsSeparator;
+    System.out.println(locale);
+    if (!locale.equals("en"))
+    {
+      thousandsSeparator = " ";
+    }
+    else
+    {
+      thousandsSeparator = ",";
+    }
+    if (num % 1 == 0)
+    {
+      format = "%." + String.valueOf(RimpleXPreferences.getTrailingZeroes()) + "f";
+    }
+    else
+    {
+      format = "%." + String.valueOf(RimpleXPreferences.getNumOfDecimals()) + "f";
+    }
+    if (RimpleXPreferences.getDisplaySeparators())
+    {
+      format = format.substring(0, 1) + thousandsSeparator + format.substring(1, format.length());
+      System.out.println(format);
+    }
+    return format;
   }
 }
