@@ -8,6 +8,7 @@ import java.awt.HeadlessException;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 
 import java.awt.event.KeyEvent;
@@ -30,6 +31,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
@@ -37,6 +39,8 @@ import javax.swing.TransferHandler;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.Highlighter.Highlight;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
@@ -46,6 +50,7 @@ import utilities.SessionHistory;
 import javax.swing.AbstractAction;
 
 import static rimplex.RimpleX.*;
+import javax.swing.JTextArea;
 
 /**
  * The main window for the RimpleX application.
@@ -96,9 +101,11 @@ public class RimpleXWindow extends JFrame implements KeyListener
   private int targetWidth = WINDOW_WIDTH;
   private int targetButtonX = 365;
 
-  private JLabel sessionHistory;
+  private JTextArea sessionHistory;
 
   private RimpleXController controller;
+  
+  JScrollPane scroller;
   // private ResourceBundle rb;
 
   /**
@@ -131,6 +138,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
     setupSessionHistoryDisplay();
     setupDisplay();
     sessionHistory.setVisible(isExpanded);
+    scroller.setVisible(isExpanded);
 
     BufferedImage myPicture = ImageIO.read(getClass().getResource("/icons/logoRimplex.png"));
 
@@ -368,69 +376,42 @@ public class RimpleXWindow extends JFrame implements KeyListener
    * Sets up the session History Display.
    */
   @SuppressWarnings("serial")
-  public void setupSessionHistoryDisplay()
-  {
-    sessionHistory = new JLabel("Session History:");
-    sessionHistory.setVerticalAlignment(SwingConstants.TOP);
-    sessionHistory.setVerticalTextPosition(SwingConstants.BOTTOM);
-    sessionHistory.setBounds(365, 10, 220, 390);
-    Border padding = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-    Border border = BorderFactory.createLineBorder(Color.BLACK);
-    Border compound = new CompoundBorder(border, padding);
+  public void setupSessionHistoryDisplay() {
+    sessionHistory = new JTextArea("Session History:");
+    sessionHistory.setEditable(false);
 
-    sessionHistory.setBorder(compound);
-    sessionHistory.setTransferHandler(new TransferHandler("text"));
-
-    // made session history copiable
     sessionHistory.setFocusable(true);
 
+    sessionHistory.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(Color.BLACK),
+        BorderFactory.createEmptyBorder(5,5,5,5)));
+
+    SessionHistory.setLabel(sessionHistory);
+
     int menuMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
-    KeyStroke copyKS = KeyStroke.getKeyStroke(KeyEvent.VK_COPY, menuMask);
-    sessionHistory.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(copyKS, COPYPLAINTEXT);
-    sessionHistory.getActionMap().put(COPYPLAINTEXT, new AbstractAction()
-    {
-      @Override
-      public void actionPerformed(final ActionEvent e)
-      {
-        String html = sessionHistory.getText();
-        try
-        {
-          HTMLEditorKit kit = new HTMLEditorKit();
-          HTMLDocument doc = (HTMLDocument) kit.createDefaultDocument();
-          doc.putProperty("IgnoreCharsetDirective", Boolean.TRUE);
-          kit.read(new StringReader(html), doc, 0);
-
-          String plain = doc.getText(0, doc.getLength());
-
-          StringSelection sel = new StringSelection(plain);
-          Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sel, null);
+    KeyStroke copyKs = KeyStroke.getKeyStroke(KeyEvent.VK_C, menuMask);
+    sessionHistory.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                  .put(copyKs, "copyPlainText");
+    sessionHistory.getActionMap().put("copyPlainText", new AbstractAction() {
+        @Override public void actionPerformed(ActionEvent e) {
+            sessionHistory.copy();
         }
-        catch (HeadlessException | BadLocationException | IOException ex)
-        {
-          ex.printStackTrace();
-        }
-      }
     });
 
     JPopupMenu popup = new JPopupMenu();
     JMenuItem copyItem = new JMenuItem("Copy");
-    copyItem.addActionListener(evt -> sessionHistory.getActionMap().get(COPYPLAINTEXT)
-        .actionPerformed(new ActionEvent(sessionHistory, 0, null)));
+    copyItem.addActionListener(e -> sessionHistory.copy());
     popup.add(copyItem);
     sessionHistory.setComponentPopupMenu(popup);
 
-    sessionHistory.addMouseListener(new MouseAdapter()
-    {
-      @Override
-      public void mousePressed(final MouseEvent e)
-      {
-        sessionHistory.requestFocusInWindow();
-      }
-    });
-    SessionHistory.setLabel(sessionHistory);
-    getContentPane().add(sessionHistory);
-
-  }
+    scroller = new JScrollPane(
+        sessionHistory,
+        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    scroller.setBounds(365, 10, 220, 390);
+    scroller.setVisible(false);
+    getContentPane().add(scroller);
+}
 
   @Override
   public void keyTyped(final KeyEvent e)
@@ -516,6 +497,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
       if (isExpanded)
       {
         sessionHistory.setVisible(true);
+        scroller.setVisible(true);
       }
 
       int currentWidth = getWidth();
@@ -535,6 +517,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
         if (!isExpanded)
         {
           sessionHistory.setVisible(false);
+          scroller.setVisible(false);
         }
         animationTimer.stop();
         // change the text of the bar accordingly.

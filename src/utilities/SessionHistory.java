@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 /**
@@ -18,7 +19,7 @@ import javax.swing.SwingUtilities;
  */
 public class SessionHistory
 {
-  private static JLabel historyBox;
+  private static JTextArea historyBox;
   private static StringBuilder historyContent = new StringBuilder();
   private static int numOp = 1;
   private static String FILE = "Session_History.txt";
@@ -32,11 +33,11 @@ public class SessionHistory
    * Sets the JLabel to act upon.
    * @param label JLabel to add session history to.
    */
-  public static void setLabel(final JLabel label)
+  public static void setLabel(final JTextArea label)
   {
     historyBox = label;
     historyContent.setLength(0);
-    SwingUtilities.invokeLater(() -> historyBox.setText("<html></html>"));
+    SwingUtilities.invokeLater(() -> historyBox.setText(""));
     Path sessionHistory = Paths.get(FILE);
     try (BufferedWriter writer = Files.newBufferedWriter(sessionHistory,
         StandardOpenOption.CREATE,
@@ -72,8 +73,8 @@ public class SessionHistory
     }
     if (historyBox != null) 
     {
-      historyContent.append(calculation).append("<br>");
-      String html = "<html>" + historyContent.toString() + "</html>";
+      historyContent.append(calculation).append("\n");
+      String html = historyContent.toString();
       SwingUtilities.invokeLater(() -> historyBox.setText(html));
     }
   }
