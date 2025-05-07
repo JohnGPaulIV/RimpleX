@@ -17,12 +17,14 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import rimplex.RimpleX;
 import utilities.Complex;
 import utilities.Evaluator;
 import utilities.PrintHelper;
 import utilities.SessionHistory;
+import utilities.WindowRecorder;
 import utilities.RimpleXPreferences;
 
 import static rimplex.RimpleX.*;
@@ -73,6 +75,8 @@ public class RimpleXController implements ActionListener
   private Complex result;
   private boolean polarFormEnabled = false;
   private Complex polarizedComplex;
+
+  private WindowRecorder recorder = new WindowRecorder();
 
   /**
    * Constructor for a RimpleXController.
@@ -398,8 +402,8 @@ public class RimpleXController implements ActionListener
           }
           else
           {
-            relationalWindow.setResult(
-                leftOperand + SPACE + operator + SPACE + rightOperand + SPACE + EQUALS + SPACE + rb.getString(evaluation));
+            relationalWindow.setResult(leftOperand + SPACE + operator + SPACE + rightOperand + SPACE
+                + EQUALS + SPACE + rb.getString(evaluation));
             relationalWindow.setVisible(true);
 
             topDisplay.setText("");
@@ -849,6 +853,17 @@ public class RimpleXController implements ActionListener
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.showOpenDialog(null);
         break;
+      case "COMPLEX_PLANE":
+        if (result != null)
+        {
+          new ComplexPlaneWindow(result);
+        }
+        else
+        {
+          JOptionPane.showMessageDialog(null, rb.getString("No_Result_To_Display"),
+              rb.getString("Error"), JOptionPane.ERROR_MESSAGE);
+        }
+        break;
       default:
         break;
     }
@@ -943,20 +958,21 @@ public class RimpleXController implements ActionListener
   {
     String up = upperDisplay.getText();
     String down = display.getText();
-    
-    if (up.isBlank() && down.isBlank()) {
+
+    if (up.isBlank() && down.isBlank())
+    {
       return;
     }
-    
+
     if (equalsPresent)
     {
       int eq = up.indexOf(EQUALS);
-      String afterEq = (eq >= 0 && up.length() > eq+2) ? up.substring(eq + 2) : up;
+      String afterEq = (eq >= 0 && up.length() > eq + 2) ? up.substring(eq + 2) : up;
       upperDisplay.setText(afterEq + SPACE + op);
       equalsPresent = false;
       return;
     }
-    
+
     if (!bracketPresent && !relationalOpPresent)
     {
       if (!up.isBlank())
@@ -975,18 +991,20 @@ public class RimpleXController implements ActionListener
           String rightOperand = tokens[2];
           String evaluation = Evaluator.evaluate(leftOperand, prevOperator, rightOperand);
           upperDisplay.setText(evaluation + SPACE + op);
-        } else
+        }
+        else
         {
           upperDisplay.setText(down + SPACE + op);
         }
-      } else
+      }
+      else
       {
         upperDisplay.setText(down + SPACE + op);
       }
       display.setText("");
       bracketClosed = false;
     }
-    
+
     else
     {
       if (checkOperatorPlacement(display))
@@ -994,9 +1012,8 @@ public class RimpleXController implements ActionListener
         display.setText(down + op);
       }
     }
-    
-  }
 
+  }
 
   /**
    * Update the display when digit is entered.
