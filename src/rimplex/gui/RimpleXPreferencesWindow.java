@@ -31,6 +31,9 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
 {
   private static final long serialVersionUID = 1L;
   private static JCheckBox displaySeparatorsCheckBox;
+  
+  private static SpinnerNumberModel trailingZeroesSpinner;
+  private static SpinnerNumberModel numDecimalsSpinner;
   private static JSpinner numDecimalsInput;
   private static JSpinner trailingZeroesInput;
 
@@ -63,7 +66,7 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     // Set input for trailing zeroes, implementing the JSpinner object:
     // https://docs.oracle.com/javase/8/docs/api/javax/swing/SpinnerNumberModel.html
     JLabel trailingZeroesLabel = new JLabel("Trailing Zeroes:");
-    SpinnerNumberModel trailingZeroesSpinner = new SpinnerNumberModel(
+    trailingZeroesSpinner = new SpinnerNumberModel(
         RimpleXPreferences.getTrailingZeroes(), 0, 6, 1);
     trailingZeroesInput = new JSpinner(trailingZeroesSpinner);
     trailingZeroesInput.addChangeListener(this);
@@ -76,7 +79,7 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
 
     // Set input for number of decimals
     JLabel numDecimalsLabel = new JLabel("Number of Decimal Places:");
-    SpinnerNumberModel numDecimalsSpinner = new SpinnerNumberModel(RimpleXPreferences.getNumOfDecimals(),
+    numDecimalsSpinner = new SpinnerNumberModel(RimpleXPreferences.getNumOfDecimals(),
         0, 6, 1);
     numDecimalsInput = new JSpinner(numDecimalsSpinner);
     numDecimalsInput.addChangeListener(this);
@@ -107,6 +110,13 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     add(trailingZeroesInput);
     add(trailingZeroesLabel);
 
+  }
+  
+  public void updatePreferenceValues()
+  {
+    displaySeparatorsCheckBox.setSelected(RimpleXPreferences.getDisplaySeparators());
+    trailingZeroesSpinner.setValue(RimpleXPreferences.getTrailingZeroes());
+    numDecimalsSpinner.setValue(RimpleXPreferences.getNumOfDecimals());
   }
 
   @Override

@@ -17,6 +17,8 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 
 import rimplex.RimpleX;
 import utilities.Complex;
@@ -59,6 +61,7 @@ public class RimpleXController implements ActionListener
   private RimpleXRelationalOperation relationalWindow = new RimpleXRelationalOperation();
   private RimpleXPreferencesWindow prefWindow = new RimpleXPreferencesWindow();
   private RimpleXWindow window;
+  
   private JLabel topDisplay;
   private JLabel bottomDisplay;
   private boolean bracketPresent;
@@ -846,8 +849,22 @@ public class RimpleXController implements ActionListener
         RimpleXPreferences.savePreferences();
         break;
       case "OPEN_PREFERENCES":
+        // Using the JFileChooser class to choose preference files to open.
+        // https://docs.oracle.com/javase/8/docs/api/javax/swing/JFileChooser.html
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.showOpenDialog(null);
+        FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("Property files (.properties)", "properties");
+        fileChooser.addChoosableFileFilter(fileFilter);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        int fileSelected = fileChooser.showOpenDialog(null);
+        if (fileSelected == JFileChooser.APPROVE_OPTION)
+        {
+          File fileToOpen = fileChooser.getSelectedFile().getAbsoluteFile();
+          System.out.println(fileToOpen.toString());
+          RimpleXPreferences.setPreferencesFile(fileToOpen.getAbsolutePath());
+          RimpleXPreferences.getPreferences();
+          prefWindow.updatePreferenceValues();
+          prefWindow.setVisible(true);
+        }
         break;
       default:
         break;
