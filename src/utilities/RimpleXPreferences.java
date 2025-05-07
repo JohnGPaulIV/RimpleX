@@ -20,6 +20,21 @@ import java.util.Properties;
  */
 public final class RimpleXPreferences
 {
+  private static final String ACTION_PRINT = "ACTION_PRINT";
+  private static final String ACTION_NEW_CALC = "ACTION_NEW_CALC";
+  private static final String ACTION_ABOUT = "ACTION_ABOUT";
+  private static final String ACTION_HELP = "ACTION_HELP";
+  private static final String ACTION_EXIT = "ACTION_EXIT";
+  private static final String EDIT_PREFERENCES = "EDIT_PREFERENCES";
+  private static final String SAVE_PREFERENCES = "SAVE_PREFERENCES";
+  private static final String OPEN_PREFERENCES = "OPEN_PREFERENCES";
+  private static final String OPEN_RECORDING = "OPEN_RECORDING";
+  private static final String SAVE_RECORDING = "SAVE_RECORDING";
+  private static final String RECORDING_PLAY = "RECORDING_PLAY";
+  private static final String RECORDING_PAUSE = "RECORDING_PAUSE";
+  private static final String RECORDING_STOP = "RECORDING_STOP";
+      
+  
   private static int numOfDecimals = 3;
   private static int trailingZeroes = 1;
   private static boolean displaySeparators = false;
@@ -38,10 +53,10 @@ public final class RimpleXPreferences
   private static String pauseRecordingShortcut;
 
   private static final Map<String, String> actionCommandMap = new HashMap<>();
-  private static List<String> actionCommands = Arrays.asList("ACTION_PRINT", "ACTION_NEW_CALC",
-      "ACTION_ABOUT", "ACTION_HELP", "ACTION_EXIT", "EDIT_PREFERENCES", "SAVE_PREFERENCES",
-      "OPEN_PREFERENCES", "OPEN_RECORDING", "SAVE_RECORDING", "RECORDING_PLAY", "RECORDING_PAUSE",
-      "RECORDING_STOP");
+  private static List<String> actionCommands = Arrays.asList(ACTION_PRINT, ACTION_NEW_CALC,
+      ACTION_ABOUT, ACTION_HELP, ACTION_EXIT, EDIT_PREFERENCES, SAVE_PREFERENCES,
+      OPEN_PREFERENCES, OPEN_RECORDING, SAVE_RECORDING, RECORDING_PLAY, RECORDING_PAUSE,
+      RECORDING_STOP);
   static
   {
     for (String action : actionCommands)
@@ -161,54 +176,54 @@ public final class RimpleXPreferences
   public static void setOpenRecordingShortcut(String shortcut)
   {
     openRecordingShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get("OPEN_RECORDING") != shortcut)
+    if (getActionCommand(shortcut) == null || actionCommandMap.get(OPEN_RECORDING) != shortcut)
     {
-      actionCommandMap.put("OPEN_RECORDING", shortcut);
+      actionCommandMap.put(OPEN_RECORDING, shortcut);
     }
   }
 
   public static void setSaveRecordingShortcut(String shortcut)
   {
     saveRecordingShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get("SAVE_RECORDING") != shortcut)
+    if (getActionCommand(shortcut) == null || actionCommandMap.get(SAVE_RECORDING) != shortcut)
     {
-      actionCommandMap.put("SAVE_RECORDING", shortcut);
+      actionCommandMap.put(SAVE_RECORDING, shortcut);
     }
   }
 
   public static void setPrintSessionShortcut(String shortcut)
   {
     printSessionShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get("ACTION_PRINT") != shortcut)
+    if (getActionCommand(shortcut) == null || actionCommandMap.get(ACTION_PRINT) != shortcut)
     {
-      actionCommandMap.put("ACTION_PRINT", shortcut);
+      actionCommandMap.put(ACTION_PRINT, shortcut);
     }
   }
 
   public static void setNewCalculatorShortcut(String shortcut)
   {
     newCalculatorShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get("ACTION_NEW_CALC") != shortcut)
+    if (getActionCommand(shortcut) == null || actionCommandMap.get(ACTION_NEW_CALC) != shortcut)
     {
-      actionCommandMap.put("ACTION_NEW_CALC", shortcut);
+      actionCommandMap.put(ACTION_NEW_CALC, shortcut);
     }
   }
 
   public static void setAboutShortcut(String shortcut)
   {
     aboutShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get("ACTION_ABOUT") != shortcut)
+    if (getActionCommand(shortcut) == null || actionCommandMap.get(ACTION_ABOUT) != shortcut)
     {
-      actionCommandMap.put("ACTION_ABOUT", shortcut);
+      actionCommandMap.put(ACTION_ABOUT, shortcut);
     }
   }
 
   public static void setHelpShortcut(String shortcut)
   {
     helpShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get("ACTION_HELP") != shortcut)
+    if (getActionCommand(shortcut) == null || actionCommandMap.get(ACTION_HELP) != shortcut)
     {
-      actionCommandMap.put("ACTION_HELP", shortcut);
+      actionCommandMap.put(ACTION_HELP, shortcut);
     }
   }
 
@@ -220,36 +235,36 @@ public final class RimpleXPreferences
   public static void setEditPreferencesShortcut(String shortcut)
   {
     editPreferencesShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get("EDIT_PREFERENCES") != shortcut)
+    if (getActionCommand(shortcut) == null || actionCommandMap.get(EDIT_PREFERENCES) != shortcut)
     {
-      actionCommandMap.put("EDIT_PREFERENCES", shortcut);
+      actionCommandMap.put(EDIT_PREFERENCES, shortcut);
     }
   }
 
   public static void setOpenPreferencesShortcut(String shortcut)
   {
     openPreferencesShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get("OPEN_PREFERENCES") != shortcut)
+    if (getActionCommand(shortcut) == null || actionCommandMap.get(OPEN_PREFERENCES) != shortcut)
     {
-      actionCommandMap.put("OPEN_PREFERENCES", shortcut);
+      actionCommandMap.put(OPEN_PREFERENCES, shortcut);
     }
   }
 
   public static void setSavePreferencesShortcut(String shortcut)
   {
     savePreferencesShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get("SAVE_PREFERENCES") != shortcut)
+    if (getActionCommand(shortcut) == null || actionCommandMap.get(SAVE_PREFERENCES) != shortcut)
     {
-      actionCommandMap.put("SAVE_PREFERENCES", shortcut);
+      actionCommandMap.put(SAVE_PREFERENCES, shortcut);
     }
   }
   
   public static void setStartStopRecordingShortcut(String shortcut)
   {
     startStopRecordingShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get("RECORDING_START") != shortcut)
+    if (getActionCommand(shortcut) == null || actionCommandMap.get(RECORDING_PLAY) != shortcut)
     {
-      actionCommandMap.put("RECORDING_START", shortcut);
+      actionCommandMap.put(RECORDING_PLAY, shortcut);
     }
   }
 
