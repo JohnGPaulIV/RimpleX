@@ -428,7 +428,6 @@ public class RimpleXWindow extends JFrame implements KeyListener
   public void setupSessionHistoryDisplay() {
     sessionHistory = new JTextArea("Session History:");
     sessionHistory.setEditable(false);
-
     sessionHistory.setFocusable(true);
 
     sessionHistory.setBorder(BorderFactory.createCompoundBorder(
@@ -436,7 +435,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
         BorderFactory.createEmptyBorder(5,5,5,5)));
 
     SessionHistory.setLabel(sessionHistory);
-
+    sessionHistory.setText("Test123");
     int menuMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
     KeyStroke copyKs = KeyStroke.getKeyStroke(KeyEvent.VK_C, menuMask);
     KeyStroke pastKs = KeyStroke.getKeyStroke(KeyEvent.VK_P, menuMask);
