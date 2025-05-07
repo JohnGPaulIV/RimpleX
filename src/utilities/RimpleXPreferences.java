@@ -223,6 +223,28 @@ public final class RimpleXPreferences
       e.printStackTrace();
     }
   }
+  
+  public static void getCustomPreferences(File customFile)
+  {
+    // Fetching properties using the Properties class, thanks to the following article:
+    // https://sybernix.medium.com/how-to-add-a-config-file-to-a-java-project-99fd9b6cebca.
+    try
+    {
+      FileInputStream prefInput = new FileInputStream(customFile.getAbsolutePath());
+      Properties preferences = new Properties();
+      preferences.load(prefInput);
+
+      numOfDecimals = Integer.parseInt(preferences.getProperty("Num_Decimals"));
+      trailingZeroes = Integer.parseInt(preferences.getProperty("Trailing_Zeroes"));
+      displaySeparators = Boolean.parseBoolean(preferences.getProperty("Thousands_Separator"));
+
+      prefInput.close();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+  }
 
   /**
    * Format the state of the preferences for debugging.
