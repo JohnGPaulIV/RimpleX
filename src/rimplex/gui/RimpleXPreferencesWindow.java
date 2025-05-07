@@ -43,7 +43,7 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
   public RimpleXPreferencesWindow()
   {
     setTitle(rb.getString("Preferences"));
-    setSize(400, 150);
+    setSize(400, 480);
     setLocationRelativeTo(null);
     setLayout(null);
     setResizable(false);
@@ -94,6 +94,31 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     displaySeparatorsCheckBox.setSelected(RimpleXPreferences.getDisplaySeparators());
     displaySeparatorsCheckBox.addItemListener(this);
     
+    JLabel openRecordingLabel = new JLabel("Open Recording:");
+    JLabel startStopRecordingLabel = new JLabel("Start/Stop Recording:");
+    JLabel saveRecordingLabel = new JLabel("Save Recording:");
+    JLabel printSessionLabel = new JLabel("Print Session:");
+    JLabel newCalcLabel = new JLabel("New Calculator:");
+    JLabel aboutLabel = new JLabel("About:");
+    JLabel helpLabel = new JLabel("Help:");
+    JLabel complexPlaneLabel = new JLabel("View Complex Plane:");
+    JLabel editPreferencesLabel = new JLabel("Edit Preferences:");
+    JLabel savePreferencesLabel = new JLabel("Save Preferences:");
+    JLabel pauseRecordingLabel = new JLabel("Pause Recording:");
+    
+    aboutLabel.setBounds(25, 120, 200, 25);
+    helpLabel.setBounds(25, 150, 200, 25);
+    complexPlaneLabel.setBounds(25, 180, 200, 25);
+    newCalcLabel.setBounds(25, 210, 200, 25);
+    printSessionLabel.setBounds(25, 240, 200, 25);
+    openRecordingLabel.setBounds(25, 270, 200, 25);
+    startStopRecordingLabel.setBounds(25, 300, 200, 25);
+    saveRecordingLabel.setBounds(25, 330, 200, 25);
+    pauseRecordingLabel.setBounds(25, 360, 200, 25);
+    editPreferencesLabel.setBounds(25, 390, 200, 25);
+    savePreferencesLabel.setBounds(25, 420, 200, 25);
+    
+   
     // Set absolute positioning within component.
     trailingZeroesInput.setBounds(275, 30, 100, 25);
     trailingZeroesLabel.setBounds(25, 30, 200, 25);
@@ -109,6 +134,18 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     add(numDecimalsLabel);
     add(trailingZeroesInput);
     add(trailingZeroesLabel);
+    
+    add(aboutLabel);
+    add(helpLabel);
+    add(complexPlaneLabel);
+    add(newCalcLabel);
+    add(printSessionLabel);
+    add(openRecordingLabel);
+    add(startStopRecordingLabel);
+    add(saveRecordingLabel);
+    add(pauseRecordingLabel);
+    add(editPreferencesLabel);
+    add(savePreferencesLabel);
 
   }
   
