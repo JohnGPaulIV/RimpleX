@@ -330,7 +330,6 @@ public class RimpleXController implements ActionListener
         setRelationalOperator(bottomDisplay, topDisplay, LESSER_THAN);
         break;
       case "ACTION_EXIT":
-        System.out.println(RimpleXPreferences.toStrings());
         System.exit(0);
         break;
       case "ACTION_HELP":
@@ -859,7 +858,6 @@ public class RimpleXController implements ActionListener
         if (fileSelected == JFileChooser.APPROVE_OPTION)
         {
           File fileToOpen = fileChooser.getSelectedFile().getAbsoluteFile();
-          System.out.println(fileToOpen.toString());
           RimpleXPreferences.setPreferencesFile(fileToOpen.getAbsolutePath());
           RimpleXPreferences.getPreferences();
           prefWindow.updatePreferenceValues();
