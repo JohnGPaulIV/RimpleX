@@ -3,6 +3,12 @@ package utilities;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -30,7 +36,20 @@ public final class RimpleXPreferences
   private static String savePreferencesShortcut;
   private static String startStopRecordingShortcut;
   private static String pauseRecordingShortcut;
-  
+
+  private static final Map<String, String> actionCommandMap = new HashMap<>();
+  private static List<String> actionCommands = Arrays.asList("ACTION_PRINT", "ACTION_NEW_CALC",
+      "ACTION_ABOUT", "ACTION_HELP", "ACTION_EXIT", "EDIT_PREFERENCES", "SAVE_PREFERENCES",
+      "OPEN_PREFERENCES", "OPEN_RECORDING", "SAVE_RECORDING", "RECORDING_PLAY", "RECORDING_PAUSE",
+      "RECORDING_STOP");
+  static
+  {
+    for (String action : actionCommands)
+    {
+      actionCommandMap.put(action, null);
+    }
+  }
+
   private static String preferencesFilePath = "src/rimplex/gui/preferences/Preferences.properties";
 
   private RimpleXPreferences()
@@ -75,6 +94,18 @@ public final class RimpleXPreferences
   public static String getAboutShortcut()
   {
     return aboutShortcut;
+  }
+
+  public static String getActionCommand(final String keyPressed)
+  {
+    for (Map.Entry<String, String> entry : actionCommandMap.entrySet())
+    {
+      if (Objects.equals(entry.getValue(), keyPressed))
+      {
+        return entry.getKey();
+      }
+    }
+    return null;
   }
 
   public static String getHelpShortcut()
@@ -130,31 +161,55 @@ public final class RimpleXPreferences
   public static void setOpenRecordingShortcut(String shortcut)
   {
     openRecordingShortcut = shortcut;
+    if (getActionCommand(shortcut) == null || actionCommandMap.get("OPEN_RECORDING") != shortcut)
+    {
+      actionCommandMap.put("OPEN_RECORDING", shortcut);
+    }
   }
 
   public static void setSaveRecordingShortcut(String shortcut)
   {
     saveRecordingShortcut = shortcut;
+    if (getActionCommand(shortcut) == null || actionCommandMap.get("SAVE_RECORDING") != shortcut)
+    {
+      actionCommandMap.put("SAVE_RECORDING", shortcut);
+    }
   }
 
   public static void setPrintSessionShortcut(String shortcut)
   {
     printSessionShortcut = shortcut;
+    if (getActionCommand(shortcut) == null || actionCommandMap.get("ACTION_PRINT") != shortcut)
+    {
+      actionCommandMap.put("ACTION_PRINT", shortcut);
+    }
   }
 
   public static void setNewCalculatorShortcut(String shortcut)
   {
     newCalculatorShortcut = shortcut;
+    if (getActionCommand(shortcut) == null || actionCommandMap.get("ACTION_NEW_CALC") != shortcut)
+    {
+      actionCommandMap.put("ACTION_NEW_CALC", shortcut);
+    }
   }
 
   public static void setAboutShortcut(String shortcut)
   {
     aboutShortcut = shortcut;
+    if (getActionCommand(shortcut) == null || actionCommandMap.get("ACTION_ABOUT") != shortcut)
+    {
+      actionCommandMap.put("ACTION_ABOUT", shortcut);
+    }
   }
 
   public static void setHelpShortcut(String shortcut)
   {
     helpShortcut = shortcut;
+    if (getActionCommand(shortcut) == null || actionCommandMap.get("ACTION_HELP") != shortcut)
+    {
+      actionCommandMap.put("ACTION_HELP", shortcut);
+    }
   }
 
   public static void setComplexPlaneShortcut(String shortcut)
@@ -165,18 +220,39 @@ public final class RimpleXPreferences
   public static void setEditPreferencesShortcut(String shortcut)
   {
     editPreferencesShortcut = shortcut;
+    if (getActionCommand(shortcut) == null || actionCommandMap.get("EDIT_PREFERENCES") != shortcut)
+    {
+      actionCommandMap.put("EDIT_PREFERENCES", shortcut);
+    }
   }
 
   public static void setOpenPreferencesShortcut(String shortcut)
   {
     openPreferencesShortcut = shortcut;
+    if (getActionCommand(shortcut) == null || actionCommandMap.get("OPEN_PREFERENCES") != shortcut)
+    {
+      actionCommandMap.put("OPEN_PREFERENCES", shortcut);
+    }
   }
 
   public static void setSavePreferencesShortcut(String shortcut)
   {
     savePreferencesShortcut = shortcut;
+    if (getActionCommand(shortcut) == null || actionCommandMap.get("SAVE_PREFERENCES") != shortcut)
+    {
+      actionCommandMap.put("SAVE_PREFERENCES", shortcut);
+    }
   }
   
+  public static void setStartStopRecordingShortcut(String shortcut)
+  {
+    startStopRecordingShortcut = shortcut;
+    if (getActionCommand(shortcut) == null || actionCommandMap.get("RECORDING_START") != shortcut)
+    {
+      actionCommandMap.put("RECORDING_START", shortcut);
+    }
+  }
+
   public static void setPreferencesFile(String filePath)
   {
     preferencesFilePath = filePath;
