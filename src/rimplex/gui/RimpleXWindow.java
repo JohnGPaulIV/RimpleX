@@ -49,6 +49,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 
 import utilities.Complex;
+import utilities.RimpleXPreferences;
 import utilities.SessionHistory;
 
 import javax.swing.AbstractAction;
@@ -520,6 +521,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
         actionCommand = UNIT;
         break;
       default:
+        actionCommand = RimpleXPreferences.getActionCommand(String.valueOf(keyChar));
         break;
     }
     if (e.getKeyChar() == KeyEvent.VK_ENTER)

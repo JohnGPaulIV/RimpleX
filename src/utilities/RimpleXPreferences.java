@@ -267,6 +267,15 @@ public final class RimpleXPreferences
       actionCommandMap.put(RECORDING_PLAY, shortcut);
     }
   }
+  
+  public static void setPauseRecordingShortcut(String shortcut)
+  {
+    pauseRecordingShortcut = shortcut;
+    if (getActionCommand(shortcut) == null || actionCommandMap.get(RECORDING_PAUSE) != shortcut)
+    {
+      actionCommandMap.put(RECORDING_PAUSE, shortcut);
+    }
+  }
 
   public static void setPreferencesFile(String filePath)
   {
@@ -310,6 +319,19 @@ public final class RimpleXPreferences
       trailingZeroes = Integer.parseInt(preferences.getProperty("Trailing_Zeroes"));
       displaySeparators = Boolean.parseBoolean(preferences.getProperty("Thousands_Separator"));
 
+      setOpenRecordingShortcut(String.valueOf(preferences.getProperty(OPEN_RECORDING)));
+      setSaveRecordingShortcut(String.valueOf(preferences.getProperty(SAVE_RECORDING)));
+      setPrintSessionShortcut(String.valueOf(preferences.getProperty(ACTION_PRINT)));
+      setNewCalculatorShortcut(String.valueOf(preferences.getProperty(ACTION_NEW_CALC)));
+      setAboutShortcut(String.valueOf(preferences.getProperty(ACTION_ABOUT)));
+      setHelpShortcut(String.valueOf(preferences.getProperty(ACTION_HELP)));
+//      complexPlaneShortcut = String.valueOf(preferences.getProperty(OPEN_RECORDING));;
+      setEditPreferencesShortcut(String.valueOf(preferences.getProperty(EDIT_PREFERENCES)));
+      setOpenPreferencesShortcut(String.valueOf(preferences.getProperty(OPEN_PREFERENCES)));
+      setSavePreferencesShortcut(String.valueOf(preferences.getProperty(SAVE_PREFERENCES)));
+      setStartStopRecordingShortcut(String.valueOf(preferences.getProperty(RECORDING_PLAY)));
+      setPauseRecordingShortcut(String.valueOf(preferences.getProperty(RECORDING_PAUSE)));
+      
       prefInput.close();
     }
     catch (IOException e)
