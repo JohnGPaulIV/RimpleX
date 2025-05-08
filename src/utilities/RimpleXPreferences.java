@@ -26,14 +26,12 @@ public final class RimpleXPreferences
   private static final String ACTION_ABOUT = "ACTION_ABOUT";
   private static final String ACTION_HELP = "ACTION_HELP";
   private static final String ACTION_EXIT = "ACTION_EXIT";
+  private static final String COMPLEX_PLANE = "COMPLEX_PLANE";
   private static final String EDIT_PREFERENCES = "EDIT_PREFERENCES";
   private static final String SAVE_PREFERENCES = "SAVE_PREFERENCES";
   private static final String OPEN_PREFERENCES = "OPEN_PREFERENCES";
   private static final String OPEN_RECORDING = "OPEN_RECORDING";
   private static final String SAVE_RECORDING = "SAVE_RECORDING";
-  private static final String RECORDING_PLAY = "RECORDING_PLAY";
-  private static final String RECORDING_PAUSE = "RECORDING_PAUSE";
-  private static final String RECORDING_STOP = "RECORDING_STOP";
       
   
   private static int numOfDecimals = 3;
@@ -46,18 +44,16 @@ public final class RimpleXPreferences
   private static String newCalculatorShortcut;
   private static String aboutShortcut;
   private static String helpShortcut;
+  private static String exitShortcut;
   private static String complexPlaneShortcut;
   private static String editPreferencesShortcut;
   private static String openPreferencesShortcut;
   private static String savePreferencesShortcut;
-  private static String startStopRecordingShortcut;
-  private static String pauseRecordingShortcut;
 
   private static final Map<String, String> actionCommandMap = new HashMap<>();
   private static List<String> actionCommands = Arrays.asList(ACTION_PRINT, ACTION_NEW_CALC,
       ACTION_ABOUT, ACTION_HELP, ACTION_EXIT, EDIT_PREFERENCES, SAVE_PREFERENCES,
-      OPEN_PREFERENCES, OPEN_RECORDING, SAVE_RECORDING, RECORDING_PLAY, RECORDING_PAUSE,
-      RECORDING_STOP);
+      OPEN_PREFERENCES, OPEN_RECORDING, SAVE_RECORDING, COMPLEX_PLANE);
   static
   {
     for (String action : actionCommands)
@@ -128,6 +124,11 @@ public final class RimpleXPreferences
   {
     return helpShortcut;
   }
+  
+  public static String getExitShortcut()
+  {
+    return exitShortcut;
+  }
 
   public static String getComplexPlaneShortcut()
   {
@@ -149,16 +150,6 @@ public final class RimpleXPreferences
     return savePreferencesShortcut;
   }
 
-  public static String getStartStopRecordingShortcut()
-  {
-    return startStopRecordingShortcut;
-  }
-
-  public static String getPauseRecordingShortcut()
-  {
-    return pauseRecordingShortcut;
-  }
-
   public static String getPreferencesFile()
   {
     return preferencesFilePath;
@@ -178,6 +169,7 @@ public final class RimpleXPreferences
   {
     displaySeparators = separators;
   }
+  
 
   public static void setOpenRecordingShortcut(String shortcut)
   {
@@ -236,6 +228,10 @@ public final class RimpleXPreferences
   public static void setComplexPlaneShortcut(String shortcut)
   {
     complexPlaneShortcut = shortcut;
+    if (getActionCommand(shortcut) == null || actionCommandMap.get(COMPLEX_PLANE) != shortcut)
+    {
+      actionCommandMap.put(COMPLEX_PLANE, shortcut);
+    }
   }
 
   public static void setEditPreferencesShortcut(String shortcut)
@@ -265,21 +261,12 @@ public final class RimpleXPreferences
     }
   }
   
-  public static void setStartStopRecordingShortcut(String shortcut)
+  public static void setExitShortcut(String shortcut)
   {
-    startStopRecordingShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get(RECORDING_PLAY) != shortcut)
+    exitShortcut = shortcut;
+    if (getActionCommand(shortcut) == null || actionCommandMap.get(ACTION_EXIT) != shortcut)
     {
-      actionCommandMap.put(RECORDING_PLAY, shortcut);
-    }
-  }
-  
-  public static void setPauseRecordingShortcut(String shortcut)
-  {
-    pauseRecordingShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get(RECORDING_PAUSE) != shortcut)
-    {
-      actionCommandMap.put(RECORDING_PAUSE, shortcut);
+      actionCommandMap.put(ACTION_EXIT, shortcut);
     }
   }
 
@@ -328,6 +315,18 @@ public final class RimpleXPreferences
       preferences.setProperty("Num_Decimals", String.valueOf(numOfDecimals));
       preferences.setProperty("Trailing_Zeroes", String.valueOf(trailingZeroes));
       preferences.setProperty("Thousands_Separator", String.valueOf(displaySeparators));
+      
+      preferences.setProperty(OPEN_RECORDING, openRecordingShortcut);
+      preferences.setProperty(SAVE_RECORDING, saveRecordingShortcut);
+      preferences.setProperty(ACTION_PRINT, printSessionShortcut);
+      preferences.setProperty(ACTION_NEW_CALC, newCalculatorShortcut);
+      preferences.setProperty(ACTION_ABOUT, aboutShortcut);
+      preferences.setProperty(ACTION_HELP, helpShortcut);
+      preferences.setProperty(ACTION_EXIT, exitShortcut);
+      preferences.setProperty(COMPLEX_PLANE, complexPlaneShortcut);
+      preferences.setProperty(EDIT_PREFERENCES, editPreferencesShortcut);
+      preferences.setProperty(OPEN_PREFERENCES, openPreferencesShortcut);
+      preferences.setProperty(SAVE_PREFERENCES, savePreferencesShortcut);
 
       FileOutputStream prefOutput = new FileOutputStream(preferencesFilePath);
       preferences.store(prefOutput, null);
@@ -364,14 +363,14 @@ public final class RimpleXPreferences
       setNewCalculatorShortcut(String.valueOf(preferences.getProperty(ACTION_NEW_CALC)));
       setAboutShortcut(String.valueOf(preferences.getProperty(ACTION_ABOUT)));
       setHelpShortcut(String.valueOf(preferences.getProperty(ACTION_HELP)));
-//      complexPlaneShortcut = String.valueOf(preferences.getProperty(OPEN_RECORDING));;
+      setExitShortcut(String.valueOf(preferences.getProperty(ACTION_EXIT)));
+      setComplexPlaneShortcut(String.valueOf(preferences.getProperty(COMPLEX_PLANE)));
       setEditPreferencesShortcut(String.valueOf(preferences.getProperty(EDIT_PREFERENCES)));
       setOpenPreferencesShortcut(String.valueOf(preferences.getProperty(OPEN_PREFERENCES)));
       setSavePreferencesShortcut(String.valueOf(preferences.getProperty(SAVE_PREFERENCES)));
-      setStartStopRecordingShortcut(String.valueOf(preferences.getProperty(RECORDING_PLAY)));
-      setPauseRecordingShortcut(String.valueOf(preferences.getProperty(RECORDING_PAUSE)));
       
       prefInput.close();
+      System.out.println(actionCommandMap);
     }
     catch (IOException e)
     {
@@ -390,7 +389,10 @@ public final class RimpleXPreferences
     String trailingZeroes = "Trailing zeroes: " + RimpleXPreferences.trailingZeroes;
     String displaySeparators = "Display separators: "
         + String.valueOf(RimpleXPreferences.displaySeparators);
+    
+    String openRec = "Open Recording Shortcut: " + RimpleXPreferences.openRecordingShortcut;
+    String about = "About Shortcut: " + RimpleXPreferences.aboutShortcut;
 
-    return numOfDecimals + '\n' + trailingZeroes + '\n' + displaySeparators;
+    return numOfDecimals + '\n' + trailingZeroes + '\n' + displaySeparators + '\n' + openRec + '\n' + about;
   }
 }
