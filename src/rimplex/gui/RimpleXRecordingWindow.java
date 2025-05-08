@@ -3,12 +3,10 @@ package rimplex.gui;
 import java.awt.Color;
 import java.awt.Font;
 
-import static rimplex.RimpleX.rb;
-
-import javax.swing.*;
+import javax.swing.JFrame;
 
 /**
- * Represents the Recording controller window.
+ * Represents the recording controller window.
  * 
  * @author Benjamin Bonnell
  * 
@@ -17,22 +15,46 @@ import javax.swing.*;
 public class RimpleXRecordingWindow extends JFrame
 {
   private static RimpleXRecordingWindow instance;
+  private String filePath;
 
-  public static RimpleXRecordingWindow getInstance(RimpleXController controller)
+  /**
+   * Gets the instance of the window for to ensure no duplicates.
+   * 
+   * @param controller
+   * @param filePath
+   * @return
+   */
+  public static RimpleXRecordingWindow getInstance(RimpleXController controller, String filePath)
   {
     if (instance == null)
     {
-      instance = new RimpleXRecordingWindow(controller);
+      instance = new RimpleXRecordingWindow(controller, filePath);
+    }
+    else
+    {
+      instance.updateFilePath(filePath);
     }
     return instance;
   }
 
-  /**
-   * Constructs Playback Controller Window for RimpleX.
-   */
-  private RimpleXRecordingWindow(RimpleXController controller)
+  public static RimpleXRecordingWindow getInstance(RimpleXController controller)
   {
-    setTitle("Recording to: ");
+    return getInstance(controller, null);
+  }
+
+  /**
+   * @param controller
+   * @param filePath
+   */
+  private RimpleXRecordingWindow(RimpleXController controller, String filePath)
+  {
+    this.filePath = filePath;
+    initializeWindow(controller);
+  }
+
+  private void initializeWindow(RimpleXController controller)
+  {
+    setTitle("Recording to: " + filePath);
     setSize(350, 100);
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -48,15 +70,19 @@ public class RimpleXRecordingWindow extends JFrame
     add(pause);
     RimpleXButton stop = new RimpleXButton("RECORDING_STOP", "◼", controller, 110, 10, 45, 45);
     add(stop);
+  }
 
+  public void updateFilePath(String newPath)
+  {
+    this.filePath = newPath;
+    setTitle("Recording to: " + newPath);
   }
 
   @Override
   public void dispose()
   {
     super.dispose();
-    instance = null; // Clear the instance when the window is closed
-
+    instance = null;
   }
 
   public static boolean isWindowVisible()
