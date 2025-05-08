@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import utilities.HotkeyTextFieldFilter;
@@ -107,6 +108,270 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     displaySeparatorsCheckBox.setSelected(RimpleXPreferences.getDisplaySeparators());
     displaySeparatorsCheckBox.addItemListener(this);
     
+    setHotkeyLabels();
+    setHotkeyInputs();
+   
+    // Set absolute positioning within component.
+    trailingZeroesInput.setBounds(275, 30, 100, 25);
+    trailingZeroesLabel.setBounds(25, 30, 200, 25);
+    numDecimalsInput.setBounds(275, 60, 100, 25);
+    numDecimalsLabel.setBounds(25, 60, 200, 25);
+    displaySeparatorsLabel.setBounds(25, 90, 200, 25);
+    displaySeparatorsCheckBox.setBounds(350, 90, 25, 25);
+    
+    // Add component to this window.
+    add(displaySeparatorsLabel);
+    add(displaySeparatorsCheckBox);
+    add(numDecimalsInput);
+    add(numDecimalsLabel);
+    add(trailingZeroesInput);
+    add(trailingZeroesLabel);
+  }
+  
+  public void updatePreferenceValues()
+  {
+    displaySeparatorsCheckBox.setSelected(RimpleXPreferences.getDisplaySeparators());
+    trailingZeroesSpinner.setValue(RimpleXPreferences.getTrailingZeroes());
+    numDecimalsSpinner.setValue(RimpleXPreferences.getNumOfDecimals());
+    
+    aboutField.setText(RimpleXPreferences.getAboutShortcut());
+    helpField.setText(RimpleXPreferences.getHelpShortcut());
+    complexField.setText(RimpleXPreferences.getComplexPlaneShortcut());
+    newCalcField.setText(RimpleXPreferences.getNewCalculatorShortcut());
+    printField.setText(RimpleXPreferences.getPrintSessionShortcut());
+    openRecordingField.setText(RimpleXPreferences.getOpenRecordingShortcut());
+    saveRecordingField.setText(RimpleXPreferences.getSaveRecordingShortcut());
+    editPreferencesField.setText(RimpleXPreferences.getEditPreferencesShortcut());
+    savePreferencesField.setText(RimpleXPreferences.getSavePreferencesShortcut());
+  }
+  
+  private void setHotkeyInputs()
+  {
+    // Limit text input into field, inspired by:
+    // https://www.rgagnon.com/javadetails/java-0198.html
+    aboutField = new JTextField();
+    aboutField.setDocument(new HotkeyTextFieldFilter());
+    ((HotkeyTextFieldFilter) aboutField.getDocument()).setInitialText(RimpleXPreferences.getAboutShortcut());
+    aboutField.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setAboutShortcut(aboutField.getText());
+      }
+      @Override
+      public void removeUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setAboutShortcut(aboutField.getText());
+      }
+      @Override
+      public void changedUpdate(DocumentEvent e)
+      {
+      }
+    });
+    aboutField.setBounds(275, 120, 80, 25);
+    add(aboutField);
+    
+    helpField = new JTextField(RimpleXPreferences.getHelpShortcut());
+    helpField.setDocument(new HotkeyTextFieldFilter());
+    ((HotkeyTextFieldFilter) helpField.getDocument()).setInitialText(RimpleXPreferences.getHelpShortcut());
+    helpField.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setHelpShortcut(helpField.getText());
+      }
+      @Override
+      public void removeUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setHelpShortcut(helpField.getText());
+      }
+      @Override
+      public void changedUpdate(DocumentEvent e)
+      {
+      }
+    });
+    helpField.setBounds(275, 150, 80, 25);
+    add(helpField);
+    
+    complexField = new JTextField(RimpleXPreferences.getComplexPlaneShortcut());
+    complexField.setDocument(new HotkeyTextFieldFilter());
+    ((HotkeyTextFieldFilter) complexField.getDocument()).setInitialText(RimpleXPreferences.getComplexPlaneShortcut());
+    complexField.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setComplexPlaneShortcut(complexField.getText());
+      }
+      @Override
+      public void removeUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setComplexPlaneShortcut(complexField.getText());
+      }
+      @Override
+      public void changedUpdate(DocumentEvent e)
+      {
+      }
+    });
+    complexField.setBounds(275, 180, 80, 25);
+    add(complexField);
+    
+    newCalcField = new JTextField(RimpleXPreferences.getNewCalculatorShortcut());
+    newCalcField.setDocument(new HotkeyTextFieldFilter());
+    ((HotkeyTextFieldFilter) newCalcField.getDocument()).setInitialText(RimpleXPreferences.getNewCalculatorShortcut());
+    newCalcField.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setNewCalculatorShortcut(newCalcField.getText());
+      }
+      @Override
+      public void removeUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setNewCalculatorShortcut(newCalcField.getText());
+      }
+      @Override
+      public void changedUpdate(DocumentEvent e)
+      {
+      }
+    });
+    newCalcField.setBounds(275, 210, 80, 25);
+    add(newCalcField);
+
+    printField = new JTextField(RimpleXPreferences.getPrintSessionShortcut());
+    printField.setDocument(new HotkeyTextFieldFilter());
+    ((HotkeyTextFieldFilter) printField.getDocument()).setInitialText(RimpleXPreferences.getPrintSessionShortcut());
+    printField.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setPrintSessionShortcut(printField.getText());
+      }
+      @Override
+      public void removeUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setPrintSessionShortcut(printField.getText());
+      }
+      @Override
+      public void changedUpdate(DocumentEvent e)
+      {
+      }
+    });
+    printField.setBounds(275, 240, 80, 25);
+    add(printField);
+    
+    openRecordingField = new JTextField(RimpleXPreferences.getOpenRecordingShortcut());
+    openRecordingField.setDocument(new HotkeyTextFieldFilter());
+    ((HotkeyTextFieldFilter) openRecordingField.getDocument()).setInitialText(RimpleXPreferences.getOpenRecordingShortcut());
+    openRecordingField.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setOpenRecordingShortcut(openRecordingField.getText());
+      }
+      @Override
+      public void removeUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setOpenRecordingShortcut(openRecordingField.getText());
+      }
+      @Override
+      public void changedUpdate(DocumentEvent e)
+      {
+      }
+    });
+    openRecordingField.setBounds(275, 270, 80, 25);
+    add(openRecordingField);
+    
+    saveRecordingField = new JTextField(RimpleXPreferences.getSaveRecordingShortcut());
+    saveRecordingField.setDocument(new HotkeyTextFieldFilter());
+    ((HotkeyTextFieldFilter) saveRecordingField.getDocument()).setInitialText(RimpleXPreferences.getSaveRecordingShortcut());
+    saveRecordingField.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setSaveRecordingShortcut(saveRecordingField.getText());
+      }
+      @Override
+      public void removeUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setSaveRecordingShortcut(saveRecordingField.getText());
+      }
+      @Override
+      public void changedUpdate(DocumentEvent e)
+      {
+      }
+    });
+    saveRecordingField.setBounds(275, 300, 80, 25);
+    add(saveRecordingField);
+    
+    editPreferencesField = new JTextField(RimpleXPreferences.getEditPreferencesShortcut());
+    editPreferencesField.setDocument(new HotkeyTextFieldFilter());
+    ((HotkeyTextFieldFilter) editPreferencesField.getDocument()).setInitialText(RimpleXPreferences.getEditPreferencesShortcut());
+    editPreferencesField.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setEditPreferencesShortcut(editPreferencesField.getText());
+      }
+      @Override
+      public void removeUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setEditPreferencesShortcut(editPreferencesField.getText());
+      }
+      @Override
+      public void changedUpdate(DocumentEvent e)
+      {
+      }
+    });
+    editPreferencesField.setBounds(275, 330, 80, 25);
+    add(editPreferencesField);
+    
+    savePreferencesField = new JTextField(RimpleXPreferences.getSavePreferencesShortcut());
+    savePreferencesField.setDocument(new HotkeyTextFieldFilter());
+    ((HotkeyTextFieldFilter) savePreferencesField.getDocument()).setInitialText(RimpleXPreferences.getSavePreferencesShortcut());
+    savePreferencesField.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setSavePreferencesShortcut(savePreferencesField.getText());
+      }
+      @Override
+      public void removeUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setSavePreferencesShortcut(savePreferencesField.getText());
+      }
+      @Override
+      public void changedUpdate(DocumentEvent e)
+      {
+      }
+    });
+    savePreferencesField.setBounds(275, 360, 80, 25);
+    add(savePreferencesField);
+    
+    exitField = new JTextField(RimpleXPreferences.getExitShortcut());
+    exitField.setDocument(new HotkeyTextFieldFilter());
+    ((HotkeyTextFieldFilter) exitField.getDocument()).setInitialText(RimpleXPreferences.getExitShortcut());
+    exitField.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setExitShortcut(exitField.getText());
+      }
+      @Override
+      public void removeUpdate(DocumentEvent e)
+      {
+        RimpleXPreferences.setExitShortcut(exitField.getText());
+      }
+      @Override
+      public void changedUpdate(DocumentEvent e)
+      {
+      }
+    });
+    exitField.setBounds(275, 390, 80, 25);
+    add(exitField);
+  }
+
+  private void setHotkeyLabels()
+  {
     JLabel openRecordingLabel = new JLabel("Open Recording:");
     JLabel saveRecordingLabel = new JLabel("Save Recording:");
     JLabel printSessionLabel = new JLabel("Print Session:");
@@ -129,85 +394,6 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     savePreferencesLabel.setBounds(25, 360, 200, 25);
     exitLabel.setBounds(25, 390, 200, 25);
     
-    
-    // Limit text input into field, inspired by:
-    // https://www.rgagnon.com/javadetails/java-0198.html
-    aboutField = new JTextField();
-    aboutField.setDocument(new HotkeyTextFieldFilter());
-    ((HotkeyTextFieldFilter) aboutField.getDocument()).setInitialText(RimpleXPreferences.getAboutShortcut());
-    aboutField.setBounds(275, 120, 80, 25);
-    add(aboutField);
-    
-    helpField = new JTextField(RimpleXPreferences.getHelpShortcut());
-    helpField.setDocument(new HotkeyTextFieldFilter());
-    ((HotkeyTextFieldFilter) helpField.getDocument()).setInitialText(RimpleXPreferences.getHelpShortcut());
-    helpField.setBounds(275, 150, 80, 25);
-    add(helpField);
-    
-    complexField = new JTextField(RimpleXPreferences.getComplexPlaneShortcut());
-    complexField.setDocument(new HotkeyTextFieldFilter());
-    ((HotkeyTextFieldFilter) complexField.getDocument()).setInitialText(RimpleXPreferences.getComplexPlaneShortcut());
-    complexField.setBounds(275, 180, 80, 25);
-    add(complexField);
-    
-    newCalcField = new JTextField(RimpleXPreferences.getNewCalculatorShortcut());
-    newCalcField.setDocument(new HotkeyTextFieldFilter());
-    ((HotkeyTextFieldFilter) newCalcField.getDocument()).setInitialText(RimpleXPreferences.getNewCalculatorShortcut());
-    newCalcField.setBounds(275, 210, 80, 25);
-    add(newCalcField);
-
-    printField = new JTextField(RimpleXPreferences.getPrintSessionShortcut());
-    printField.setDocument(new HotkeyTextFieldFilter());
-    ((HotkeyTextFieldFilter) printField.getDocument()).setInitialText(RimpleXPreferences.getPrintSessionShortcut());
-    printField.setBounds(275, 240, 80, 25);
-    add(printField);
-    
-    openRecordingField = new JTextField(RimpleXPreferences.getOpenRecordingShortcut());
-    openRecordingField.setDocument(new HotkeyTextFieldFilter());
-    ((HotkeyTextFieldFilter) openRecordingField.getDocument()).setInitialText(RimpleXPreferences.getOpenRecordingShortcut());
-    openRecordingField.setBounds(275, 270, 80, 25);
-    add(openRecordingField);
-    
-    saveRecordingField = new JTextField(RimpleXPreferences.getSaveRecordingShortcut());
-    saveRecordingField.setDocument(new HotkeyTextFieldFilter());
-    ((HotkeyTextFieldFilter) saveRecordingField.getDocument()).setInitialText(RimpleXPreferences.getSaveRecordingShortcut());
-    saveRecordingField.setBounds(275, 300, 80, 25);
-    add(saveRecordingField);
-    
-    editPreferencesField = new JTextField(RimpleXPreferences.getEditPreferencesShortcut());
-    editPreferencesField.setDocument(new HotkeyTextFieldFilter());
-    ((HotkeyTextFieldFilter) editPreferencesField.getDocument()).setInitialText(RimpleXPreferences.getEditPreferencesShortcut());
-    editPreferencesField.setBounds(275, 330, 80, 25);
-    add(editPreferencesField);
-    
-    savePreferencesField = new JTextField(RimpleXPreferences.getSavePreferencesShortcut());
-    savePreferencesField.setDocument(new HotkeyTextFieldFilter());
-    ((HotkeyTextFieldFilter) savePreferencesField.getDocument()).setInitialText(RimpleXPreferences.getSavePreferencesShortcut());
-    savePreferencesField.setBounds(275, 360, 80, 25);
-    add(savePreferencesField);
-    
-    exitField = new JTextField(RimpleXPreferences.getExitShortcut());
-    exitField.setDocument(new HotkeyTextFieldFilter());
-    ((HotkeyTextFieldFilter) exitField.getDocument()).setInitialText(RimpleXPreferences.getExitShortcut());
-    exitField.setBounds(275, 390, 80, 25);
-    add(exitField);
-   
-    // Set absolute positioning within component.
-    trailingZeroesInput.setBounds(275, 30, 100, 25);
-    trailingZeroesLabel.setBounds(25, 30, 200, 25);
-    numDecimalsInput.setBounds(275, 60, 100, 25);
-    numDecimalsLabel.setBounds(25, 60, 200, 25);
-    displaySeparatorsLabel.setBounds(25, 90, 200, 25);
-    displaySeparatorsCheckBox.setBounds(350, 90, 25, 25);
-    
-    // Add component to this window.
-    add(displaySeparatorsLabel);
-    add(displaySeparatorsCheckBox);
-    add(numDecimalsInput);
-    add(numDecimalsLabel);
-    add(trailingZeroesInput);
-    add(trailingZeroesLabel);
-    
     add(aboutLabel);
     add(helpLabel);
     add(complexPlaneLabel);
@@ -220,23 +406,6 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     add(exitLabel);
   }
   
-  public void updatePreferenceValues()
-  {
-    displaySeparatorsCheckBox.setSelected(RimpleXPreferences.getDisplaySeparators());
-    trailingZeroesSpinner.setValue(RimpleXPreferences.getTrailingZeroes());
-    numDecimalsSpinner.setValue(RimpleXPreferences.getNumOfDecimals());
-    
-    aboutField.setText(RimpleXPreferences.getAboutShortcut());
-    helpField.setText(RimpleXPreferences.getHelpShortcut());
-    complexField.setText(RimpleXPreferences.getComplexPlaneShortcut());
-    newCalcField.setText(RimpleXPreferences.getNewCalculatorShortcut());
-    printField.setText(RimpleXPreferences.getPrintSessionShortcut());
-    openRecordingField.setText(RimpleXPreferences.getOpenRecordingShortcut());
-    saveRecordingField.setText(RimpleXPreferences.getSaveRecordingShortcut());
-    editPreferencesField.setText(RimpleXPreferences.getEditPreferencesShortcut());
-    savePreferencesField.setText(RimpleXPreferences.getSavePreferencesShortcut());
-  }
-
   @Override
   public void itemStateChanged(ItemEvent e)
   {
