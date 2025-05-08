@@ -366,16 +366,18 @@ public class RimpleXController implements ActionListener
         break;
       case "OPEN_RECORDING":
         // Close recording window if open
-        if (RimpleXRecordingWindow.isWindowVisible()) {
-            RimpleXRecordingWindow.getInstance(this).dispose();
+        if (RimpleXRecordingWindow.isWindowVisible())
+        {
+          RimpleXRecordingWindow.getInstance(this).dispose();
         }
         RimpleXPlaybackWindow playbackWindow = RimpleXPlaybackWindow.getInstance(this);
         playbackWindow.setVisible(true);
         break;
-    case "SAVE_RECORDING":
+      case "SAVE_RECORDING":
         // Close playback window if open
-        if (RimpleXPlaybackWindow.isWindowVisible()) {
-            RimpleXPlaybackWindow.getInstance(this).dispose();
+        if (RimpleXPlaybackWindow.isWindowVisible())
+        {
+          RimpleXPlaybackWindow.getInstance(this).dispose();
         }
         RimpleXRecordingWindow recordingWindow = RimpleXRecordingWindow.getInstance(this);
         recordingWindow.setVisible(true);
@@ -407,8 +409,8 @@ public class RimpleXController implements ActionListener
           }
           else
           {
-            relationalWindow.setResult(
-                leftOperand + SPACE + operator + SPACE + rightOperand + SPACE + EQUALS + SPACE + rb.getString(evaluation));
+            relationalWindow.setResult(leftOperand + SPACE + operator + SPACE + rightOperand + SPACE
+                + EQUALS + SPACE + rb.getString(evaluation));
             relationalWindow.setVisible(true);
 
             topDisplay.setText("");
@@ -846,7 +848,16 @@ public class RimpleXController implements ActionListener
         PrintHelper.printHtmlFile();
         break;
       case "ACTION_NEWCALC":
-        new RimpleX().run();
+        try
+        {
+          ProcessBuilder pb = new ProcessBuilder("java", "-cp",
+              System.getProperty("java.class.path"), "rimplex.RimpleX");
+          pb.start();
+        }
+        catch (IOException e)
+        {
+          e.printStackTrace();
+        }
         break;
       case "EDIT_PREFERENCES":
         prefWindow.setVisible(true);
@@ -952,20 +963,21 @@ public class RimpleXController implements ActionListener
   {
     String up = upperDisplay.getText();
     String down = display.getText();
-    
-    if (up.isBlank() && down.isBlank()) {
+
+    if (up.isBlank() && down.isBlank())
+    {
       return;
     }
-    
+
     if (equalsPresent)
     {
       int eq = up.indexOf(EQUALS);
-      String afterEq = (eq >= 0 && up.length() > eq+2) ? up.substring(eq + 2) : up;
+      String afterEq = (eq >= 0 && up.length() > eq + 2) ? up.substring(eq + 2) : up;
       upperDisplay.setText(afterEq + SPACE + op);
       equalsPresent = false;
       return;
     }
-    
+
     if (!bracketPresent && !relationalOpPresent)
     {
       if (!up.isBlank())
@@ -984,18 +996,20 @@ public class RimpleXController implements ActionListener
           String rightOperand = tokens[2];
           String evaluation = Evaluator.evaluate(leftOperand, prevOperator, rightOperand);
           upperDisplay.setText(evaluation + SPACE + op);
-        } else
+        }
+        else
         {
           upperDisplay.setText(down + SPACE + op);
         }
-      } else
+      }
+      else
       {
         upperDisplay.setText(down + SPACE + op);
       }
       display.setText("");
       bracketClosed = false;
     }
-    
+
     else
     {
       if (checkOperatorPlacement(display))
@@ -1003,9 +1017,8 @@ public class RimpleXController implements ActionListener
         display.setText(down + op);
       }
     }
-    
-  }
 
+  }
 
   /**
    * Update the display when digit is entered.
