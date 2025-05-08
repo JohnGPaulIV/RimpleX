@@ -17,6 +17,7 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import rimplex.RimpleX;
 import utilities.Complex;
@@ -58,6 +59,7 @@ public class RimpleXController implements ActionListener
 
   private RimpleXRelationalOperation relationalWindow = new RimpleXRelationalOperation();
   private RimpleXPreferencesWindow prefWindow = new RimpleXPreferencesWindow();
+  FileNameExtensionFilter filter = new FileNameExtensionFilter("Preferences", "properties");
   private RimpleXWindow window;
   private JLabel topDisplay;
   private JLabel bottomDisplay;
@@ -327,7 +329,7 @@ public class RimpleXController implements ActionListener
         setRelationalOperator(bottomDisplay, topDisplay, LESSER_THAN);
         break;
       case "ACTION_EXIT":
-        System.out.println(RimpleXPreferences.toStrings());
+        RimpleXPreferences.savePreferences();
         System.exit(0);
         break;
       case "ACTION_HELP":
@@ -863,11 +865,46 @@ public class RimpleXController implements ActionListener
         prefWindow.setVisible(true);
         break;
       case "SAVE_PREFERENCES":
-        RimpleXPreferences.savePreferences();
+        JFileChooser fileSaver = new JFileChooser();
+        fileSaver.addChoosableFileFilter(filter);
+        fileSaver.setFileFilter(filter);
+        fileSaver.setAcceptAllFileFilterUsed(false);
+        if (fileSaver.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
+        {
+          File fileToSave = fileSaver.getSelectedFile();
+          String fileToSavePath = fileToSave.getAbsolutePath();
+
+          if (!fileToSavePath.toLowerCase().endsWith(".properties"))
+          {
+            fileToSavePath += ".properties";
+            fileToSave = new File(fileToSavePath);
+          }
+          RimpleXPreferences.setPreferencesFile(fileToSavePath);
+          if (!fileToSave.exists())
+          {
+            try
+            {
+              fileToSave.createNewFile();
+            }
+            catch (IOException e)
+            {
+              e.printStackTrace();
+            }
+          }
+          
+          RimpleXPreferences.savePreferences();
+        }
         break;
       case "OPEN_PREFERENCES":
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.showOpenDialog(null);
+        fileChooser.addChoosableFileFilter(filter);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+        {
+          RimpleXPreferences.setPreferencesFile(fileChooser.getSelectedFile().getAbsolutePath());
+          RimpleXPreferences.getPreferences();
+          prefWindow.updatePreferenceValues();
+        }
         break;
       default:
         break;

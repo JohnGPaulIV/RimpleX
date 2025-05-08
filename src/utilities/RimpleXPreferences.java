@@ -158,6 +158,11 @@ public final class RimpleXPreferences
     return pauseRecordingShortcut;
   }
 
+  public static String getPreferencesFile()
+  {
+    return preferencesFilePath;
+  }
+  
   public static void setNumOfDecimals(int num)
   {
     numOfDecimals = num;
