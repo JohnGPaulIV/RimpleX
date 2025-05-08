@@ -381,8 +381,23 @@ public class RimpleXController implements ActionListener
         {
           RimpleXPlaybackWindow.getInstance(this).dispose();
         }
-        RimpleXRecordingWindow recordingWindow = RimpleXRecordingWindow.getInstance(this);
-        recordingWindow.setVisible(true);
+
+        JFileChooser saveFileChooser = new JFileChooser();
+        saveFileChooser.setDialogTitle("Select Recording Save Location");
+
+        int userSelection = saveFileChooser.showSaveDialog(null);
+
+        // RimpleXRecordingWindow recordingWindow = RimpleXRecordingWindow.getInstance(this);
+        // recordingWindow.setVisible(true);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION)
+        {
+          String filePath = saveFileChooser.getSelectedFile().getAbsolutePath();
+
+          RimpleXRecordingWindow recordingWindow = RimpleXRecordingWindow.getInstance(this,
+              filePath);
+          recordingWindow.setVisible(true);
+        }
         break;
       case "EQUALS":
         if (!bracketPresent && checkOperatorPlacement(bottomDisplay))
