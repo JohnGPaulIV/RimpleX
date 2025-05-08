@@ -863,6 +863,7 @@ public class RimpleXController implements ActionListener
         break;
       case "EDIT_PREFERENCES":
         prefWindow.setVisible(true);
+        System.out.println(RimpleXPreferences.getPreferencesFile());
         break;
       case "SAVE_PREFERENCES":
         JFileChooser fileSaver = new JFileChooser();
@@ -885,6 +886,7 @@ public class RimpleXController implements ActionListener
             try
             {
               fileToSave.createNewFile();
+              RimpleXPreferences.savePreferencesFilePath(fileToSavePath);
             }
             catch (IOException e)
             {
@@ -902,8 +904,10 @@ public class RimpleXController implements ActionListener
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
         {
           RimpleXPreferences.setPreferencesFile(fileChooser.getSelectedFile().getAbsolutePath());
+          RimpleXPreferences.savePreferencesFilePath(fileChooser.getSelectedFile().getAbsolutePath());
           RimpleXPreferences.getPreferences();
           prefWindow.updatePreferenceValues();
+          System.out.println(RimpleXPreferences.getPreferencesFile());
         }
         break;
       default:

@@ -1,6 +1,7 @@
 package utilities;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public final class RimpleXPreferences
     }
   }
 
-  private static String preferencesFilePath = "src/rimplex/gui/preferences/Preferences.properties";
+  private static String preferencesFilePath;
 
   private RimpleXPreferences()
   {
@@ -286,6 +287,34 @@ public final class RimpleXPreferences
   {
     preferencesFilePath = filePath;
   }
+  
+  public static void savePreferencesFilePath(String filePath)
+  {
+    FileInputStream prefInput;
+    try
+    {
+      prefInput = new FileInputStream("src/rimplex/preferenceFilePath.properties");
+      Properties preferences = new Properties();
+      try
+      {
+        preferences.load(prefInput);
+        prefInput.close();
+        
+        preferences.setProperty("PREFERENCE_FILE_PATH", preferencesFilePath);
+        FileOutputStream prefOutput = new FileOutputStream("src/rimplex/preferenceFilePath.properties");
+        preferences.store(prefOutput, null);
+        prefOutput.close();
+      }
+      catch (IOException e)
+      {
+        e.printStackTrace();
+      }
+    }
+    catch (FileNotFoundException e)
+    {
+      e.printStackTrace();
+    }
+  }
 
   public static void savePreferences()
   {
@@ -316,6 +345,11 @@ public final class RimpleXPreferences
     // https://sybernix.medium.com/how-to-add-a-config-file-to-a-java-project-99fd9b6cebca.
     try
     {
+      FileInputStream prefPathInput = new FileInputStream("src/rimplex/preferenceFilePath.properties");
+      Properties preferencePath = new Properties();
+      preferencePath.load(prefPathInput);
+      preferencesFilePath = preferencePath.getProperty("PREFERENCE_FILE_PATH");
+      
       FileInputStream prefInput = new FileInputStream(preferencesFilePath);
       Properties preferences = new Properties();
       preferences.load(prefInput);
