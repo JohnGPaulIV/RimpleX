@@ -87,7 +87,7 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
   {
     // Set input for trailing zeroes, implementing the JSpinner object:
     // https://docs.oracle.com/javase/8/docs/api/javax/swing/SpinnerNumberModel.html
-    JLabel trailingZeroesLabel = new JLabel("Trailing Zeroes:");
+    JLabel trailingZeroesLabel = new JLabel(rb.getString("Trailing_Zeroes"));
     trailingZeroesSpinner = new SpinnerNumberModel(RimpleXPreferences.getTrailingZeroes(), 0, 6, 1);
     trailingZeroesInput = new JSpinner(trailingZeroesSpinner);
     trailingZeroesInput.addChangeListener(this);
@@ -99,7 +99,7 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     trailingZeroesEditor.getTextField().setEditable(false);
 
     // Set input for number of decimals
-    JLabel numDecimalsLabel = new JLabel("Number of Decimal Places:");
+    JLabel numDecimalsLabel = new JLabel(rb.getString("Num_Decimals"));
     numDecimalsSpinner = new SpinnerNumberModel(RimpleXPreferences.getNumOfDecimals(), 0, 6, 1);
     numDecimalsInput = new JSpinner(numDecimalsSpinner);
     numDecimalsInput.addChangeListener(this);
@@ -109,7 +109,7 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     numDecimalsEditor.getTextField().setEditable(false);
 
     // Set checkbox for display thousands separators
-    JLabel displaySeparatorsLabel = new JLabel("Display Separators:");
+    JLabel displaySeparatorsLabel = new JLabel(rb.getString("Display_Separators"));
     displaySeparatorsCheckBox = new JCheckBox();
     displaySeparatorsCheckBox.setSelected(RimpleXPreferences.getDisplaySeparators());
     displaySeparatorsCheckBox.addItemListener(this);
@@ -221,16 +221,16 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
    */
   private void setHotkeyLabels()
   {
-    JLabel openRecordingLabel = new JLabel("Open Recording:");
-    JLabel saveRecordingLabel = new JLabel("Save Recording:");
-    JLabel printSessionLabel = new JLabel("Print Session:");
-    JLabel newCalcLabel = new JLabel("New Calculator:");
-    JLabel aboutLabel = new JLabel("About:");
-    JLabel helpLabel = new JLabel("Help:");
-    JLabel complexPlaneLabel = new JLabel("View Complex Plane:");
-    JLabel editPreferencesLabel = new JLabel("Edit Preferences:");
-    JLabel savePreferencesLabel = new JLabel("Save Preferences:");
-    JLabel exitLabel = new JLabel("Exit RimpleX:");
+    JLabel openRecordingLabel = new JLabel(rb.getString("Open_Recording"));
+    JLabel saveRecordingLabel = new JLabel(rb.getString("Save_Recording"));
+    JLabel printSessionLabel = new JLabel(rb.getString("Print_Session") + ":");
+    JLabel newCalcLabel = new JLabel(rb.getString("New_Calculator") + ":");
+    JLabel aboutLabel = new JLabel(rb.getString("About") + ":");
+    JLabel helpLabel = new JLabel(rb.getString("Help") + ":");
+    JLabel complexPlaneLabel = new JLabel(rb.getString("Complex_Plane_Hotkey"));
+    JLabel editPreferencesLabel = new JLabel(rb.getString("Edit_Preferences"));
+    JLabel savePreferencesLabel = new JLabel(rb.getString("Save_Preferences"));
+    JLabel exitLabel = new JLabel(rb.getString("Exit_Hotkey"));
 
     aboutLabel.setBounds(25, 120, 200, 25);
     helpLabel.setBounds(25, 150, 200, 25);
