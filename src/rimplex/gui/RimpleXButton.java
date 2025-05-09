@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.Insets;
 
 import javax.swing.JButton;
+import javax.swing.SwingConstants;
 
 /**
  * Represents a button on the RimpleX application with a set text, action command, and bounds.

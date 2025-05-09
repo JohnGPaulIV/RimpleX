@@ -562,7 +562,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
 //      setSize(currentWidth + widthStep, WINDOW_HEIGHT);
 //      dropoutBar.setLocation(currentButtonX + buttonStep, dropoutBar.getY());
 //
-//      // stop it when its in place.
+//      // stop it when its in place.dropoutBar.setText(">");
 //      // because targetWidth works both ways, it has to be equals.
 //      if (currentWidth == targetWidth && currentButtonX == targetButtonX)
 //      {

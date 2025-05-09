@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -23,7 +24,6 @@ public class RimpleXAboutWindow extends JFrame
   private static final long serialVersionUID = 1L;
   private final String sansSerif = "Sans-Serif";
   private final String about = "About";
-  private final String imgFile = "/icons/iconRimplex.png";
   
   /**
    * Constructs "About" Window for Rimplex.
@@ -44,10 +44,10 @@ public class RimpleXAboutWindow extends JFrame
       titleLabel.setBounds(0, 10, 400, 20);
       add(titleLabel);
 
-      BufferedImage icon = ImageIO.read(getClass().getResource(imgFile));
+      BufferedImage icon = ImageIO.read(getClass().getResource("/icons/iconRimplex.png"));
       
       // sets the window icon.
-      ImageIcon img = new ImageIcon(getClass().getResource(imgFile));
+      ImageIcon img = new ImageIcon(getClass().getResource("/icons/iconRimplex.png"));
       setIconImage(img.getImage());
 
       int iconWidth = icon.getWidth() / 2;

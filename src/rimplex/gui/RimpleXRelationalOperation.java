@@ -1,11 +1,9 @@
 package rimplex.gui;
 
 import java.awt.Font;
-import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import static rimplex.RimpleX.*;
@@ -18,16 +16,17 @@ import static rimplex.RimpleX.*;
 public class RimpleXRelationalOperation extends JDialog
 {
   private static final long serialVersionUID = 1L;
+  private static final String RESULT = "Relational_Operation_Result";
   private final String sansSerif = "Sans-Serif";
   
-  JLabel descLabel;
+  private JLabel descLabel;
 
   /**
    * Constructs "About" Window for Rimplex.
    */
   public RimpleXRelationalOperation()
   {
-    setTitle(rb.getString("Relational_Operation_Result"));
+    setTitle(rb.getString(RESULT));
     setSize(400, 150);
     setLocationRelativeTo(null);
     setLayout(null);
@@ -35,7 +34,7 @@ public class RimpleXRelationalOperation extends JDialog
     setModal(true);
 
     // Add title and RimpleX icon to the About Window.
-    JLabel titleLabel = new JLabel(rb.getString("Relational_Operation_Result"), JLabel.CENTER);
+    JLabel titleLabel = new JLabel(rb.getString(RESULT), JLabel.CENTER);
     titleLabel.setFont(new Font(sansSerif, Font.PLAIN, 16));
     titleLabel.setBounds(0, 10, 400, 20);
     add(titleLabel);
@@ -50,6 +49,11 @@ public class RimpleXRelationalOperation extends JDialog
     add(descLabel);
   }
   
+  /**
+   * Set the result of the relational operation to the window.
+   * 
+   * @param result The result of the evaluation.
+   */
   public void setResult(final String result)
   {
     descLabel.setText(result);

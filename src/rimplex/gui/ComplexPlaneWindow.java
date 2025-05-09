@@ -27,7 +27,7 @@ public class ComplexPlaneWindow extends JFrame
     super(rb.getString("Complex_Plane"));
     this.number = number;
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    setSize(400, 400);
+    setSize(500, 500);
     setLocationRelativeTo(null);
     ComplexPlanePanel panel = new ComplexPlanePanel(number);
     add(panel);
@@ -51,52 +51,58 @@ public class ComplexPlaneWindow extends JFrame
     protected void paintComponent(Graphics g)
     {
       super.paintComponent(g);
+
       double realPart = number.getReal();
       double imaginaryPart = number.getImaginary();
+
       int width = getWidth();
       int height = getHeight();
       int centerX = width / 2;
       int centerY = height / 2;
-      int[] scaleAndInterval = calculateScaleAndInterval(number);
-      int scale = scaleAndInterval[0];
-      int tickInterval = scaleAndInterval[1];
+
+      double[] scales = calculateScalesAndIntervals(number);
+      double scaleX = scales[0];
+      double scaleY = scales[1];
+      double tickIntervalX = scales[2];
+      double tickIntervalY = scales[3];
       int tickSize = 4;
+
       g.setColor(Color.BLACK);
       g.drawLine(centerX, 0, centerX, height); // y-axis
       g.drawLine(0, centerY, width, centerY); // x-axis
       g.drawString("Re", width - 30, centerY - 5);
       g.drawString("Im", centerX + 5, 15);
+
       // x-axis
-      double realStart = -((double) width / (2 * scale));
-      double realEnd = (double) width / (2 * scale);
-      int startXTick = (int) Math.floor(realStart / tickInterval) * tickInterval;
-      int endXTick = (int) Math.ceil(realEnd / tickInterval) * tickInterval;
-      for (int i = startXTick; i <= endXTick; i += tickInterval)
+      double realStart = -((double) width / (2 * scaleX));
+      double realEnd = (double) width / (2 * scaleX);
+      for (double i = Math.floor(realStart / tickIntervalX)
+          * tickIntervalX; i <= realEnd; i += tickIntervalX)
       {
-        int screenX = centerX + i * scale;
+        int screenX = (int) (centerX + i * scaleX);
         g.drawLine(screenX, centerY - tickSize, screenX, centerY + tickSize);
-        if (i != 0)
+        if (Math.abs(i) > 1e-6)
         {
-          g.drawString(Integer.toString(i), screenX - 5, centerY + 15);
-        }
-      }
-      // y-axis
-      double imaginaryStart = -((double) height / (2 * scale));
-      double imaginaryEnd = (double) height / (2 * scale);
-      int startYTick = (int) Math.floor(imaginaryStart / tickInterval) * tickInterval;
-      int endYTick = (int) Math.ceil(imaginaryEnd / tickInterval) * tickInterval;
-      for (int j = startYTick; j <= endYTick; j += tickInterval)
-      {
-        int screenY = centerY - j * scale;
-        g.drawLine(centerX - tickSize, screenY, centerX + tickSize, screenY);
-        if (j != 0)
-        {
-          g.drawString(Integer.toString(j), centerX + 5, screenY + 5);
+          g.drawString(String.format("%.0f", i), screenX - 10, centerY + 15);
         }
       }
 
-      int x = (int) (realPart * scale);
-      int y = (int) (imaginaryPart * scale);
+      // y-axis
+      double imaginaryStart = -((double) height / (2 * scaleY));
+      double imaginaryEnd = (double) height / (2 * scaleY);
+      for (double j = Math.floor(imaginaryStart / tickIntervalY)
+          * tickIntervalY; j <= imaginaryEnd; j += tickIntervalY)
+      {
+        int screenY = (int) (centerY - j * scaleY);
+        g.drawLine(centerX - tickSize, screenY, centerX + tickSize, screenY);
+        if (Math.abs(j) > 1e-6)
+        {
+          g.drawString(String.format("%.0f", j), centerX + 5, screenY + 5);
+        }
+      }
+
+      int x = (int) (realPart * scaleX);
+      int y = (int) (imaginaryPart * scaleY);
       g.setColor(Color.RED);
       g.fillOval(centerX + x - 5, centerY - y - 5, 10, 10);
       g.setColor(Color.BLACK);
@@ -110,54 +116,58 @@ public class ComplexPlaneWindow extends JFrame
      *          The complex number result
      * @return the scale and interval
      */
-    private int[] calculateScaleAndInterval(Complex number)
+    private double[] calculateScalesAndIntervals(Complex number)
     {
       double real = Math.abs(number.getReal());
       double imaginary = Math.abs(number.getImaginary());
-      double maxVal = Math.max(real, imaginary);
-      int baseSize = Math.min(getWidth(), getHeight()) / 2;
+
+      double paddingFactor = 1.2;
+      double minVisibleRange = 10.0;
+
+      double realRange = Math.max(real * paddingFactor, minVisibleRange);
+      double imaginaryRange = Math.max(imaginary * paddingFactor, minVisibleRange);
+
+      double maxRange = Math.max(realRange, imaginaryRange);
+
+      double scaleFactor = (0.45 * Math.min(getWidth(), getHeight())) / maxRange;
+
+      double scale = Math.max(0.1, scaleFactor);
+
+      double tickInterval = determineTickInterval(maxRange);
+
+      return new double[] {scale, scale, tickInterval, tickInterval};
+    }
+
+    /**
+     * Calculating the tick intervals.
+     * 
+     * @param maxVal
+     *          the max value for the axes.
+     * @return
+     */
+    private double determineTickInterval(double maxVal)
+    {
       if (maxVal == 0)
-        return new int[] {50, 1};
-      double scale = baseSize / (maxVal * 1.2);
-      int roundedScale = (int) Math.floor(scale);
-      int tickInterval;
-      if (maxVal > 1000)
+        return 1;
+
+      int magnitude = (int) Math.floor(Math.log10(maxVal));
+      double base = Math.pow(10, magnitude);
+
+      double scaled = maxVal / base;
+      if (scaled > 5)
       {
-        tickInterval = 500;
+        base *= 2;
       }
-      else if (maxVal > 500)
+      else if (scaled > 2.5)
       {
-        tickInterval = 200;
-      }
-      else if (maxVal > 200)
-      {
-        tickInterval = 100;
-      }
-      else if (maxVal > 100)
-      {
-        tickInterval = 50;
-      }
-      else if (maxVal > 50)
-      {
-        tickInterval = 20;
-      }
-      else if (maxVal > 20)
-      {
-        tickInterval = 10;
-      }
-      else if (maxVal > 10)
-      {
-        tickInterval = 5;
-      }
-      else if (maxVal > 5)
-      {
-        tickInterval = 2;
+        base *= 1;
       }
       else
       {
-        tickInterval = 1;
+        base /= 2;
       }
-      return new int[] {roundedScale, tickInterval};
+
+      return base;
     }
   }
 }
