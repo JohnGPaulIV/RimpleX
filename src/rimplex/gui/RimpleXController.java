@@ -18,13 +18,13 @@ import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import rimplex.RimpleX;
 import utilities.Complex;
 import utilities.Evaluator;
 import utilities.PrintHelper;
 import utilities.SessionHistory;
-import utilities.WindowRecorder;
 import utilities.RimpleXPreferences;
 
 import static rimplex.RimpleX.*;
@@ -60,6 +60,7 @@ public class RimpleXController implements ActionListener
 
   private RimpleXRelationalOperation relationalWindow = new RimpleXRelationalOperation();
   private RimpleXPreferencesWindow prefWindow = new RimpleXPreferencesWindow();
+  FileNameExtensionFilter filter = new FileNameExtensionFilter("Preferences", "properties");
   private RimpleXWindow window;
   private JLabel topDisplay;
   private JLabel bottomDisplay;
@@ -75,8 +76,6 @@ public class RimpleXController implements ActionListener
   private Complex result;
   private boolean polarFormEnabled = false;
   private Complex polarizedComplex;
-
-  private WindowRecorder recorder = new WindowRecorder();
 
   /**
    * Constructor for a RimpleXController.
@@ -331,7 +330,7 @@ public class RimpleXController implements ActionListener
         setRelationalOperator(bottomDisplay, topDisplay, LESSER_THAN);
         break;
       case "ACTION_EXIT":
-        System.out.println(RimpleXPreferences.toStrings());
+        RimpleXPreferences.savePreferences();
         System.exit(0);
         break;
       case "ACTION_HELP":
@@ -369,11 +368,37 @@ public class RimpleXController implements ActionListener
         }
         break;
       case "OPEN_RECORDING":
+        // Close recording window if open
+        if (RimpleXRecordingWindow.isWindowVisible())
+        {
+          RimpleXRecordingWindow.getInstance(this).dispose();
+        }
         RimpleXPlaybackWindow playbackWindow = RimpleXPlaybackWindow.getInstance(this);
         playbackWindow.setVisible(true);
         break;
       case "SAVE_RECORDING":
-        // TODO implement save recording window.
+        // Close playback window if open
+        if (RimpleXPlaybackWindow.isWindowVisible())
+        {
+          RimpleXPlaybackWindow.getInstance(this).dispose();
+        }
+
+        JFileChooser saveFileChooser = new JFileChooser();
+        saveFileChooser.setDialogTitle("Select Recording Save Location");
+
+        int userSelection = saveFileChooser.showSaveDialog(null);
+
+        // RimpleXRecordingWindow recordingWindow = RimpleXRecordingWindow.getInstance(this);
+        // recordingWindow.setVisible(true);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION)
+        {
+          String filePath = saveFileChooser.getSelectedFile().getAbsolutePath();
+
+          RimpleXRecordingWindow recordingWindow = RimpleXRecordingWindow.getInstance(this,
+              filePath);
+          recordingWindow.setVisible(true);
+        }
         break;
       case "EQUALS":
         if (!bracketPresent && checkOperatorPlacement(bottomDisplay))
@@ -841,17 +866,64 @@ public class RimpleXController implements ActionListener
         PrintHelper.printHtmlFile();
         break;
       case "ACTION_NEWCALC":
-        new RimpleX().run();
+        try
+        {
+          ProcessBuilder pb = new ProcessBuilder("java", "-cp",
+              System.getProperty("java.class.path"), "rimplex.RimpleX");
+          pb.start();
+        }
+        catch (IOException e)
+        {
+          e.printStackTrace();
+        }
         break;
       case "EDIT_PREFERENCES":
         prefWindow.setVisible(true);
         break;
       case "SAVE_PREFERENCES":
-        RimpleXPreferences.savePreferences();
+        JFileChooser fileSaver = new JFileChooser();
+        fileSaver.addChoosableFileFilter(filter);
+        fileSaver.setFileFilter(filter);
+        fileSaver.setAcceptAllFileFilterUsed(false);
+        if (fileSaver.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
+        {
+          File fileToSave = fileSaver.getSelectedFile();
+          String fileToSavePath = fileToSave.getAbsolutePath();
+
+          if (!fileToSavePath.toLowerCase().endsWith(".properties"))
+          {
+            fileToSavePath += ".properties";
+            fileToSave = new File(fileToSavePath);
+          }
+          RimpleXPreferences.setPreferencesFile(fileToSavePath);
+          if (!fileToSave.exists())
+          {
+            try
+            {
+              fileToSave.createNewFile();
+            }
+            catch (IOException e)
+            {
+              e.printStackTrace();
+            }
+          }
+          RimpleXPreferences.savePreferencesFilePath(fileToSavePath);
+          RimpleXPreferences.savePreferences();
+        }
         break;
       case "OPEN_PREFERENCES":
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.showOpenDialog(null);
+        fileChooser.addChoosableFileFilter(filter);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+        {
+          RimpleXPreferences.setPreferencesFile(fileChooser.getSelectedFile().getAbsolutePath());
+          RimpleXPreferences
+              .savePreferencesFilePath(fileChooser.getSelectedFile().getAbsolutePath());
+          RimpleXPreferences.getPreferences();
+          prefWindow.updatePreferenceValues();
+          System.out.println(RimpleXPreferences.getPreferencesFile());
+        }
         break;
       case "COMPLEX_PLANE":
         if (result != null)
