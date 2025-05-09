@@ -70,7 +70,7 @@ import javax.swing.JTextArea;
 public class RimpleXWindow extends JFrame implements KeyListener
 {
   private static final long serialVersionUID = 1L;
-  private static final int WINDOW_WIDTH = 400;
+  private static final int WINDOW_WIDTH = 372;
   private static final int WINDOW_HEIGHT = 460;
   // due to integer division, history width must be even.
   private static final int HISTORY_WIDTH = 224;
@@ -101,10 +101,6 @@ public class RimpleXWindow extends JFrame implements KeyListener
 
   private boolean isExpanded = false;
   private SessionHistoryDropoutBar dropoutBar;
-
-  private Timer animationTimer;
-  private int targetWidth = WINDOW_WIDTH;
-  private int targetButtonX = 365;
 
   private JTextArea sessionHistory;
 
@@ -137,8 +133,8 @@ public class RimpleXWindow extends JFrame implements KeyListener
     ImageIcon img = new ImageIcon(getClass().getResource("/icons/iconRimplex.png"));
     setIconImage(img.getImage());
 
-    setupAnimationTimer();
-    setupSessionHistoryDropout();
+//    setupAnimationTimer();
+//    setupSessionHistoryDropout();
     setupSoftKeyboard();
     setupSessionHistoryDisplay();
     setupDisplay();
@@ -354,6 +350,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
         .add(new RimpleXButton("EXPONENT", rb.getString("Exponent"), controller, 260, 350, 45, 45));
     getContentPane().add(
         new RimpleXButton("LOGARITHM", rb.getString("Logarithm"), controller, 310, 350, 45, 45));
+    
   }
 
   /**
@@ -426,6 +423,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
    */
   @SuppressWarnings("serial")
   public void setupSessionHistoryDisplay() {
+    
     sessionHistory = new JTextArea("Session History:");
     sessionHistory.setEditable(false);
     sessionHistory.setFocusable(true);
@@ -458,9 +456,12 @@ public class RimpleXWindow extends JFrame implements KeyListener
         sessionHistory,
         JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    scroller.setBounds(365, 10, 220, 390);
-    scroller.setVisible(false);
-    getContentPane().add(scroller);
+//    scroller.setBounds(365, 10, 220, 390);
+//    scroller.setVisible(false);
+//    getContentPane().add(scroller);
+    
+    SessionHistoryWindow sessionHistoryWindow = new SessionHistoryWindow(this, sessionHistory);
+    sessionHistoryWindow.setVisible(true);
 }
 
   @Override
@@ -534,75 +535,75 @@ public class RimpleXWindow extends JFrame implements KeyListener
     }
   }
 
-  private void setupSessionHistoryDropout()
-  {
-    dropoutBar = new SessionHistoryDropoutBar(controller);
-    getContentPane().add(dropoutBar);
-  }
+//  private void setupSessionHistoryDropout()
+//  {
+////    dropoutBar = new SessionHistoryDropoutBar(controller);
+////    getContentPane().add(dropoutBar);
+//  }
 
-  private void setupAnimationTimer()
-  {
-    // animation timer with function attached.
-    animationTimer = new Timer(ANIMATION_DURATION / ANIMATION_STEPS, e -> {
-
-      if (isExpanded)
-      {
-        sessionHistory.setVisible(true);
-        scroller.setVisible(true);
-      }
-
-      int currentWidth = getWidth();
-      // this lets us move the button
-      int currentButtonX = dropoutBar.getX();
-
-      int widthStep = Integer.compare(targetWidth, currentWidth) * 2; // Fixed step of 2px
-      int buttonStep = Integer.compare(targetButtonX, currentButtonX) * 2;
-
-      setSize(currentWidth + widthStep, WINDOW_HEIGHT);
-      dropoutBar.setLocation(currentButtonX + buttonStep, dropoutBar.getY());
-
-      // stop it when its in place.
-      // because targetWidth works both ways, it has to be equals.
-      if (currentWidth == targetWidth && currentButtonX == targetButtonX)
-      {
-        if (!isExpanded)
-        {
-          sessionHistory.setVisible(false);
-          scroller.setVisible(false);
-        }
-        animationTimer.stop();
-        // change the text of the bar accordingly.
-        dropoutBar.setText(!isExpanded ? ">" : "<");
-      }
-    });
-  }
+//  private void setupAnimationTimer()
+//  {
+//    // animation timer with function attached.
+//    animationTimer = new Timer(ANIMATION_DURATION / ANIMATION_STEPS, e -> {
+//
+//      if (isExpanded)
+//      {
+//        sessionHistory.setVisible(true);
+//        scroller.setVisible(true);
+//      }
+//
+//      int currentWidth = getWidth();
+//      // this lets us move the button
+//      int currentButtonX = dropoutBar.getX();
+//
+//      int widthStep = Integer.compare(targetWidth, currentWidth) * 2; // Fixed step of 2px
+//      int buttonStep = Integer.compare(targetButtonX, currentButtonX) * 2;
+//
+//      setSize(currentWidth + widthStep, WINDOW_HEIGHT);
+//      dropoutBar.setLocation(currentButtonX + buttonStep, dropoutBar.getY());
+//
+//      // stop it when its in place.
+//      // because targetWidth works both ways, it has to be equals.
+//      if (currentWidth == targetWidth && currentButtonX == targetButtonX)
+//      {
+//        if (!isExpanded)
+//        {
+//          sessionHistory.setVisible(false);
+//          scroller.setVisible(false);
+//        }
+//        animationTimer.stop();
+//        // change the text of the bar accordingly.
+//        dropoutBar.setText(!isExpanded ? ">" : "<");
+//      }
+//    });
+//  }
 
   /**
    * Toggle method for the expansion of the session history.
    */
-  public void toggleExpansion()
-  {
-    if (animationTimer.isRunning())
-      return;
-
-    // flip expansion logic
-    isExpanded = !isExpanded;
-
-    // if it isnt expanded, set target to expanded width.
-    // if it IS expanded, set target to window width.
-    if (!isExpanded)
-    {
-      targetWidth = WINDOW_WIDTH;
-      targetButtonX = 365;
-    }
-    else
-    {
-      targetWidth = EXPANDED_WIDTH;
-      targetButtonX = 365 + HISTORY_WIDTH;
-    }
-
-    animationTimer.start();
-  }
+//  public void toggleExpansion()
+//  {
+//    if (animationTimer.isRunning())
+//      return;
+//
+//    // flip expansion logic
+//    isExpanded = !isExpanded;
+//
+//    // if it isnt expanded, set target to expanded width.
+//    // if it IS expanded, set target to window width.
+//    if (!isExpanded)
+//    {
+//      targetWidth = WINDOW_WIDTH;
+//      targetButtonX = 365;
+//    }
+//    else
+//    {
+//      targetWidth = EXPANDED_WIDTH;
+//      targetButtonX = 365 + HISTORY_WIDTH;
+//    }
+//
+//    animationTimer.start();
+//  }
 
   @Override
   public void keyPressed(final KeyEvent e)

@@ -2,6 +2,7 @@ package rimplex.gui;
 
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
@@ -22,7 +23,7 @@ public class SessionHistoryDropoutBar extends JButton
    * Session History Drop-out Bar constructor.
    * @param controller Controller object that the drop-out uses.
    */
-  public SessionHistoryDropoutBar(final RimpleXController controller)
+  public SessionHistoryDropoutBar(final ActionListener controller)
   {
     this.setActionCommand("S_HISTORY_DROPOUT");
     this.addActionListener(controller);
