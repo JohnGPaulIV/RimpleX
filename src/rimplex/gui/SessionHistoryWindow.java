@@ -8,6 +8,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
 
+/**
+ * The window for the session history that follows the main calculator.
+ * 
+ * @author Benjamin Bonnell
+ * 
+ * This work complies with JMU Honor Code.
+ */
 public class SessionHistoryWindow extends JFrame
 {
   private static final long serialVersionUID = 1L;
@@ -22,6 +29,12 @@ public class SessionHistoryWindow extends JFrame
   private boolean isExpanded = false;
   private DropoutWindowController controller;
 
+  /**
+   * Explicit Session History Window constructor
+   * 
+   * @param mainWindow the window it shall follow behind
+   * @param sessionHistory the Session History it will contain.
+   */
   public SessionHistoryWindow(final RimpleXWindow mainWindow, final JTextArea sessionHistory)
   {
     this.setUndecorated(true);
@@ -40,21 +53,19 @@ public class SessionHistoryWindow extends JFrame
     dropoutBar.setText(">");
     add(dropoutBar);
 
-    // display.setBounds(10, 10, 220, 380);
-    // add(display);
-
-    // System.out.println(display);
-
-    JScrollPane display2 = new JScrollPane(sessionHistory, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+    JScrollPane display = new JScrollPane(sessionHistory, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    display2.setBounds(10, 10, 220, 380);
-    add(display2);
+    display.setBounds(10, 10, 220, 380);
+    add(display);
 
     setupMainWindowTracking();
     updateLocation();
     setupAnimationTimer();
   }
 
+  /**
+   * Set up the timer that controls the smooth sliding animation.
+   */
   private void setupAnimationTimer()
   {
     animationTimer = new Timer(ANIMATION_DURATION / ANIMATION_STEPS, e -> {
@@ -91,6 +102,9 @@ public class SessionHistoryWindow extends JFrame
     });
   }
 
+  /**
+   * Setup the tracking of the window it shall follow.
+   */
   private void setupMainWindowTracking()
   {
     mainWindow.addComponentListener(new ComponentAdapter()
@@ -104,6 +118,9 @@ public class SessionHistoryWindow extends JFrame
     });
   }
 
+  /**
+   * Update the location of the window to be where it is supposed to be.
+   */
   public void updateLocation()
   {
     if (mainWindow != null && mainWindow != null)
@@ -114,6 +131,9 @@ public class SessionHistoryWindow extends JFrame
     }
   }
 
+  /**
+   * Either open or close the timer.
+   */
   public void toggleAnimation()
   {
     if (!animationTimer.isRunning())
