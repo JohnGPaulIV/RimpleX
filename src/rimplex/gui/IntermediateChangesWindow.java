@@ -9,24 +9,24 @@ import javax.swing.JTextArea;
 import javax.swing.Timer;
 
 /**
- * The window for the session history that follows the main calculator.
+ * The window for the Intermediate Changes that follows the main calculator.
  * 
  * @author Benjamin Bonnell
  * 
  * This work complies with JMU Honor Code.
  */
-public class SessionHistoryWindow extends DropoutWindow
+public class IntermediateChangesWindow extends DropoutWindow
 {
   private static final long serialVersionUID = 1L;
 
   /**
-   * Explicit Session History Window constructor
+   * Explicit Intermediate Changes Window constructor
    * 
    * @param mainWindow the window it shall follow behind
-   * @param sessionHistory the Session History it will contain.
+   * @param IntermediateChanges the Intermediate Changes it will contain.
    */
-  public SessionHistoryWindow(final RimpleXWindow mainWindow, final JTextArea sessionHistory)
+  public IntermediateChangesWindow(final RimpleXWindow mainWindow, final JTextArea IntermediateChanges)
   {
-    super(mainWindow, sessionHistory, "right", 142);
+    super(mainWindow, IntermediateChanges, "left", -30);
   }
 }

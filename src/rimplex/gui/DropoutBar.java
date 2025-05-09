@@ -13,7 +13,7 @@ import javax.swing.JButton;
  * 
  * This work complies with JMU Honor Code.
  */
-public class SessionHistoryDropoutBar extends JButton
+public class DropoutBar extends JButton
 {
 
   private static final long serialVersionUID = 1L;
@@ -23,9 +23,9 @@ public class SessionHistoryDropoutBar extends JButton
    * Session History Drop-out Bar constructor.
    * @param controller Controller object that the drop-out uses.
    */
-  public SessionHistoryDropoutBar(final ActionListener controller)
+  public DropoutBar(final ActionListener controller)
   {
-    this.setActionCommand("S_HISTORY_DROPOUT");
+    this.setActionCommand("DROPOUT");
     this.addActionListener(controller);
     this.setBounds(365, 2, 25, 400);
     this.setMargin(new Insets(0,0,0,0));  // Smaller than default

@@ -10,15 +10,15 @@ import java.awt.event.ActionListener;
  */
 public class DropoutWindowController implements ActionListener
 {
-  private final SessionHistoryWindow sessionHistory;
+  private final DropoutWindow dropoutWindow;
   
   /**
    * Constructs the controller to control appropriate windows
    * 
-   * @param sessionHistory The SessionHistoryWindow to be controlled.
+   * @param dropoutWindow The SessionHistoryWindow to be controlled.
    */
-  public DropoutWindowController(SessionHistoryWindow sessionHistory) {
-    this.sessionHistory = sessionHistory;
+  public DropoutWindowController(DropoutWindow dropoutWindow) {
+    this.dropoutWindow = dropoutWindow;
   }
 
   /**
@@ -29,8 +29,8 @@ public class DropoutWindowController implements ActionListener
   {
     String ac = e.getActionCommand();    
     switch (ac) {
-      case "S_HISTORY_DROPOUT":
-        sessionHistory.toggleAnimation();
+      case "DROPOUT":
+        dropoutWindow.toggleAnimation();
         break;
       default:
         break;

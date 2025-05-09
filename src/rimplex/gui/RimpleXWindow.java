@@ -100,9 +100,8 @@ public class RimpleXWindow extends JFrame implements KeyListener
   private static final String DIVIDE = "DIVIDE";
 
   private boolean isExpanded = false;
-  private SessionHistoryDropoutBar dropoutBar;
-
   private JTextArea sessionHistory;
+  private JTextArea intermediateChanges;
 
   private RimpleXController controller;
   
@@ -137,6 +136,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
 //    setupSessionHistoryDropout();
     setupSoftKeyboard();
     setupSessionHistoryDisplay();
+    setupIntermediateChangesDisplay();
     setupDisplay();
     sessionHistory.setVisible(isExpanded);
     scroller.setVisible(isExpanded);
@@ -463,6 +463,48 @@ public class RimpleXWindow extends JFrame implements KeyListener
     SessionHistoryWindow sessionHistoryWindow = new SessionHistoryWindow(this, sessionHistory);
     sessionHistoryWindow.setVisible(true);
 }
+  
+  public void setupIntermediateChangesDisplay() {
+    
+    intermediateChanges = new JTextArea("Session History:");
+    intermediateChanges.setEditable(false);
+    intermediateChanges.setFocusable(true);
+
+    intermediateChanges.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(Color.BLACK),
+        BorderFactory.createEmptyBorder(5,5,5,5)));
+
+    SessionHistory.setLabel(intermediateChanges);
+    intermediateChanges.setText("Test123");
+    int menuMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+    KeyStroke copyKs = KeyStroke.getKeyStroke(KeyEvent.VK_C, menuMask);
+    KeyStroke pastKs = KeyStroke.getKeyStroke(KeyEvent.VK_P, menuMask);
+    intermediateChanges.getInputMap(JComponent.WHEN_FOCUSED)
+                  .put(copyKs, "copyPlainText");
+    
+    intermediateChanges.getActionMap().put("copyPlainText", new AbstractAction() {
+        @Override public void actionPerformed(ActionEvent e) {
+          intermediateChanges.copy();
+        }
+    });
+
+    JPopupMenu popup = new JPopupMenu();
+    JMenuItem copyItem = new JMenuItem("Copy");
+    copyItem.addActionListener(e -> intermediateChanges.copy());
+    popup.add(copyItem);
+    intermediateChanges.setComponentPopupMenu(popup);
+
+    scroller = new JScrollPane(
+        intermediateChanges,
+        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//    scroller.setBounds(365, 10, 220, 390);
+//    scroller.setVisible(false);
+//    getContentPane().add(scroller);
+    
+    IntermediateChangesWindow intermediateChangesWindow = new IntermediateChangesWindow(this, intermediateChanges);
+    intermediateChangesWindow.setVisible(true);
+  }
 
   @Override
   public void keyTyped(final KeyEvent e)
