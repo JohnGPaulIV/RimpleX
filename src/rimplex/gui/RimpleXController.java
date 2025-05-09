@@ -378,10 +378,10 @@ public class RimpleXController implements ActionListener
         break;
       case "SAVE_RECORDING":
         // Close playback window if open
-        if (RimpleXPlaybackWindow.isWindowVisible())
-        {
-          RimpleXPlaybackWindow.getInstance(this).dispose();
-        }
+//        if (RimpleXPlaybackWindow.isWindowVisible())
+//        {
+//          RimpleXPlaybackWindow.getInstance(this).dispose();
+//        }
 
         JFileChooser saveFileChooser = new JFileChooser();
         saveFileChooser.setDialogTitle("Select Recording Save Location");
