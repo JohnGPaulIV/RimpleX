@@ -6,7 +6,7 @@ import javax.swing.text.PlainDocument;
 
 /**
  * The hot-key input filter to ensure that users can not input anything more than a single
- * character. 
+ * character.
  * 
  * This work complies with JMU Honor Code.
  * 
@@ -27,6 +27,10 @@ public class HotkeyTextFieldFilter extends PlainDocument
 
   /**
    * Insert keyboard input only if the current text is no more than one in length.
+   * 
+   * @param offset The offset of the field to insert the string into.
+   * @param str The inputed string to insert.
+   * @param attr The attributes for the inserted content.
    */
   public void insertString(final int offset, final String str, final AttributeSet attr)
   {
@@ -34,9 +38,10 @@ public class HotkeyTextFieldFilter extends PlainDocument
     {
       return;
     }
-    
+
     // For the initial text.
-    if (initialized) {
+    if (initialized)
+    {
       try
       {
         super.insertString(offset, str, attr);
@@ -47,7 +52,7 @@ public class HotkeyTextFieldFilter extends PlainDocument
       }
       return;
     }
-    
+
     if ((getLength() + str.length() <= 1))
     {
       try
@@ -63,7 +68,9 @@ public class HotkeyTextFieldFilter extends PlainDocument
 
   /**
    * Check whether the inputed character is neither a digit nor an already existing hot-key.
-   * @param str The inputed character.
+   * 
+   * @param str
+   *          The inputed character.
    * @return Whether the character is a valid hot-key.
    */
   private boolean isInputValid(final String str)
@@ -79,17 +86,23 @@ public class HotkeyTextFieldFilter extends PlainDocument
   /**
    * Set the initial text of the field that bypasses the insertString() filter.
    * 
-   * @param str The hot-key loaded in from the preferences configuration file.
+   * @param str
+   *          The hot-key loaded in from the preferences configuration file.
    */
   public void setInitialText(final String str)
   {
-    try {
+    try
+    {
       initialized = true;
       remove(0, getLength());
       super.insertString(0, str, null);
-    } catch (BadLocationException e) {
+    }
+    catch (BadLocationException e)
+    {
       e.printStackTrace();
-    } finally {
+    }
+    finally
+    {
       initialized = false;
     }
   }

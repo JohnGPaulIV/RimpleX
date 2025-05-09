@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +32,12 @@ public final class RimpleXPreferences
   private static final String OPEN_PREFERENCES = "OPEN_PREFERENCES";
   private static final String OPEN_RECORDING = "OPEN_RECORDING";
   private static final String SAVE_RECORDING = "SAVE_RECORDING";
+  private static final String NUM_OF_DECIMALS = "Num_Decimals";
+  private static final String TRAILING_ZEROES = "Trailing_Zeroes";
+  private static final String DISPLAY_SEPARATORS = "Thousands_Separators";
+
+  private static final String PREF_FILE_PATH = "PREFERENCE_FILE_PATH";
+  private static final String PREF_FILE_PATH_CONFIG = "src/rimplex/preferenceFilePath.properties";
 
   // Preferences
   private static int numOfDecimals = 3;
@@ -53,7 +58,7 @@ public final class RimpleXPreferences
   private static String savePreferencesShortcut;
 
   // Setup initial map of action commands.
-  private static final Map<String, String> actionCommandMap = new HashMap<>();
+  private static final Map<String, String> HOTKEY_MAPPING = new HashMap<>();
   private static List<String> actionCommands = Arrays.asList(ACTION_PRINT, ACTION_NEW_CALC,
       ACTION_ABOUT, ACTION_HELP, ACTION_EXIT, EDIT_PREFERENCES, SAVE_PREFERENCES, OPEN_PREFERENCES,
       OPEN_RECORDING, SAVE_RECORDING, COMPLEX_PLANE);
@@ -61,7 +66,7 @@ public final class RimpleXPreferences
   {
     for (String action : actionCommands)
     {
-      actionCommandMap.put(action, null);
+      HOTKEY_MAPPING.put(action, null);
     }
   }
 
@@ -163,7 +168,7 @@ public final class RimpleXPreferences
    */
   public static String getActionCommand(final String keyPressed)
   {
-    for (Map.Entry<String, String> entry : actionCommandMap.entrySet())
+    for (Map.Entry<String, String> entry : HOTKEY_MAPPING.entrySet())
     {
       if (Objects.equals(entry.getValue(), keyPressed))
       {
@@ -236,7 +241,7 @@ public final class RimpleXPreferences
   /**
    * Get the file path of the currently used preference configuration.
    * 
-   * @return
+   * @return Return the file path to the current preferences configuration.
    */
   public static String getPreferencesFile()
   {
@@ -285,9 +290,9 @@ public final class RimpleXPreferences
   public static void setOpenRecordingShortcut(final String shortcut)
   {
     openRecordingShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get(OPEN_RECORDING) != shortcut)
+    if (getActionCommand(shortcut) == null || HOTKEY_MAPPING.get(OPEN_RECORDING) != shortcut)
     {
-      actionCommandMap.put(OPEN_RECORDING, shortcut);
+      HOTKEY_MAPPING.put(OPEN_RECORDING, shortcut);
     }
   }
 
@@ -300,9 +305,9 @@ public final class RimpleXPreferences
   public static void setSaveRecordingShortcut(final String shortcut)
   {
     saveRecordingShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get(SAVE_RECORDING) != shortcut)
+    if (getActionCommand(shortcut) == null || HOTKEY_MAPPING.get(SAVE_RECORDING) != shortcut)
     {
-      actionCommandMap.put(SAVE_RECORDING, shortcut);
+      HOTKEY_MAPPING.put(SAVE_RECORDING, shortcut);
     }
   }
 
@@ -315,9 +320,9 @@ public final class RimpleXPreferences
   public static void setPrintSessionShortcut(final String shortcut)
   {
     printSessionShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get(ACTION_PRINT) != shortcut)
+    if (getActionCommand(shortcut) == null || HOTKEY_MAPPING.get(ACTION_PRINT) != shortcut)
     {
-      actionCommandMap.put(ACTION_PRINT, shortcut);
+      HOTKEY_MAPPING.put(ACTION_PRINT, shortcut);
     }
   }
 
@@ -330,9 +335,9 @@ public final class RimpleXPreferences
   public static void setNewCalculatorShortcut(final String shortcut)
   {
     newCalculatorShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get(ACTION_NEW_CALC) != shortcut)
+    if (getActionCommand(shortcut) == null || HOTKEY_MAPPING.get(ACTION_NEW_CALC) != shortcut)
     {
-      actionCommandMap.put(ACTION_NEW_CALC, shortcut);
+      HOTKEY_MAPPING.put(ACTION_NEW_CALC, shortcut);
     }
   }
 
@@ -345,9 +350,9 @@ public final class RimpleXPreferences
   public static void setAboutShortcut(final String shortcut)
   {
     aboutShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get(ACTION_ABOUT) != shortcut)
+    if (getActionCommand(shortcut) == null || HOTKEY_MAPPING.get(ACTION_ABOUT) != shortcut)
     {
-      actionCommandMap.put(ACTION_ABOUT, shortcut);
+      HOTKEY_MAPPING.put(ACTION_ABOUT, shortcut);
     }
   }
 
@@ -360,9 +365,9 @@ public final class RimpleXPreferences
   public static void setHelpShortcut(final String shortcut)
   {
     helpShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get(ACTION_HELP) != shortcut)
+    if (getActionCommand(shortcut) == null || HOTKEY_MAPPING.get(ACTION_HELP) != shortcut)
     {
-      actionCommandMap.put(ACTION_HELP, shortcut);
+      HOTKEY_MAPPING.put(ACTION_HELP, shortcut);
     }
   }
 
@@ -375,9 +380,9 @@ public final class RimpleXPreferences
   public static void setComplexPlaneShortcut(final String shortcut)
   {
     complexPlaneShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get(COMPLEX_PLANE) != shortcut)
+    if (getActionCommand(shortcut) == null || HOTKEY_MAPPING.get(COMPLEX_PLANE) != shortcut)
     {
-      actionCommandMap.put(COMPLEX_PLANE, shortcut);
+      HOTKEY_MAPPING.put(COMPLEX_PLANE, shortcut);
     }
   }
 
@@ -390,9 +395,9 @@ public final class RimpleXPreferences
   public static void setEditPreferencesShortcut(final String shortcut)
   {
     editPreferencesShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get(EDIT_PREFERENCES) != shortcut)
+    if (getActionCommand(shortcut) == null || HOTKEY_MAPPING.get(EDIT_PREFERENCES) != shortcut)
     {
-      actionCommandMap.put(EDIT_PREFERENCES, shortcut);
+      HOTKEY_MAPPING.put(EDIT_PREFERENCES, shortcut);
     }
   }
 
@@ -405,9 +410,9 @@ public final class RimpleXPreferences
   public static void setOpenPreferencesShortcut(final String shortcut)
   {
     openPreferencesShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get(OPEN_PREFERENCES) != shortcut)
+    if (getActionCommand(shortcut) == null || HOTKEY_MAPPING.get(OPEN_PREFERENCES) != shortcut)
     {
-      actionCommandMap.put(OPEN_PREFERENCES, shortcut);
+      HOTKEY_MAPPING.put(OPEN_PREFERENCES, shortcut);
     }
   }
 
@@ -420,9 +425,9 @@ public final class RimpleXPreferences
   public static void setSavePreferencesShortcut(final String shortcut)
   {
     savePreferencesShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get(SAVE_PREFERENCES) != shortcut)
+    if (getActionCommand(shortcut) == null || HOTKEY_MAPPING.get(SAVE_PREFERENCES) != shortcut)
     {
-      actionCommandMap.put(SAVE_PREFERENCES, shortcut);
+      HOTKEY_MAPPING.put(SAVE_PREFERENCES, shortcut);
     }
   }
 
@@ -435,9 +440,9 @@ public final class RimpleXPreferences
   public static void setExitShortcut(final String shortcut)
   {
     exitShortcut = shortcut;
-    if (getActionCommand(shortcut) == null || actionCommandMap.get(ACTION_EXIT) != shortcut)
+    if (getActionCommand(shortcut) == null || HOTKEY_MAPPING.get(ACTION_EXIT) != shortcut)
     {
-      actionCommandMap.put(ACTION_EXIT, shortcut);
+      HOTKEY_MAPPING.put(ACTION_EXIT, shortcut);
     }
   }
 
@@ -463,16 +468,15 @@ public final class RimpleXPreferences
     FileInputStream prefInput;
     try
     {
-      prefInput = new FileInputStream("src/rimplex/preferenceFilePath.properties");
+      prefInput = new FileInputStream(PREF_FILE_PATH_CONFIG);
       Properties preferences = new Properties();
       try
       {
         preferences.load(prefInput);
         prefInput.close();
 
-        preferences.setProperty("PREFERENCE_FILE_PATH", preferencesFilePath);
-        FileOutputStream prefOutput = new FileOutputStream(
-            "src/rimplex/preferenceFilePath.properties");
+        preferences.setProperty(PREF_FILE_PATH, preferencesFilePath);
+        FileOutputStream prefOutput = new FileOutputStream(PREF_FILE_PATH_CONFIG);
         preferences.store(prefOutput, null);
         prefOutput.close();
       }
@@ -499,9 +503,9 @@ public final class RimpleXPreferences
       preferences.load(prefInput);
       prefInput.close();
 
-      preferences.setProperty("Num_Decimals", String.valueOf(numOfDecimals));
-      preferences.setProperty("Trailing_Zeroes", String.valueOf(trailingZeroes));
-      preferences.setProperty("Thousands_Separator", String.valueOf(displaySeparators));
+      preferences.setProperty(NUM_OF_DECIMALS, String.valueOf(numOfDecimals));
+      preferences.setProperty(TRAILING_ZEROES, String.valueOf(trailingZeroes));
+      preferences.setProperty(DISPLAY_SEPARATORS, String.valueOf(displaySeparators));
 
       preferences.setProperty(OPEN_RECORDING, openRecordingShortcut);
       preferences.setProperty(SAVE_RECORDING, saveRecordingShortcut);
@@ -535,11 +539,10 @@ public final class RimpleXPreferences
     try
     {
       // Load the preferences file path to save into.
-      FileInputStream prefPathInput = new FileInputStream(
-          "src/rimplex/preferenceFilePath.properties");
+      FileInputStream prefPathInput = new FileInputStream(PREF_FILE_PATH_CONFIG);
       Properties preferencePath = new Properties();
       preferencePath.load(prefPathInput);
-      preferencesFilePath = preferencePath.getProperty("PREFERENCE_FILE_PATH");
+      preferencesFilePath = preferencePath.getProperty(PREF_FILE_PATH);
 
       // Load the properties from the received file path.
       FileInputStream prefInput = new FileInputStream(preferencesFilePath);
@@ -547,9 +550,9 @@ public final class RimpleXPreferences
       preferences.load(prefInput);
 
       // Parse and populate the preferences from the configuration file into the application.
-      numOfDecimals = Integer.parseInt(preferences.getProperty("Num_Decimals"));
-      trailingZeroes = Integer.parseInt(preferences.getProperty("Trailing_Zeroes"));
-      displaySeparators = Boolean.parseBoolean(preferences.getProperty("Thousands_Separator"));
+      numOfDecimals = Integer.parseInt(preferences.getProperty(NUM_OF_DECIMALS));
+      trailingZeroes = Integer.parseInt(preferences.getProperty(TRAILING_ZEROES));
+      displaySeparators = Boolean.parseBoolean(preferences.getProperty(DISPLAY_SEPARATORS));
 
       setOpenRecordingShortcut(String.valueOf(preferences.getProperty(OPEN_RECORDING)));
       setSaveRecordingShortcut(String.valueOf(preferences.getProperty(SAVE_RECORDING)));
@@ -564,30 +567,11 @@ public final class RimpleXPreferences
       setSavePreferencesShortcut(String.valueOf(preferences.getProperty(SAVE_PREFERENCES)));
 
       prefInput.close();
-      System.out.println(actionCommandMap);
+      System.out.println(HOTKEY_MAPPING);
     }
     catch (IOException e)
     {
       e.printStackTrace();
     }
-  }
-
-  /**
-   * Format the state of the preferences for debugging.
-   * 
-   * @return The current state of preferences.
-   */
-  public static String toStrings()
-  {
-    String numOfDecimals = "Number of decimals: " + RimpleXPreferences.numOfDecimals;
-    String trailingZeroes = "Trailing zeroes: " + RimpleXPreferences.trailingZeroes;
-    String displaySeparators = "Display separators: "
-        + String.valueOf(RimpleXPreferences.displaySeparators);
-
-    String openRec = "Open Recording Shortcut: " + RimpleXPreferences.openRecordingShortcut;
-    String about = "About Shortcut: " + RimpleXPreferences.aboutShortcut;
-
-    return numOfDecimals + '\n' + trailingZeroes + '\n' + displaySeparators + '\n' + openRec + '\n'
-        + about;
   }
 }

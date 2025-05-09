@@ -1,18 +1,12 @@
 package rimplex.gui;
 
-import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
@@ -81,7 +75,7 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
   {
     if (e.getSource() == displaySeparatorsCheckBox)
     {
-      boolean boxChecked = (e.getStateChange() == 1) ? true : false;
+      boolean boxChecked = (e.getStateChange() == 1);
       RimpleXPreferences.setDisplaySeparators(boxChecked);
     }
   }
@@ -269,18 +263,18 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     aboutField.getDocument().addDocumentListener(new DocumentListener()
     {
       @Override
-      public void changedUpdate(DocumentEvent e)
+      public void changedUpdate(final DocumentEvent e)
       {
       }
 
       @Override
-      public void insertUpdate(DocumentEvent e)
+      public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setAboutShortcut(aboutField.getText());
       }
 
       @Override
-      public void removeUpdate(DocumentEvent e)
+      public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setAboutShortcut(aboutField.getText());
       }
@@ -288,18 +282,18 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     helpField.getDocument().addDocumentListener(new DocumentListener()
     {
       @Override
-      public void changedUpdate(DocumentEvent e)
+      public void changedUpdate(final DocumentEvent e)
       {
       }
 
       @Override
-      public void insertUpdate(DocumentEvent e)
+      public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setHelpShortcut(helpField.getText());
       }
 
       @Override
-      public void removeUpdate(DocumentEvent e)
+      public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setHelpShortcut(helpField.getText());
       }
@@ -307,18 +301,18 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     complexField.getDocument().addDocumentListener(new DocumentListener()
     {
       @Override
-      public void changedUpdate(DocumentEvent e)
+      public void changedUpdate(final DocumentEvent e)
       {
       }
 
       @Override
-      public void insertUpdate(DocumentEvent e)
+      public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setComplexPlaneShortcut(complexField.getText());
       }
 
       @Override
-      public void removeUpdate(DocumentEvent e)
+      public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setComplexPlaneShortcut(complexField.getText());
       }
@@ -326,18 +320,18 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     newCalcField.getDocument().addDocumentListener(new DocumentListener()
     {
       @Override
-      public void changedUpdate(DocumentEvent e)
+      public void changedUpdate(final DocumentEvent e)
       {
       }
 
       @Override
-      public void insertUpdate(DocumentEvent e)
+      public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setNewCalculatorShortcut(newCalcField.getText());
       }
 
       @Override
-      public void removeUpdate(DocumentEvent e)
+      public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setNewCalculatorShortcut(newCalcField.getText());
       }
@@ -345,18 +339,18 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     printField.getDocument().addDocumentListener(new DocumentListener()
     {
       @Override
-      public void changedUpdate(DocumentEvent e)
+      public void changedUpdate(final DocumentEvent e)
       {
       }
 
       @Override
-      public void insertUpdate(DocumentEvent e)
+      public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setPrintSessionShortcut(printField.getText());
       }
 
       @Override
-      public void removeUpdate(DocumentEvent e)
+      public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setPrintSessionShortcut(printField.getText());
       }
@@ -364,18 +358,18 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     openRecordingField.getDocument().addDocumentListener(new DocumentListener()
     {
       @Override
-      public void changedUpdate(DocumentEvent e)
+      public void changedUpdate(final DocumentEvent e)
       {
       }
 
       @Override
-      public void insertUpdate(DocumentEvent e)
+      public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setOpenRecordingShortcut(openRecordingField.getText());
       }
 
       @Override
-      public void removeUpdate(DocumentEvent e)
+      public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setOpenRecordingShortcut(openRecordingField.getText());
       }
@@ -383,18 +377,18 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     saveRecordingField.getDocument().addDocumentListener(new DocumentListener()
     {
       @Override
-      public void changedUpdate(DocumentEvent e)
+      public void changedUpdate(final DocumentEvent e)
       {
       }
 
       @Override
-      public void insertUpdate(DocumentEvent e)
+      public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setSaveRecordingShortcut(saveRecordingField.getText());
       }
 
       @Override
-      public void removeUpdate(DocumentEvent e)
+      public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setSaveRecordingShortcut(saveRecordingField.getText());
       }
@@ -402,18 +396,18 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     editPreferencesField.getDocument().addDocumentListener(new DocumentListener()
     {
       @Override
-      public void changedUpdate(DocumentEvent e)
+      public void changedUpdate(final DocumentEvent e)
       {
       }
 
       @Override
-      public void insertUpdate(DocumentEvent e)
+      public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setEditPreferencesShortcut(editPreferencesField.getText());
       }
 
       @Override
-      public void removeUpdate(DocumentEvent e)
+      public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setEditPreferencesShortcut(editPreferencesField.getText());
       }
@@ -421,18 +415,18 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     savePreferencesField.getDocument().addDocumentListener(new DocumentListener()
     {
       @Override
-      public void changedUpdate(DocumentEvent e)
+      public void changedUpdate(final DocumentEvent e)
       {
       }
 
       @Override
-      public void insertUpdate(DocumentEvent e)
+      public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setSavePreferencesShortcut(savePreferencesField.getText());
       }
 
       @Override
-      public void removeUpdate(DocumentEvent e)
+      public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setSavePreferencesShortcut(savePreferencesField.getText());
       }
@@ -440,18 +434,18 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     exitField.getDocument().addDocumentListener(new DocumentListener()
     {
       @Override
-      public void changedUpdate(DocumentEvent e)
+      public void changedUpdate(final DocumentEvent e)
       {
       }
 
       @Override
-      public void insertUpdate(DocumentEvent e)
+      public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setExitShortcut(exitField.getText());
       }
 
       @Override
-      public void removeUpdate(DocumentEvent e)
+      public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setExitShortcut(exitField.getText());
       }
