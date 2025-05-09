@@ -17,6 +17,7 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import rimplex.RimpleX;
@@ -917,10 +918,22 @@ public class RimpleXController implements ActionListener
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
         {
           RimpleXPreferences.setPreferencesFile(fileChooser.getSelectedFile().getAbsolutePath());
-          RimpleXPreferences.savePreferencesFilePath(fileChooser.getSelectedFile().getAbsolutePath());
+          RimpleXPreferences
+              .savePreferencesFilePath(fileChooser.getSelectedFile().getAbsolutePath());
           RimpleXPreferences.getPreferences();
           prefWindow.updatePreferenceValues();
           System.out.println(RimpleXPreferences.getPreferencesFile());
+        }
+        break;
+      case "COMPLEX_PLANE":
+        if (result != null)
+        {
+          new ComplexPlaneWindow(result);
+        }
+        else
+        {
+          JOptionPane.showMessageDialog(null, rb.getString("No_Result_To_Display"),
+              rb.getString("Error"), JOptionPane.ERROR_MESSAGE);
         }
         break;
       default:
