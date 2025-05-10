@@ -39,6 +39,9 @@ import static rimplex.RimpleX.*;
  *
  *         This work complies with JMU Honor Code.
  */
+/**
+ * 
+ */
 public class RimpleXController implements ActionListener
 {
   private static final String ADD = "+";
@@ -76,6 +79,8 @@ public class RimpleXController implements ActionListener
   private Complex result;
   private boolean polarFormEnabled = false;
   private Complex polarizedComplex;
+
+  private SessionHistoryWindow sessionHistoryWindow;
 
   /**
    * Constructor for a RimpleXController.
@@ -860,7 +865,10 @@ public class RimpleXController implements ActionListener
         }
         break;
       case "S_HISTORY_DROPOUT":
-        window.toggleExpansion();
+        if (sessionHistoryWindow != null)
+        {
+          sessionHistoryWindow.toggleAnimation();
+        }
         break;
       case "ACTION_PRINT":
         PrintHelper.printHtmlFile();
@@ -907,7 +915,11 @@ public class RimpleXController implements ActionListener
               e.printStackTrace();
             }
           }
-          RimpleXPreferences.savePreferencesFilePath(fileToSavePath);
+//<<<<<<< HEAD
+//
+//=======
+//          RimpleXPreferences.savePreferencesFilePath(fileToSavePath);
+//>>>>>>> branch 'main' of https://github.com/bernstdh/s25team2b
           RimpleXPreferences.savePreferences();
         }
         break;
@@ -1202,5 +1214,15 @@ public class RimpleXController implements ActionListener
   public void setWindow(final RimpleXWindow window)
   {
     this.window = window;
+  }
+
+  /**
+   * Sets the session history window to be controlled.
+   * 
+   * @param window
+   */
+  public void setSessionHistoryWindow(SessionHistoryWindow window)
+  {
+    this.sessionHistoryWindow = window;
   }
 }
