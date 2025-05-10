@@ -194,16 +194,16 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
 
     setHotkeyListeners();
 
-    aboutField.setBounds(275, 120, 80, 25);
-    helpField.setBounds(275, 150, 80, 25);
-    complexField.setBounds(275, 180, 80, 25);
-    newCalcField.setBounds(275, 210, 80, 25);
-    printField.setBounds(275, 240, 80, 25);
-    openRecordingField.setBounds(275, 270, 80, 25);
-    saveRecordingField.setBounds(275, 300, 80, 25);
-    editPreferencesField.setBounds(275, 330, 80, 25);
-    savePreferencesField.setBounds(275, 360, 80, 25);
-    exitField.setBounds(275, 390, 80, 25);
+    aboutField.setBounds(335, 120, 40, 25);
+    helpField.setBounds(335, 150, 40, 25);
+    complexField.setBounds(335, 180, 40, 25);
+    newCalcField.setBounds(335, 210, 40, 25);
+    printField.setBounds(335, 240, 40, 25);
+    openRecordingField.setBounds(335, 270, 40, 25);
+    saveRecordingField.setBounds(335, 300, 40, 25);
+    editPreferencesField.setBounds(335, 330, 40, 25);
+    savePreferencesField.setBounds(335, 360, 40, 25);
+    exitField.setBounds(335, 390, 40, 25);
 
     add(aboutField);
     add(helpField);
