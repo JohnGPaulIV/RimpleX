@@ -77,6 +77,7 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     {
       boolean boxChecked = (e.getStateChange() == 1);
       RimpleXPreferences.setDisplaySeparators(boxChecked);
+      RimpleXPreferences.savePreferences();
     }
   }
 
@@ -271,12 +272,14 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
       public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setAboutShortcut(aboutField.getText());
+        RimpleXPreferences.savePreferences();
       }
 
       @Override
       public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setAboutShortcut(aboutField.getText());
+        RimpleXPreferences.savePreferences();
       }
     });
     helpField.getDocument().addDocumentListener(new DocumentListener()
@@ -290,12 +293,14 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
       public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setHelpShortcut(helpField.getText());
+        RimpleXPreferences.savePreferences();
       }
 
       @Override
       public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setHelpShortcut(helpField.getText());
+        RimpleXPreferences.savePreferences();
       }
     });
     complexField.getDocument().addDocumentListener(new DocumentListener()
@@ -309,12 +314,14 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
       public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setComplexPlaneShortcut(complexField.getText());
+        RimpleXPreferences.savePreferences();
       }
 
       @Override
       public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setComplexPlaneShortcut(complexField.getText());
+        RimpleXPreferences.savePreferences();
       }
     });
     newCalcField.getDocument().addDocumentListener(new DocumentListener()
@@ -328,12 +335,14 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
       public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setNewCalculatorShortcut(newCalcField.getText());
+        RimpleXPreferences.savePreferences();
       }
 
       @Override
       public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setNewCalculatorShortcut(newCalcField.getText());
+        RimpleXPreferences.savePreferences();
       }
     });
     printField.getDocument().addDocumentListener(new DocumentListener()
@@ -347,12 +356,14 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
       public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setPrintSessionShortcut(printField.getText());
+        RimpleXPreferences.savePreferences();
       }
 
       @Override
       public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setPrintSessionShortcut(printField.getText());
+        RimpleXPreferences.savePreferences();
       }
     });
     openRecordingField.getDocument().addDocumentListener(new DocumentListener()
@@ -366,12 +377,14 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
       public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setOpenRecordingShortcut(openRecordingField.getText());
+        RimpleXPreferences.savePreferences();
       }
 
       @Override
       public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setOpenRecordingShortcut(openRecordingField.getText());
+        RimpleXPreferences.savePreferences();
       }
     });
     saveRecordingField.getDocument().addDocumentListener(new DocumentListener()
@@ -385,12 +398,14 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
       public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setSaveRecordingShortcut(saveRecordingField.getText());
+        RimpleXPreferences.savePreferences();
       }
 
       @Override
       public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setSaveRecordingShortcut(saveRecordingField.getText());
+        RimpleXPreferences.savePreferences();
       }
     });
     editPreferencesField.getDocument().addDocumentListener(new DocumentListener()
@@ -404,12 +419,14 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
       public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setEditPreferencesShortcut(editPreferencesField.getText());
+        RimpleXPreferences.savePreferences();
       }
 
       @Override
       public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setEditPreferencesShortcut(editPreferencesField.getText());
+        RimpleXPreferences.savePreferences();
       }
     });
     savePreferencesField.getDocument().addDocumentListener(new DocumentListener()
@@ -423,12 +440,14 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
       public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setSavePreferencesShortcut(savePreferencesField.getText());
+        RimpleXPreferences.savePreferences();
       }
 
       @Override
       public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setSavePreferencesShortcut(savePreferencesField.getText());
+        RimpleXPreferences.savePreferences();
       }
     });
     exitField.getDocument().addDocumentListener(new DocumentListener()
@@ -442,12 +461,14 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
       public void insertUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setExitShortcut(exitField.getText());
+        RimpleXPreferences.savePreferences();
       }
 
       @Override
       public void removeUpdate(final DocumentEvent e)
       {
         RimpleXPreferences.setExitShortcut(exitField.getText());
+        RimpleXPreferences.savePreferences();
       }
     });
   }
@@ -461,10 +482,12 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     if (e.getSource() == numDecimalsInput)
     {
       RimpleXPreferences.setNumOfDecimals((int) numDecimalsInput.getValue());
+      RimpleXPreferences.savePreferences();
     }
     else if (e.getSource() == trailingZeroesInput)
     {
       RimpleXPreferences.setTrailingZeroes((int) trailingZeroesInput.getValue());
+      RimpleXPreferences.savePreferences();
     }
   }
 

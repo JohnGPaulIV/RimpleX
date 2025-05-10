@@ -915,11 +915,7 @@ public class RimpleXController implements ActionListener
               e.printStackTrace();
             }
           }
-//<<<<<<< HEAD
-//
-//=======
-//          RimpleXPreferences.savePreferencesFilePath(fileToSavePath);
-//>>>>>>> branch 'main' of https://github.com/bernstdh/s25team2b
+          RimpleXPreferences.savePreferencesFilePath(fileToSavePath);
           RimpleXPreferences.savePreferences();
         }
         break;
