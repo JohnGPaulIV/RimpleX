@@ -247,19 +247,20 @@ public class Complex
     {
       Double modulus = Math.sqrt((this.real * this.real) + (this.imaginary * this.imaginary));
       Double argument = Math.atan(this.imaginary / this.real);
-      result = String.valueOf(modulus) + "((cos" + String.valueOf(argument) + ") + " + "i sin("
-          + String.valueOf(argument) + doubleClosed;
+      result = String.format(getDecimalFormat(modulus), modulus) + "((cos"
+          + String.format(getDecimalFormat(argument), argument) + ") + " + "i sin("
+          + String.format(getDecimalFormat(argument), argument) + doubleClosed;
     }
     else if (this.real != 0.0 && this.imaginary == 0.0)
     {
       if (this.real > 0)
       {
-        result = String.valueOf(this.real) + "(cos(0)" + " + i sin(0))";
+        result = String.format(getDecimalFormat(this.real), this.real) + "(cos(0)" + " + i sin(0))";
       }
 
       else
       {
-        result = String.valueOf(this.real) + "(cos(π)" + " + i sin(π))";
+        result = String.format(getDecimalFormat(this.real), this.real) + "(cos(π)" + " + i sin(π))";
       }
     }
     else if (this.real == 0.0 && this.imaginary != 0.0)
@@ -274,8 +275,8 @@ public class Complex
       {
         argument = "3π/2";
       }
-      result = String.valueOf(modulus) + "(cos(" + argument + ")" + " + i sin(" + argument
-          + doubleClosed;
+      result = String.format(getDecimalFormat(modulus), modulus) + "(cos(" + argument + ")"
+          + " + i sin(" + argument + doubleClosed;
     }
     return result;
   }
@@ -482,7 +483,9 @@ public class Complex
         // If there is only a negative imaginary number.
         if (sign.equals(NEGATIVE))
         {
-          result = NEGATIVE + String.format(getDecimalFormat(Math.abs(this.imaginary)), Math.abs(this.imaginary)) + unit;
+          result = NEGATIVE
+              + String.format(getDecimalFormat(Math.abs(this.imaginary)), Math.abs(this.imaginary))
+              + unit;
         }
         else
         {
@@ -499,7 +502,8 @@ public class Complex
       else
       {
         result = String.format(getDecimalFormat(this.real), this.real) + SUBTRACTION
-            + String.format(getDecimalFormat(Math.abs(this.imaginary)), Math.abs(this.imaginary)) + unit;
+            + String.format(getDecimalFormat(Math.abs(this.imaginary)), Math.abs(this.imaginary))
+            + unit;
       }
     }
     else
