@@ -482,6 +482,7 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
     complexField.setText(RimpleXPreferences.getComplexPlaneShortcut());
     newCalcField.setText(RimpleXPreferences.getNewCalculatorShortcut());
     printField.setText(RimpleXPreferences.getPrintSessionShortcut());
+    exitField.setText(RimpleXPreferences.getExitShortcut());
     openRecordingField.setText(RimpleXPreferences.getOpenRecordingShortcut());
     saveRecordingField.setText(RimpleXPreferences.getSaveRecordingShortcut());
     editPreferencesField.setText(RimpleXPreferences.getEditPreferencesShortcut());

@@ -455,6 +455,7 @@ public final class RimpleXPreferences
   public static void setPreferencesFile(final String filePath)
   {
     preferencesFilePath = filePath;
+    System.out.println("Set preferences file: " + preferencesFilePath);
   }
 
   /**
@@ -476,8 +477,10 @@ public final class RimpleXPreferences
         prefInput.close();
 
         preferences.setProperty(PREF_FILE_PATH, preferencesFilePath);
+        System.out.println("Updated file path configuration: " + preferencesFilePath);
         FileOutputStream prefOutput = new FileOutputStream(PREF_FILE_PATH_CONFIG);
         preferences.store(prefOutput, null);
+        System.out.println("Stored file path configuration: " + preferences.toString());
         prefOutput.close();
       }
       catch (IOException e)
@@ -522,6 +525,7 @@ public final class RimpleXPreferences
       FileOutputStream prefOutput = new FileOutputStream(preferencesFilePath);
       preferences.store(prefOutput, null);
       prefOutput.close();
+      System.out.println("Saved preferences: " + HOTKEY_MAPPING);
     }
     catch (IOException e)
     {
@@ -567,7 +571,8 @@ public final class RimpleXPreferences
       setSavePreferencesShortcut(String.valueOf(preferences.getProperty(SAVE_PREFERENCES)));
 
       prefInput.close();
-      System.out.println(HOTKEY_MAPPING);
+      System.out.println("Loaded in inputs from: " + preferencesFilePath);
+      System.out.println(HOTKEY_MAPPING + "\n");
     }
     catch (IOException e)
     {

@@ -879,7 +879,6 @@ public class RimpleXController implements ActionListener
         break;
       case "EDIT_PREFERENCES":
         prefWindow.setVisible(true);
-        System.out.println(RimpleXPreferences.getPreferencesFile());
         break;
       case "SAVE_PREFERENCES":
         JFileChooser fileSaver = new JFileChooser();
@@ -923,7 +922,6 @@ public class RimpleXController implements ActionListener
               .savePreferencesFilePath(fileChooser.getSelectedFile().getAbsolutePath());
           RimpleXPreferences.getPreferences();
           prefWindow.updatePreferenceValues();
-          System.out.println(RimpleXPreferences.getPreferencesFile());
         }
         break;
       case "COMPLEX_PLANE":
