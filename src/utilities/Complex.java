@@ -352,7 +352,20 @@ public class Complex
   public static Complex parse(final String input)
   {
     // If in complex form.
-    String copy = new String(input).replace(",", "");
+    Locale locale = Locale.getDefault();
+    String copy;
+    if (locale.getLanguage() == "es")
+    {
+      copy = new String(input).replace(",", ".").replace(".", "");
+    }
+    else if (locale.getLanguage() == "ru")
+    {
+      copy = new String(input).replace(" ", "").replace(",", ".");
+    }
+    else
+    {
+      copy = new String(input).replace(",", "");
+    }
     Complex result;
     if (copy.contains(ADDITION))
     {
@@ -504,17 +517,6 @@ public class Complex
   private String getDecimalFormat(final double num)
   {
     String format;
-    String locale = Locale.getDefault().getLanguage();
-    String thousandsSeparator;
-    System.out.println(locale);
-    if (!locale.equals("en"))
-    {
-      thousandsSeparator = " ";
-    }
-    else
-    {
-      thousandsSeparator = ",";
-    }
     if (num % 1 == 0)
     {
       format = "%." + String.valueOf(RimpleXPreferences.getTrailingZeroes()) + "f";
@@ -525,7 +527,7 @@ public class Complex
     }
     if (RimpleXPreferences.getDisplaySeparators())
     {
-      format = format.substring(0, 1) + thousandsSeparator + format.substring(1, format.length());
+      format = format.substring(0, 1) + "," + format.substring(1, format.length());
       System.out.println(format);
     }
     return format;
