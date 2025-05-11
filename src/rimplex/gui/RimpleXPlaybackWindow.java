@@ -44,6 +44,7 @@ public class RimpleXPlaybackWindow extends JFrame
       
       JSlider slider = new JSlider();
       slider.setBounds(160, 10, 180, 45);
+      slider.setOpaque(false);
       add(slider);
       
   }
