@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +81,34 @@ public class RimpleXController implements ActionListener
   private boolean polarFormEnabled = false;
   private Complex polarizedComplex;
 
-  private SessionHistoryWindow sessionHistoryWindow;
+  private SessionHistoryWindow sessionHistoryWindow;  
+  
+  private String[] tempFileResources = new String[] {
+      "help_en_US.html",
+      "help_es_ES.html",
+      "help_ru_RU.html",
+      
+      "ComplexPlaneWindow_en_US.png",
+      "Equals_en_US.png",
+      "IntermediateSteps_en_US.png",
+      "NumberEntry_en_US.png",
+      "OperationEntry_en_US.png",
+      "Playback_en_US.png",
+      "PrintSessionHistory_en_US.png",
+      "Recording_en_US.png",
+      "SessionHistory_en_US.png",
+
+      "ComplexPlaneWindow_ru_RU.png",
+      "Equals_ru_RU.png",
+      "IntermediateSteps_ru_RU.png",
+      "NumberEntry_ru_RU.png",
+      "OperationEntry_ru_RU.png",
+      "Playback_ru_RU.png",
+      "PrintSessionHistory_ru_RU.png",
+      "Recording_ru_RU.png",
+      "SessionHistory_ru_RU.png",
+  };
+
 
   /**
    * Constructor for a RimpleXController.
@@ -338,26 +367,38 @@ public class RimpleXController implements ActionListener
         System.exit(0);
         break;
       case "ACTION_HELP":
-        String htmlFilePath = rb.getString("Help_File_Path");
-        try (InputStream in = getClass().getResourceAsStream(htmlFilePath))
-        {
-          File tempFile = File.createTempFile("help", ".html");
-          tempFile.deleteOnExit();
-          Files.copy(in, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-          try
-          {
-            Desktop.getDesktop().browse(tempFile.toURI());
-          }
-          catch (UnsupportedOperationException e)
-          {
-            // we have to do this on linux
-            Runtime.getRuntime().exec(new String[] {"xdg-open", tempFile.getAbsolutePath()});
-          }
-        }
-        catch (IOException e)
-        {
-          System.err.println("cant find help file " + e.getMessage());
+        try {
+            // Create a temporary directory
+            Path tempDir = Files.createTempDirectory("rimplex_help");
+            tempDir.toFile().deleteOnExit();
+            
+            // Get the base resource path
+            String basePath = rb.getString("Help_File_Path");
+            System.out.println(rb.getString("Help_File_Path"));
+            basePath = basePath.substring(0, basePath.lastIndexOf('/') + 1);
+            
+            // Copy all files
+            for (String file : tempFileResources) {
+                try (InputStream in = getClass().getResourceAsStream(basePath + file)) {
+                    if (in != null) {
+                        Path targetFile = tempDir.resolve(file);
+                        Files.createDirectories(targetFile.getParent());
+                        Files.copy(in, targetFile, StandardCopyOption.REPLACE_EXISTING);
+                        System.out.println(targetFile);
+                    }
+                }
+            }
+            
+            // Open main help file
+            Path mainHelpFile = tempDir.resolve(rb.getString("Help_File"));
+            System.out.println(tempFileResources[0]);
+            try {
+                Desktop.getDesktop().browse(mainHelpFile.toUri());
+            } catch (UnsupportedOperationException e) {
+                Runtime.getRuntime().exec(new String[] {"xdg-open", mainHelpFile.toString()});
+            }
+        } catch (IOException e) {
+            System.err.println("Error loading help files: " + e.getMessage());
         }
         break;
       case "ACTION_ABOUT":

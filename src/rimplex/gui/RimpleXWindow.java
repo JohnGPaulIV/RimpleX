@@ -198,12 +198,12 @@ public class RimpleXWindow extends JFrame implements KeyListener
     JMenu fileMenu = new JMenu(rb.getString("File"));
 
     // Recording Options
-    JMenuItem saveRecordingItem = new JMenuItem("Save Recording");
+    JMenuItem saveRecordingItem = new JMenuItem(rb.getString("Save_Recording"));
     saveRecordingItem.setActionCommand("SAVE_RECORDING");
     saveRecordingItem.addActionListener(controller);
     fileMenu.add(saveRecordingItem);
 
-    JMenuItem openRecordingItem = new JMenuItem("Open Recording");
+    JMenuItem openRecordingItem = new JMenuItem(rb.getString("Open_Recording"));
     openRecordingItem.setActionCommand("OPEN_RECORDING");
     openRecordingItem.addActionListener(controller);
     fileMenu.add(openRecordingItem);
@@ -348,7 +348,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
     polarRadioButton.setBounds(250, 128, 20, 12);
     polarRadioButton.setActionCommand("POLAR_FORM");
     polarRadioButton.addActionListener(controller);
-    JLabel polarLabel = new JLabel("Polar Form");
+    JLabel polarLabel = new JLabel(rb.getString("Polar_Form"));
     polarLabel.setBounds(270, 125, 80, 20);
 
     getContentPane().add(polarLabel);
