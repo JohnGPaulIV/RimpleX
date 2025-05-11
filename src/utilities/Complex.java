@@ -367,6 +367,7 @@ public class Complex
     {
       copy = new String(input).replace(",", "");
     }
+    copy = copy.replace("(", "").replace(")", "");
     Complex result;
     if (copy.contains(ADDITION))
     {
