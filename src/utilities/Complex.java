@@ -357,7 +357,7 @@ public class Complex
     String copy;
     if (locale.getLanguage() == "es")
     {
-      copy = new String(input).replace(",", ".").replace(".", "");
+      copy = new String(input).replace(",", "#").replace(".", "").replace("#", ".");
     }
     else if (locale.getLanguage() == "ru")
     {
