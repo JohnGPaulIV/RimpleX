@@ -48,7 +48,6 @@ public abstract class DropoutWindow extends JFrame
     setLocationRelativeTo(null);
     setLayout(null);
     setResizable(false);
-
     this.mainWindow = mainWindow;
     this.controller = new DropoutWindowController(this);
     this.offsetX = offsetX;
@@ -98,7 +97,6 @@ public abstract class DropoutWindow extends JFrame
       int newX;
       
       boolean isRightOriented = targetX > offsetX;
-
       if (isExpanded)
       {
         // Animate back to original position

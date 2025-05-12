@@ -80,6 +80,8 @@ public class RimpleXController implements ActionListener
   private Complex polarizedComplex;
 
   private SessionHistoryWindow sessionHistoryWindow;
+  
+  private ResourceBundle pref;
 
   /**
    * Constructor for a RimpleXController.
@@ -87,6 +89,7 @@ public class RimpleXController implements ActionListener
   public RimpleXController()
   {
     super();
+    this.pref = ResourceBundle.getBundle("rimplex.gui.preferences.Preferences");
   }
 
   @Override
@@ -946,6 +949,7 @@ public class RimpleXController implements ActionListener
               rb.getString("Error"), JOptionPane.ERROR_MESSAGE);
         }
         break;
+      //case KeyStroke
       default:
         break;
     }

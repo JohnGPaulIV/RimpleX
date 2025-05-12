@@ -49,6 +49,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 
 import utilities.Complex;
+import utilities.IntermediateStepsHelper;
 import utilities.RimpleXPreferences;
 import utilities.SessionHistory;
 
@@ -99,7 +100,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
   private static final String MULTIPLY = "MULTIPLY";
   private static final String DIVIDE = "DIVIDE";
 
-  private boolean isExpanded = false;
+  private boolean isExpanded = true;
   private JTextArea sessionHistory;
   private JTextArea intermediateChanges;
 
@@ -150,7 +151,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
           }
       }
   });
-
+    setAlwaysOnTop(true);
     BufferedImage myPicture = ImageIO.read(getClass().getResource("/icons/logoRimplex.png"));
 
     // Calculate scaled dimensions
@@ -474,7 +475,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
         BorderFactory.createLineBorder(Color.BLACK),
         BorderFactory.createEmptyBorder(5,5,5,5)));
 
-    SessionHistory.setLabel(intermediateChanges);
+    IntermediateStepsHelper.setLabel(intermediateChanges);
     intermediateChanges.setText("Test123");
     int menuMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
     KeyStroke copyKs = KeyStroke.getKeyStroke(KeyEvent.VK_C, menuMask);
