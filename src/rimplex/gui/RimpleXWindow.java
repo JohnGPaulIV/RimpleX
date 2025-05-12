@@ -36,8 +36,10 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.TransferHandler;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.text.BadLocationException;
@@ -104,9 +106,14 @@ public class RimpleXWindow extends JFrame implements KeyListener
   private JTextArea intermediateChanges;
 
   private RimpleXController controller;
-  
+
   JScrollPane scroller;
-  // private ResourceBundle rb;
+  
+  private Color displayBackgroundColor = new Color(230, 230, 230);
+  private Color displayTextColor = new Color(0, 0, 0);
+  private Color BackgroundCalcColor = new Color(69, 0, 132);
+  private Color ButtonBackgroundColor = new Color(203, 182, 119);
+  
 
   /**
    * Explicit window constructor.
@@ -119,6 +126,14 @@ public class RimpleXWindow extends JFrame implements KeyListener
   {
     super();
     // rb = ResourceBundle.getBundle("rimplex.gui.languages.Strings", locale);
+    // Override global colors (do this BEFORE creating components)
+    UIManager.put("Panel.background", BackgroundCalcColor);   // Background for panels
+    UIManager.put("Button.background", ButtonBackgroundColor);   // Button background
+    UIManager.put("Button.foreground", Color.BLACK);       // Button text color
+    UIManager.put("Label.foreground", Color.BLACK);         // Label text color
+    
+    // setting the window itself (instantiated before uimanager colors)
+    this.getContentPane().setBackground(BackgroundCalcColor);
 
     // Set the controller to refer to this instance.
     this.controller = controller;
@@ -132,24 +147,27 @@ public class RimpleXWindow extends JFrame implements KeyListener
     ImageIcon img = new ImageIcon(getClass().getResource("/icons/iconRimplex.png"));
     setIconImage(img.getImage());
 
-//    setupAnimationTimer();
-//    setupSessionHistoryDropout();
+    // setupAnimationTimer();
+    // setupSessionHistoryDropout();
     setupSoftKeyboard();
     setupSessionHistoryDisplay();
     setupIntermediateChangesDisplay();
     setupDisplay();
     sessionHistory.setVisible(isExpanded);
     scroller.setVisible(isExpanded);
-    getContentPane().addMouseListener(new MouseAdapter() {
+    getContentPane().addMouseListener(new MouseAdapter()
+    {
       @Override
-      public void mousePressed(MouseEvent e) {
-          Point p = e.getPoint();
-          if (!scroller.getBounds().contains(p)) {
-              // click was outside the JTextArea’s scroll pane
-              getContentPane().requestFocusInWindow();
-          }
+      public void mousePressed(MouseEvent e)
+      {
+        Point p = e.getPoint();
+        if (!scroller.getBounds().contains(p))
+        {
+          // click was outside the JTextArea’s scroll pane
+          getContentPane().requestFocusInWindow();
+        }
       }
-  });
+    });
 
     BufferedImage myPicture = ImageIO.read(getClass().getResource("/icons/logoRimplex.png"));
 
@@ -178,18 +196,18 @@ public class RimpleXWindow extends JFrame implements KeyListener
     JMenuBar menuBar = new JMenuBar();
 
     JMenu fileMenu = new JMenu(rb.getString("File"));
-    
+
     // Recording Options
-    JMenuItem saveRecordingItem = new JMenuItem("Save Recording");
+    JMenuItem saveRecordingItem = new JMenuItem(rb.getString("Save_Recording"));
     saveRecordingItem.setActionCommand("SAVE_RECORDING");
     saveRecordingItem.addActionListener(controller);
     fileMenu.add(saveRecordingItem);
-    
-    JMenuItem openRecordingItem = new JMenuItem("Open Recording");
+
+    JMenuItem openRecordingItem = new JMenuItem(rb.getString("Open_Recording"));
     openRecordingItem.setActionCommand("OPEN_RECORDING");
     openRecordingItem.addActionListener(controller);
     fileMenu.add(openRecordingItem);
-    
+
     JMenuItem printItem = new JMenuItem(rb.getString("Print_Session"));
     printItem.setActionCommand("ACTION_PRINT");
     printItem.addActionListener(controller);
@@ -203,9 +221,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
     exitItem.addActionListener(controller);
     fileMenu.add(exitItem);
     menuBar.add(fileMenu);
-    
-    
-    
+
     // View menu
     JMenu viewMenu = new JMenu(rb.getString("View"));
     JMenuItem complexPlaneItem = new JMenuItem(rb.getString("Complex_Plane"));
@@ -328,10 +344,11 @@ public class RimpleXWindow extends JFrame implements KeyListener
 
     // Polar Form Radio Button
     JRadioButton polarRadioButton = new JRadioButton();
+    polarRadioButton.setOpaque(false);
     polarRadioButton.setBounds(250, 128, 20, 12);
     polarRadioButton.setActionCommand("POLAR_FORM");
     polarRadioButton.addActionListener(controller);
-    JLabel polarLabel = new JLabel("Polar Form");
+    JLabel polarLabel = new JLabel(rb.getString("Polar_Form"));
     polarLabel.setBounds(270, 125, 80, 20);
 
     getContentPane().add(polarLabel);
@@ -350,7 +367,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
         .add(new RimpleXButton("EXPONENT", rb.getString("Exponent"), controller, 260, 350, 45, 45));
     getContentPane().add(
         new RimpleXButton("LOGARITHM", rb.getString("Logarithm"), controller, 310, 350, 45, 45));
-    
+
   }
 
   /**
@@ -360,16 +377,29 @@ public class RimpleXWindow extends JFrame implements KeyListener
   {
     // Create new displays.
     JLabel display = new JLabel("", SwingConstants.RIGHT);
+    
+    display.setBackground(displayBackgroundColor); // Light gray background
+    display.setOpaque(true); // Important! JLabels are transparent by default
+    display.setForeground(displayTextColor); // Black text
     JLabel topDisplay = new JLabel("");
+    
+    topDisplay.setBackground(displayBackgroundColor); // Light gray background
+    topDisplay.setOpaque(true); // Important! JLabels are transparent by default
+    topDisplay.setForeground(displayTextColor); // Black text
+    
     this.controller.setDisplays(display, topDisplay);
     topDisplay.setFocusable(true);
-    topDisplay.addMouseListener(new MouseAdapter() {
-      public void mousePressed(MouseEvent e) {
+    topDisplay.addMouseListener(new MouseAdapter()
+    {
+      public void mousePressed(MouseEvent e)
+      {
         topDisplay.requestFocusInWindow();
       }
     });
-    display.addMouseListener(new MouseAdapter() {
-      public void mousePressed(MouseEvent e) {
+    display.addMouseListener(new MouseAdapter()
+    {
+      public void mousePressed(MouseEvent e)
+      {
         topDisplay.requestFocusInWindow();
       }
     });
@@ -380,7 +410,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
 
     // Set the size of the displays.
     display.setBounds(10, 65, 345, 50);
-    topDisplay.setBounds(10, 65, 345, 30);
+    topDisplay.setBounds(11, 66, 343, 30);
 
     // Using compound border to set padding of the text in the display:
     // https://docs.oracle.com/javase/7/docs/api/javax/swing/border/CompoundBorder.html
@@ -395,55 +425,63 @@ public class RimpleXWindow extends JFrame implements KeyListener
 
     getContentPane().add(display);
     getContentPane().add(topDisplay);
-    
-    if (!scroller.hasFocus()) {
+
+    if (!scroller.hasFocus())
+    {
       topDisplay.getInputMap(JComponent.WHEN_FOCUSED).put(pasteKs, "pastePlainText");
     }
-    topDisplay.getActionMap().put("pastePlainText", new AbstractAction() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
-            Transferable contents = clip.getContents(null);
-            try {
-                if (contents != null && contents.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-                    String text = (String) contents.getTransferData(DataFlavor.stringFlavor);
-                    topDisplay.setText(text);
-                }
-            } 
-            catch (UnsupportedFlavorException | IOException ex) {
-                ex.printStackTrace();
-            }
+    topDisplay.getActionMap().put("pastePlainText", new AbstractAction()
+    {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Transferable contents = clip.getContents(null);
+        try
+        {
+          if (contents != null && contents.isDataFlavorSupported(DataFlavor.stringFlavor))
+          {
+            String text = (String) contents.getTransferData(DataFlavor.stringFlavor);
+            topDisplay.setText(text);
           }
+        }
+        catch (UnsupportedFlavorException | IOException ex)
+        {
+          ex.printStackTrace();
+        }
+      }
     });
-    
+
   }
 
   /**
    * Sets up the session History Display.
    */
   @SuppressWarnings("serial")
-  public void setupSessionHistoryDisplay() {
-    
+  public void setupSessionHistoryDisplay()
+  {
+
     sessionHistory = new JTextArea("Session History:");
     sessionHistory.setEditable(false);
     sessionHistory.setFocusable(true);
 
     sessionHistory.setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(Color.BLACK),
-        BorderFactory.createEmptyBorder(5,5,5,5)));
+        BorderFactory.createLineBorder(Color.BLACK), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
     SessionHistory.setLabel(sessionHistory);
     sessionHistory.setText("Test123");
     int menuMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
     KeyStroke copyKs = KeyStroke.getKeyStroke(KeyEvent.VK_C, menuMask);
     KeyStroke pastKs = KeyStroke.getKeyStroke(KeyEvent.VK_P, menuMask);
-    sessionHistory.getInputMap(JComponent.WHEN_FOCUSED)
-                  .put(copyKs, "copyPlainText");
-    
-    sessionHistory.getActionMap().put("copyPlainText", new AbstractAction() {
-        @Override public void actionPerformed(ActionEvent e) {
-            sessionHistory.copy();
-        }
+    sessionHistory.getInputMap(JComponent.WHEN_FOCUSED).put(copyKs, "copyPlainText");
+
+    sessionHistory.getActionMap().put("copyPlainText", new AbstractAction()
+    {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        sessionHistory.copy();
+      }
     });
 
     JPopupMenu popup = new JPopupMenu();
@@ -452,40 +490,40 @@ public class RimpleXWindow extends JFrame implements KeyListener
     popup.add(copyItem);
     sessionHistory.setComponentPopupMenu(popup);
 
-    scroller = new JScrollPane(
-        sessionHistory,
-        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+    scroller = new JScrollPane(sessionHistory, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-//    scroller.setBounds(365, 10, 220, 390);
-//    scroller.setVisible(false);
-//    getContentPane().add(scroller);
-    
+    // scroller.setBounds(365, 10, 220, 390);
+    // scroller.setVisible(false);
+    // getContentPane().add(scroller);
+
     SessionHistoryWindow sessionHistoryWindow = new SessionHistoryWindow(this, sessionHistory);
     sessionHistoryWindow.setVisible(true);
-}
-  
-  public void setupIntermediateChangesDisplay() {
-    
+  }
+
+  public void setupIntermediateChangesDisplay()
+  {
+
     intermediateChanges = new JTextArea("Session History:");
     intermediateChanges.setEditable(false);
     intermediateChanges.setFocusable(true);
 
     intermediateChanges.setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(Color.BLACK),
-        BorderFactory.createEmptyBorder(5,5,5,5)));
+        BorderFactory.createLineBorder(Color.BLACK), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
     SessionHistory.setLabel(intermediateChanges);
     intermediateChanges.setText("Test123");
     int menuMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
     KeyStroke copyKs = KeyStroke.getKeyStroke(KeyEvent.VK_C, menuMask);
     KeyStroke pastKs = KeyStroke.getKeyStroke(KeyEvent.VK_P, menuMask);
-    intermediateChanges.getInputMap(JComponent.WHEN_FOCUSED)
-                  .put(copyKs, "copyPlainText");
-    
-    intermediateChanges.getActionMap().put("copyPlainText", new AbstractAction() {
-        @Override public void actionPerformed(ActionEvent e) {
-          intermediateChanges.copy();
-        }
+    intermediateChanges.getInputMap(JComponent.WHEN_FOCUSED).put(copyKs, "copyPlainText");
+
+    intermediateChanges.getActionMap().put("copyPlainText", new AbstractAction()
+    {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        intermediateChanges.copy();
+      }
     });
 
     JPopupMenu popup = new JPopupMenu();
@@ -494,15 +532,14 @@ public class RimpleXWindow extends JFrame implements KeyListener
     popup.add(copyItem);
     intermediateChanges.setComponentPopupMenu(popup);
 
-    scroller = new JScrollPane(
-        intermediateChanges,
-        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+    scroller = new JScrollPane(intermediateChanges, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-//    scroller.setBounds(365, 10, 220, 390);
-//    scroller.setVisible(false);
-//    getContentPane().add(scroller);
-    
-    IntermediateChangesWindow intermediateChangesWindow = new IntermediateChangesWindow(this, intermediateChanges);
+    // scroller.setBounds(365, 10, 220, 390);
+    // scroller.setVisible(false);
+    // getContentPane().add(scroller);
+
+    IntermediateChangesWindow intermediateChangesWindow = new IntermediateChangesWindow(this,
+        intermediateChanges);
     intermediateChangesWindow.setVisible(true);
   }
 

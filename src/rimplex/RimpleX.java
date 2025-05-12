@@ -43,7 +43,7 @@ public class RimpleX implements Runnable
    * @throws InvocationTargetException
    */
   public static void main(final String[] args)
-      throws InterruptedException, InvocationTargetException
+      throws InterruptedException, java.lang.reflect.InvocationTargetException
   {
     // Perform all of the setup activities in the event dispatch thread
     SwingUtilities.invokeAndWait(new RimpleX());

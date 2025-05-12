@@ -567,7 +567,6 @@ public final class RimpleXPreferences
       setSavePreferencesShortcut(String.valueOf(preferences.getProperty(SAVE_PREFERENCES)));
 
       prefInput.close();
-      System.out.println(HOTKEY_MAPPING);
     }
     catch (IOException e)
     {

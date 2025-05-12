@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
@@ -60,7 +61,6 @@ public class RimpleXController implements ActionListener
   private static final String OPEN_PAREN = "(";
   private static final String CLOSED_PAREN = ")";
   private static final String OPEN_BRACKET = "[";
-  private static final String CLOSED_BRACKET = "]";
   private static final String SPACE = " ";
   private static final String DECIMAL = ".";
   private static final String GREATER_THAN = "≥";
@@ -85,7 +85,34 @@ public class RimpleXController implements ActionListener
   private boolean polarFormEnabled = false;
   private Complex polarizedComplex;
 
-  private SessionHistoryWindow sessionHistoryWindow;
+  private SessionHistoryWindow sessionHistoryWindow;  
+  
+  private String[] tempFileResources = new String[] {
+      "help_en_US.html",
+      "help_es_ES.html",
+      "help_ru_RU.html",
+      
+      "ComplexPlaneWindow_en_US.png",
+      "Equals_en_US.png",
+      "IntermediateSteps_en_US.png",
+      "NumberEntry_en_US.png",
+      "OperationEntry_en_US.png",
+      "Playback_en_US.png",
+      "PrintSessionHistory_en_US.png",
+      "Recording_en_US.png",
+      "SessionHistory_en_US.png",
+
+      "ComplexPlaneWindow_ru_RU.png",
+      "Equals_ru_RU.png",
+      "IntermediateSteps_ru_RU.png",
+      "NumberEntry_ru_RU.png",
+      "OperationEntry_ru_RU.png",
+      "Playback_ru_RU.png",
+      "PrintSessionHistory_ru_RU.png",
+      "Recording_ru_RU.png",
+      "SessionHistory_ru_RU.png",
+  };
+
 
   private boolean isRecording = false;
   private boolean isPaused = false;
@@ -351,26 +378,38 @@ public class RimpleXController implements ActionListener
         System.exit(0);
         break;
       case "ACTION_HELP":
-        String htmlFilePath = rb.getString("Help_File_Path");
-        try (InputStream in = getClass().getResourceAsStream(htmlFilePath))
-        {
-          File tempFile = File.createTempFile("help", ".html");
-          tempFile.deleteOnExit();
-          Files.copy(in, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-          try
-          {
-            Desktop.getDesktop().browse(tempFile.toURI());
-          }
-          catch (UnsupportedOperationException e)
-          {
-            // we have to do this on linux
-            Runtime.getRuntime().exec(new String[] {"xdg-open", tempFile.getAbsolutePath()});
-          }
-        }
-        catch (IOException e)
-        {
-          System.err.println("cant find help file " + e.getMessage());
+        try {
+            // Create a temporary directory
+            Path tempDir = Files.createTempDirectory("rimplex_help");
+            tempDir.toFile().deleteOnExit();
+            
+            // Get the base resource path
+            String basePath = rb.getString("Help_File_Path");
+            System.out.println(rb.getString("Help_File_Path"));
+            basePath = basePath.substring(0, basePath.lastIndexOf('/') + 1);
+            
+            // Copy all files
+            for (String file : tempFileResources) {
+                try (InputStream in = getClass().getResourceAsStream(basePath + file)) {
+                    if (in != null) {
+                        Path targetFile = tempDir.resolve(file);
+                        Files.createDirectories(targetFile.getParent());
+                        Files.copy(in, targetFile, StandardCopyOption.REPLACE_EXISTING);
+                        System.out.println(targetFile);
+                    }
+                }
+            }
+            
+            // Open main help file
+            Path mainHelpFile = tempDir.resolve(rb.getString("Help_File"));
+            System.out.println(tempFileResources[0]);
+            try {
+                Desktop.getDesktop().browse(mainHelpFile.toUri());
+            } catch (UnsupportedOperationException e) {
+                Runtime.getRuntime().exec(new String[] {"xdg-open", mainHelpFile.toString()});
+            }
+        } catch (IOException e) {
+            System.err.println("Error loading help files: " + e.getMessage());
         }
         break;
       case "ACTION_ABOUT":
@@ -452,15 +491,16 @@ public class RimpleXController implements ActionListener
           // System.out.println("operator: " + operator);
           // System.out.println("rightOperand: " + rightOperand);
 
-          String evaluation = Evaluator.evaluate(leftOperand, operator, rightOperand);
+          String evaluation = Evaluator.evaluate(leftOperand, operator, rightOperand, false);
           if (!relationalOpPresent)
           {
             result = Complex.parse(evaluation);
           }
           else
           {
-            relationalWindow.setResult(leftOperand + SPACE + operator + SPACE + rightOperand + SPACE
-                + EQUALS + SPACE + rb.getString(evaluation));
+            relationalWindow.setResult(Evaluator.evaluate(leftOperand, "", "", true) + SPACE
+                + operator + SPACE + Evaluator.evaluate(rightOperand, "", "", true) + SPACE + EQUALS
+                + SPACE + rb.getString(evaluation));
             relationalWindow.setVisible(true);
 
             topDisplay.setText("");
@@ -477,19 +517,24 @@ public class RimpleXController implements ActionListener
 
           topDisplay.setText(
               leftOperand + operator + SPACE + rightOperand + SPACE + EQUALS + SPACE + evaluation);
+          topDisplay.setText(Evaluator.evaluate(leftOperand, "", "", true) + SPACE + operator
+              + SPACE + Evaluator.evaluate(rightOperand, "", "", true) + SPACE + EQUALS + SPACE
+              + evaluation);
           SessionHistory.add(topDisplay.getText());
           if (polarFormEnabled)
           {
             Complex evaluated = Complex.parse(evaluation);
             String polarForm = evaluated.getPolarForm();
             topDisplay.setText(polarizedComplex.getPolarForm() + SPACE + operator + SPACE
-                + rightOperand + SPACE + EQUALS + SPACE + polarForm);
+                + Evaluator.evaluate(rightOperand, "", "", true) + SPACE + EQUALS + SPACE
+                + polarForm);
             polarizedComplex = evaluated;
           }
           else
           {
-            topDisplay.setText(leftOperand + operator + SPACE + rightOperand + SPACE + EQUALS
-                + SPACE + evaluation);
+            topDisplay.setText(Evaluator.evaluate(leftOperand, "", "", true) + SPACE + operator
+                + SPACE + Evaluator.evaluate(rightOperand, "", "", true) + SPACE + EQUALS + SPACE
+                + evaluation);
           }
           bottomDisplay.setText("");
 
@@ -509,7 +554,7 @@ public class RimpleXController implements ActionListener
         if (bracketClosed
             || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
         {
-          String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Invert", "");
+          String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Invert", "", false);
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + evaluated);
           SessionHistory.add("Inv("
               + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1) + ")"
@@ -559,7 +604,7 @@ public class RimpleXController implements ActionListener
         if (bracketClosed
             || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
         {
-          String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "", "");
+          String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "", "", false);
 
           Complex imaginary = new Complex(0.0, Complex.parse(evaluated).getImaginary());
           topDisplay
@@ -612,7 +657,7 @@ public class RimpleXController implements ActionListener
         if (bracketClosed
             || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
         {
-          String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "", "");
+          String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "", "", false);
           Complex real = new Complex(Complex.parse(evaluated).getReal(), 0.0);
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + real.toString());
           top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
@@ -665,7 +710,7 @@ public class RimpleXController implements ActionListener
         {
           if (!polarFormEnabled)
           {
-            String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "", "");
+            String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "", "", false);
             polarizedComplex = Complex.parse(evaluated);
             topDisplay.setText(
                 bottomDisplay.getText() + SPACE + EQUALS + SPACE + polarizedComplex.getPolarForm());
@@ -712,7 +757,7 @@ public class RimpleXController implements ActionListener
         if (bracketClosed
             || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
         {
-          String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Conjugate", "");
+          String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Conjugate", "", false);
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + evaluated);
           top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
               + ")";
@@ -763,7 +808,7 @@ public class RimpleXController implements ActionListener
         if (bracketClosed
             || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
         {
-          String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Square root", "");
+          String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Square root", "", false);
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + evaluated);
           top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
               + ")";
@@ -819,7 +864,7 @@ public class RimpleXController implements ActionListener
         if (bracketClosed
             || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
         {
-          String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Log", "");
+          String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Log", "", false);
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + evaluated);
           top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
               + ")";
@@ -915,7 +960,6 @@ public class RimpleXController implements ActionListener
         break;
       case "EDIT_PREFERENCES":
         prefWindow.setVisible(true);
-        System.out.println(RimpleXPreferences.getPreferencesFile());
         break;
       case "SAVE_PREFERENCES":
         JFileChooser fileSaver = new JFileChooser();
@@ -949,6 +993,7 @@ public class RimpleXController implements ActionListener
           // =======
           // RimpleXPreferences.savePreferencesFilePath(fileToSavePath);
           // >>>>>>> branch 'main' of https://github.com/bernstdh/s25team2b
+          RimpleXPreferences.savePreferencesFilePath(fileToSavePath);
           RimpleXPreferences.savePreferences();
         }
         break;
@@ -963,7 +1008,6 @@ public class RimpleXController implements ActionListener
               .savePreferencesFilePath(fileChooser.getSelectedFile().getAbsolutePath());
           RimpleXPreferences.getPreferences();
           prefWindow.updatePreferenceValues();
-          System.out.println(RimpleXPreferences.getPreferencesFile());
         }
         break;
       case "COMPLEX_PLANE":
@@ -1105,8 +1149,9 @@ public class RimpleXController implements ActionListener
     }
     if (equalsPresent)
     {
-      upperDisplay
-          .setText(topDisplayValue.substring(topDisplayValue.indexOf(EQUALS) + 2) + SPACE + op);
+      upperDisplay.setText(
+          Evaluator.evaluate(topDisplayValue.substring(topDisplayValue.indexOf(EQUALS) + 2), "", "",
+              true) + SPACE + op);
       equalsPresent = false;
     }
     else
@@ -1131,7 +1176,7 @@ public class RimpleXController implements ActionListener
               .substring(upperDisplay.getText().length() - 1);
           String rightOperand = display.getText();
 
-          String evaluation = Evaluator.evaluate(leftOperand, prevOperator, rightOperand);
+          String evaluation = Evaluator.evaluate(leftOperand, prevOperator, rightOperand, false);
           if (polarFormEnabled)
           {
             Complex evaluated = Complex.parse(evaluation);
@@ -1154,7 +1199,7 @@ public class RimpleXController implements ActionListener
         }
         else
         {
-          upperDisplay.setText(display.getText() + SPACE + op);
+          upperDisplay.setText(Evaluator.evaluate(display.getText(), "", "", true) + SPACE + op);
         }
         display.setText("");
         bracketClosed = false;
@@ -1210,13 +1255,14 @@ public class RimpleXController implements ActionListener
       if (bracketClosed
           || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
       {
-        upperDisplay.setText(display.getText() + SPACE + op);
+        upperDisplay.setText(Evaluator.evaluate(display.getText(), "", "", true) + SPACE + op);
       }
     }
     else if (equalsPresent)
     {
-      upperDisplay
-          .setText(topDisplayValue.substring(topDisplayValue.indexOf(EQUALS) + 2) + SPACE + op);
+      upperDisplay.setText(
+          Evaluator.evaluate(topDisplayValue.substring(topDisplayValue.indexOf(EQUALS) + 2), "", "",
+              true) + SPACE + op);
       equalsPresent = false;
     }
     else if (!relationalOpPresent && !bracketPresent)
@@ -1238,7 +1284,7 @@ public class RimpleXController implements ActionListener
         String prevOperator = upperDisplay.getText().substring(upperDisplay.getText().length() - 1);
         String rightOperand = display.getText();
 
-        String evaluation = Evaluator.evaluate(leftOperand, prevOperator, rightOperand);
+        String evaluation = Evaluator.evaluate(leftOperand, prevOperator, rightOperand, false);
         if (polarFormEnabled)
         {
           Complex evaluated = Complex.parse(evaluation);

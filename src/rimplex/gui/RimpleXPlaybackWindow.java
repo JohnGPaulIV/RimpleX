@@ -39,6 +39,7 @@ public class RimpleXPlaybackWindow extends JFrame
   /**
    * Constructs Playback Controller Window for RimpleX.
    */
+
   private RimpleXPlaybackWindow(RimpleXController controller, String filePath)
   {
     this.controller = controller;

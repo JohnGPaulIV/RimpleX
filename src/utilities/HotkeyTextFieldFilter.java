@@ -1,5 +1,7 @@
 package utilities;
 
+import java.awt.event.KeyEvent;
+
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
@@ -28,9 +30,12 @@ public class HotkeyTextFieldFilter extends PlainDocument
   /**
    * Insert keyboard input only if the current text is no more than one in length.
    * 
-   * @param offset The offset of the field to insert the string into.
-   * @param str The inputed string to insert.
-   * @param attr The attributes for the inserted content.
+   * @param offset
+   *          The offset of the field to insert the string into.
+   * @param str
+   *          The inputed string to insert.
+   * @param attr
+   *          The attributes for the inserted content.
    */
   public void insertString(final int offset, final String str, final AttributeSet attr)
   {
@@ -76,7 +81,9 @@ public class HotkeyTextFieldFilter extends PlainDocument
   private boolean isInputValid(final String str)
   {
     char input = str.charAt(0);
-    if (!Character.isDigit(input) && RimpleXPreferences.getActionCommand(str) == null)
+    if ((!Character.isDigit(input) && input != '+' && input != '-' && input != '*' && input != '.'
+        && input != '/' && input != 'i' && input != KeyEvent.VK_ENTER)
+        && RimpleXPreferences.getActionCommand(str) == null)
     {
       return true;
     }
