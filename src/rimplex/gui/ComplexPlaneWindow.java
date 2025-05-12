@@ -22,7 +22,12 @@ public class ComplexPlaneWindow extends JFrame
   private static final long serialVersionUID = 1L;
   private Complex number;
 
-  public ComplexPlaneWindow(Complex number)
+  /**
+   * Creates an instance of a complex plane window.
+   *
+   * @param number complex number to be graphed
+   */
+  public ComplexPlaneWindow(final Complex number)
   {
     super(rb.getString("Complex_Plane"));
     this.number = number;
@@ -42,13 +47,13 @@ public class ComplexPlaneWindow extends JFrame
     private static final long serialVersionUID = 1L;
     private Complex number;
 
-    public ComplexPlanePanel(Complex number)
+    public ComplexPlanePanel(final Complex number)
     {
       this.number = number;
     }
 
     @Override
-    protected void paintComponent(Graphics g)
+    protected void paintComponent(final Graphics g)
     {
       super.paintComponent(g);
 
@@ -116,7 +121,7 @@ public class ComplexPlaneWindow extends JFrame
      *          The complex number result
      * @return the scale and interval
      */
-    private double[] calculateScalesAndIntervals(Complex number)
+    private double[] calculateScalesAndIntervals(final Complex number)
     {
       double real = Math.abs(number.getReal());
       double imaginary = Math.abs(number.getImaginary());
@@ -143,9 +148,9 @@ public class ComplexPlaneWindow extends JFrame
      * 
      * @param maxVal
      *          the max value for the axes.
-     * @return
+     * @return a double for the tick interval
      */
-    private double determineTickInterval(double maxVal)
+    private double determineTickInterval(final double maxVal)
     {
       if (maxVal == 0)
         return 1;
