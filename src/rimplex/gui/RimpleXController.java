@@ -3,11 +3,16 @@ package rimplex.gui;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +29,7 @@ import rimplex.RimpleX;
 import utilities.Complex;
 import utilities.Evaluator;
 import utilities.PrintHelper;
+import utilities.RecordingManager;
 import utilities.SessionHistory;
 import utilities.RimpleXPreferences;
 
@@ -79,9 +85,41 @@ public class RimpleXController implements ActionListener
   private boolean polarFormEnabled = false;
   private Complex polarizedComplex;
 
-  private SessionHistoryWindow sessionHistoryWindow;
+  private SessionHistoryWindow sessionHistoryWindow;  
   
-  private ResourceBundle pref;
+  private String[] tempFileResources = new String[] {
+      "help_en_US.html",
+      "help_es_ES.html",
+      "help_ru_RU.html",
+      
+      "ComplexPlaneWindow_en_US.png",
+      "Equals_en_US.png",
+      "IntermediateSteps_en_US.png",
+      "NumberEntry_en_US.png",
+      "OperationEntry_en_US.png",
+      "Playback_en_US.png",
+      "PrintSessionHistory_en_US.png",
+      "Recording_en_US.png",
+      "SessionHistory_en_US.png",
+
+      "ComplexPlaneWindow_ru_RU.png",
+      "Equals_ru_RU.png",
+      "IntermediateSteps_ru_RU.png",
+      "NumberEntry_ru_RU.png",
+      "OperationEntry_ru_RU.png",
+      "Playback_ru_RU.png",
+      "PrintSessionHistory_ru_RU.png",
+      "Recording_ru_RU.png",
+      "SessionHistory_ru_RU.png",
+  };
+
+
+  private boolean isRecording = false;
+  private boolean isPaused = false;
+  // private BufferedWriter recordingWriter;
+  private String recordingPath;
+
+  private StringBuilder currentInput = new StringBuilder();
 
   /**
    * Constructor for a RimpleXController.
@@ -89,7 +127,6 @@ public class RimpleXController implements ActionListener
   public RimpleXController()
   {
     super();
-    this.pref = ResourceBundle.getBundle("rimplex.gui.preferences.Preferences");
   }
 
   @Override
@@ -341,26 +378,38 @@ public class RimpleXController implements ActionListener
         System.exit(0);
         break;
       case "ACTION_HELP":
-        String htmlFilePath = rb.getString("Help_File_Path");
-        try (InputStream in = getClass().getResourceAsStream(htmlFilePath))
-        {
-          File tempFile = File.createTempFile("help", ".html");
-          tempFile.deleteOnExit();
-          Files.copy(in, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-          try
-          {
-            Desktop.getDesktop().browse(tempFile.toURI());
-          }
-          catch (UnsupportedOperationException e)
-          {
-            // we have to do this on linux
-            Runtime.getRuntime().exec(new String[] {"xdg-open", tempFile.getAbsolutePath()});
-          }
-        }
-        catch (IOException e)
-        {
-          System.err.println("cant find help file " + e.getMessage());
+        try {
+            // Create a temporary directory
+            Path tempDir = Files.createTempDirectory("rimplex_help");
+            tempDir.toFile().deleteOnExit();
+            
+            // Get the base resource path
+            String basePath = rb.getString("Help_File_Path");
+            System.out.println(rb.getString("Help_File_Path"));
+            basePath = basePath.substring(0, basePath.lastIndexOf('/') + 1);
+            
+            // Copy all files
+            for (String file : tempFileResources) {
+                try (InputStream in = getClass().getResourceAsStream(basePath + file)) {
+                    if (in != null) {
+                        Path targetFile = tempDir.resolve(file);
+                        Files.createDirectories(targetFile.getParent());
+                        Files.copy(in, targetFile, StandardCopyOption.REPLACE_EXISTING);
+                        System.out.println(targetFile);
+                    }
+                }
+            }
+            
+            // Open main help file
+            Path mainHelpFile = tempDir.resolve(rb.getString("Help_File"));
+            System.out.println(tempFileResources[0]);
+            try {
+                Desktop.getDesktop().browse(mainHelpFile.toUri());
+            } catch (UnsupportedOperationException e) {
+                Runtime.getRuntime().exec(new String[] {"xdg-open", mainHelpFile.toString()});
+            }
+        } catch (IOException e) {
+            System.err.println("Error loading help files: " + e.getMessage());
         }
         break;
       case "ACTION_ABOUT":
@@ -375,13 +424,26 @@ public class RimpleXController implements ActionListener
         }
         break;
       case "OPEN_RECORDING":
-        // Close recording window if open
-        if (RimpleXRecordingWindow.isWindowVisible())
+        JFileChooser openFileChooser = new JFileChooser();
+        openFileChooser.setDialogTitle("Open Recording File");
+
+        int openResult = openFileChooser.showOpenDialog(null);
+        if (openResult == JFileChooser.APPROVE_OPTION)
         {
-          RimpleXRecordingWindow.getInstance(this).dispose();
+          String selectedFilePath = openFileChooser.getSelectedFile().getAbsolutePath();
+          System.out.println("Selected recording file: " + selectedFilePath);
+
+          RecordingManager.setFilePath(selectedFilePath, false);
+
+          // Close recording window if open
+          if (RimpleXRecordingWindow.isWindowVisible())
+          {
+            RimpleXRecordingWindow.getInstance(this).dispose();
+          }
+          RimpleXPlaybackWindow playbackWindow = RimpleXPlaybackWindow.getInstance(this,
+              selectedFilePath);
+          playbackWindow.setVisible(true);
         }
-        RimpleXPlaybackWindow playbackWindow = RimpleXPlaybackWindow.getInstance(this);
-        playbackWindow.setVisible(true);
         break;
       case "SAVE_RECORDING":
         // Close playback window if open
@@ -401,6 +463,8 @@ public class RimpleXController implements ActionListener
         if (userSelection == JFileChooser.APPROVE_OPTION)
         {
           String filePath = saveFileChooser.getSelectedFile().getAbsolutePath();
+
+          RecordingManager.setFilePath(filePath, true);
 
           RimpleXRecordingWindow recordingWindow = RimpleXRecordingWindow.getInstance(this,
               filePath);
@@ -450,6 +514,9 @@ public class RimpleXController implements ActionListener
             closedParenCount = 0;
             break;
           }
+
+          topDisplay.setText(
+              leftOperand + operator + SPACE + rightOperand + SPACE + EQUALS + SPACE + evaluation);
           topDisplay.setText(Evaluator.evaluate(leftOperand, "", "", true) + SPACE + operator
               + SPACE + Evaluator.evaluate(rightOperand, "", "", true) + SPACE + EQUALS + SPACE
               + evaluation);
@@ -921,6 +988,11 @@ public class RimpleXController implements ActionListener
               e.printStackTrace();
             }
           }
+          // <<<<<<< HEAD
+          //
+          // =======
+          // RimpleXPreferences.savePreferencesFilePath(fileToSavePath);
+          // >>>>>>> branch 'main' of https://github.com/bernstdh/s25team2b
           RimpleXPreferences.savePreferencesFilePath(fileToSavePath);
           RimpleXPreferences.savePreferences();
         }
@@ -949,7 +1021,35 @@ public class RimpleXController implements ActionListener
               rb.getString("Error"), JOptionPane.ERROR_MESSAGE);
         }
         break;
-      //case KeyStroke
+      case "RECORDING_START":
+        RecordingManager.startRecording();
+        break;
+      case "RECORDING_PAUSE":
+        RecordingManager.pauseRecording();
+        break;
+      case "RECORDING_RESUME":
+        RecordingManager.resumeRecording();
+      case "RECORDING_STOP":
+        RecordingManager.pauseRecording();
+        RimpleXRecordingWindow.getInstance(this).dispose();
+        break;
+      case "RECORDING_PLAY":
+        String filePath = RecordingManager.getFilePath();
+        System.out.println("Playback triggered for file: " + filePath);
+
+        if (filePath != null && !filePath.isEmpty())
+        {
+          RimpleXPlaybackWindow playbackWindow = RimpleXPlaybackWindow.getInstance(this, filePath);
+          int sliderValue = playbackWindow.getSliderValue();
+
+          int delayMillis = 4100 - sliderValue;
+          RecordingManager.playFromFile(filePath, this, delayMillis);
+        }
+        else
+        {
+          System.err.println("Error: No recording file selected for playback");
+        }
+        break;
       default:
         break;
     }
@@ -1230,4 +1330,34 @@ public class RimpleXController implements ActionListener
   {
     this.sessionHistoryWindow = window;
   }
+
+  public void parseAndApplyCalculation(String line)
+  {
+    System.out.println("parseAndApplyCalculation received: " + line);
+    if (line.contains("="))
+    {
+      line = line.replaceFirst("^\\d+\\.\\s*", "");
+      String[] parts = line.split("=");
+      if (parts.length == 2)
+      {
+        String equation = parts[0].trim();
+        String result = parts[1].trim();
+
+        topDisplay.setText(equation + " =");
+        bottomDisplay.setText(result);
+        topDisplay.repaint();
+        bottomDisplay.repaint();
+        System.out.println("Displayed playback equation: " + equation + " = " + result);
+      }
+      else
+      {
+        System.err.println("Invalid playback format: " + line);
+      }
+    }
+    else
+    {
+      System.err.println("Playback entry does not contain '=': " + line);
+    }
+  }
+
 }
