@@ -1,12 +1,15 @@
 package utilities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class evaluates given operands and operators recursively given a string of input. It also
  * formats the expression without evaluating, using similar recursive logic.
  * 
- * @author Joseph Pogoretskiy
+ * Enhanced to include intermediate steps in the evaluation process.
  * 
- * This work complies with JMU Honor Code.
+ * @author Joseph Pogoretskiy (original)
  */
 public final class Evaluator
 {
@@ -24,8 +27,15 @@ public final class Evaluator
   private static final String GREATER_THAN = "≥";
   private static final String LESS_THAN = "≤";
   private static final String OPEN_PARENTHESIS = "(";
-
+  private static final String CLOSED_PARENTHESIS = ")";
+  private static final String FINAL_RESULT = "Final result: ";
+  private static final String FURTHER = "Further evaluation needed with operator: ";
+  private static final String COMPARING = "Comparing: ";
+  private static final String SPACE = " ";
+  private static final String EQUALS = "=";
+  
   private static boolean toFormat;
+  private static List<String> steps; // List to store intermediate steps
 
   /**
    * Initialize static Evaluator.
@@ -112,6 +122,37 @@ public final class Evaluator
   }
 
   /**
+   * Recursively evaluate the given expression with intermediate steps.
+   * 
+   * @param expression
+   *          The full expression to evaluate.
+   * @return List of strings containing intermediate steps and final result.
+   */
+  public static List<String> evaluateWithSteps(final String expression)
+  {
+    steps = new ArrayList<>();
+    toFormat = false;
+    
+    // Add the original expression as the first step
+    steps.add("Original expression: " + expression);
+    
+    // Start the evaluation process
+    String operator = checkOperators(expression);
+    if (operator != null) 
+    {
+      String result = evaluateFurther(expression, operator);
+      // Final result is already added to steps in the evaluation process
+      return steps;
+    } else 
+    {
+      // If there are no operators, just return the expression as is
+      String result = Complex.parse(expression).toString();
+      steps.add(FINAL_RESULT + result);
+      return steps;
+    }
+  }
+
+  /**
    * Recursively evaluate the given expression.
    * 
    * @param leftOperand
@@ -138,22 +179,44 @@ public final class Evaluator
     String leftOperator = checkOperators(leftOperand);
     String rightOperator = checkOperators(rightOperand);
 
+    // Add a step showing the current operation we're evaluating
+    if (!format && steps != null) 
+    {
+      steps.add("Evaluating: " + leftOperand + SPACE + operator + SPACE + rightOperand);
+    }
+
     // If there is an operator in the left operand, evaluate it.
     if (leftOperator != null)
     {
+      if (!format && steps != null) 
+      {
+        steps.add("Processing left operand: " + leftOperand);
+      }
       leftResult = evaluateFurther(leftResult, leftOperator);
+      if (!format && steps != null) 
+      {
+        steps.add("Left operand evaluates to: " + leftResult);
+      }
     }
 
     // If there is an operator in the right operand, evaluate it.
     if (rightOperator != null)
     {
+      if (!format && steps != null) 
+      {
+        steps.add("Processing right operand: " + rightOperand);
+      }
       rightResult = evaluateFurther(rightResult, rightOperator);
+      if (!format && steps != null) 
+      {
+        steps.add("Right operand evaluates to: " + rightResult);
+      }
     }
 
     // Replace the negative symbols with subtractions symbols so the Double parser can parse
     // negative numbers.
-    leftResult.replace(NEGATIVE, SUBTRACTION);
-    rightResult.replace(NEGATIVE, SUBTRACTION);
+    leftResult = leftResult.replace(NEGATIVE, SUBTRACTION);
+    rightResult = rightResult.replace(NEGATIVE, SUBTRACTION);
 
     // Create new Complex numbers based on presence of imaginary units.
     Complex leftComplex = null;
@@ -163,6 +226,12 @@ public final class Evaluator
     {
       leftComplex = Complex.parse(leftResult);
       rightComplex = Complex.parse(rightResult);
+      
+      if (steps != null) 
+      {
+        steps.add("Left as complex number: " + leftComplex.toString());
+        steps.add("Right as complex number: " + rightComplex.toString());
+      }
     }
 
     switch (operator)
@@ -175,6 +244,12 @@ public final class Evaluator
         else
         {
           result = leftComplex.add(rightComplex).toString();
+          if (steps != null) 
+          {
+            steps.add("Adding: " + leftComplex.toString() + " + "
+                  + rightComplex.toString() + SPACE + EQUALS 
+                  + SPACE + result);
+          }
         }
         break;
       case SUBTRACTION:
@@ -185,6 +260,12 @@ public final class Evaluator
         else
         {
           result = leftComplex.subtract(rightComplex).toString();
+          if (steps != null) 
+          {
+            steps.add("Subtracting: " + leftComplex.toString()
+                + " - " + rightComplex.toString() + SPACE + EQUALS
+                + SPACE + result);
+          }
         }
         break;
       case DIVISION:
@@ -195,6 +276,11 @@ public final class Evaluator
         else
         {
           result = leftComplex.divide(rightComplex).toString();
+          if (steps != null) 
+          {
+            steps.add("Dividing: " + leftComplex.toString() + " ÷ " + rightComplex.toString()
+                + SPACE + EQUALS + SPACE + result);
+          }
         }
         break;
       case MULTIPLICATION:
@@ -205,6 +291,11 @@ public final class Evaluator
         else
         {
           result = leftComplex.multiply(rightComplex).toString();
+          if (steps != null) 
+          {
+            steps.add("Multiplying: " + leftComplex.toString()
+                + " × " + rightComplex.toString() + SPACE + EQUALS + SPACE + result);
+          }
         }
         break;
       case POWER:
@@ -215,29 +306,60 @@ public final class Evaluator
         else
         {
           result = evaluatePower(leftComplex, rightComplex);
+          if (steps != null) 
+          {
+            steps.add("Exponentiating: " + leftComplex.toString() + " ^ "
+                + rightComplex.toString() + SPACE + EQUALS + SPACE + result);
+          }
         }
         break;
       case CONJUGATE:
         leftComplex.conjugate();
         result = leftComplex.toString();
+        if (!format && steps != null) 
+        {
+          steps.add("Conjugating: " + leftOperand + SPACE + EQUALS + SPACE + result);
+        }
         break;
       case INVERT:
         leftComplex.inverse();
         result = leftComplex.toString();
+        if (!format && steps != null) 
+        {
+          steps.add("Inverting: " + leftOperand + SPACE + EQUALS + SPACE + result);
+        }
         break;
       case SQUARE_ROOT:
         leftComplex.squareRoot();
         result = leftComplex.toString();
+        if (!format && steps != null) 
+        {
+          steps.add("Square root of: " + leftOperand + SPACE + EQUALS + SPACE + result);
+        }
         break;
       case LOG:
         leftComplex.logarithm();
         result = leftComplex.toString();
+        if (!format && steps != null) 
+        {
+          steps.add("Log of: " + leftOperand + SPACE + EQUALS + SPACE + result);
+        }
         break;
       case GREATER_THAN:
         result = Boolean.toString(leftComplex.greaterThan(rightComplex));
+        if (!format && steps != null) 
+        {
+          steps.add(COMPARING + leftComplex.toString()
+              + " ≥ " + rightComplex.toString() + SPACE + EQUALS + SPACE + result);
+        }
         break;
       case LESS_THAN:
         result = Boolean.toString(leftComplex.lessThan(rightComplex));
+        if (!format && steps != null) 
+        {
+          steps.add(COMPARING + leftComplex.toString() + " ≤ "
+              + rightComplex.toString() + SPACE + EQUALS + SPACE + result);
+        }
         break;
       default:
         if (checkOperators(leftResult) == null)
@@ -250,6 +372,13 @@ public final class Evaluator
         }
         break;
     }
+    
+    // Add the final step for this evaluation if we're in the outer scope
+    if (!format && steps != null && leftOperator == null && rightOperator == null) 
+    {
+      steps.add(FINAL_RESULT + result);
+    }
+    
     return result;
   }
 
@@ -270,6 +399,10 @@ public final class Evaluator
       if (isComplex(leftOperand) || leftOperand.getImaginary() != 0.0)
       {
         result = leftOperand.toString() + POWER + rightOperand.toString();
+        if (steps != null) 
+        {
+          steps.add("Cannot evaluate complex with imaginary exponent: " + result);
+        }
       }
       else if (leftOperand.getReal() != 0.0)
       {
@@ -277,15 +410,29 @@ public final class Evaluator
         result = String
             .valueOf(Math.pow(leftOperand.getReal(), Math.abs(rightOperand.getImaginary()))) + POWER
             + sign + IMAGINARY_UNIT;
+        if (steps != null) 
+        {
+          steps.add("Partial evaluation of power with imaginary exponent: " + result);
+        }
       }
     }
     else if (rightOperand.getImaginary() == 0.0 && rightOperand.getReal() != 0.0)
     {
       result = leftOperand.exponentiate(rightOperand).toString();
+      if (steps != null) 
+      {
+        steps.add("Power evaluation: " + leftOperand.toString() 
+            + POWER + rightOperand.toString() 
+            + SPACE + EQUALS + SPACE + result);
+      }
     }
     else
     {
       result = leftOperand.toString() + POWER + rightOperand.toString();
+      if (steps != null) 
+      {
+        steps.add("Cannot evaluate complex power: " + result);
+      }
     }
     return result;
   }
@@ -304,22 +451,53 @@ public final class Evaluator
     String operandCopy = new String(operand);
     String operatorCopy = new String(operator);
     String result;
+
+    // Add step for this evaluation phase
+    if (!toFormat && steps != null) 
+    {
+      steps.add("Evaluating expression: " + operand);
+    }
+
     // If operand contains parenthesis, fetch it and evaluate it first.
     if (operand.contains(OPEN_PARENTHESIS) && !toFormat)
     {
       String parenthesizedExpr = fetchParenthesizedExpression(operandCopy);
       String unparenthesizedExpr = new String(parenthesizedExpr).substring(1,
           parenthesizedExpr.length() - 1);
+      
+      if (!toFormat && steps != null) 
+      {
+        steps.add("Found parenthesized expression: " + parenthesizedExpr);
+        steps.add("Without parentheses: " + unparenthesizedExpr);
+      }
+      
       operatorCopy = checkOperators(unparenthesizedExpr);
       if (operatorCopy != null)
       {
         // Get result and replace parenthesized operand with its result.
         result = evaluateFurther(unparenthesizedExpr, operatorCopy);
+        
+        if (!toFormat && steps != null) 
+        {
+          steps.add("Evaluated parenthesized expression: " + result);
+          steps.add("Replacing " + parenthesizedExpr + " with " + result + " in " + operandCopy);
+        }
+        
         operandCopy = new String(operandCopy.replace(parenthesizedExpr, result));
+        
+        if (!toFormat && steps != null) 
+        {
+          steps.add("Expression after replacement: " + operandCopy);
+        }
+        
         operatorCopy = checkOperators(operandCopy);
         // Keep evaluating as long as there is a operator.
         if (operatorCopy != null)
         {
+          if (!toFormat && steps != null) 
+          {
+            steps.add(FURTHER + operatorCopy);
+          }
           result = evaluateFurther(operandCopy, operatorCopy);
         }
         else
@@ -330,10 +508,20 @@ public final class Evaluator
       else
       {
         operandCopy = new String(operandCopy.replace(parenthesizedExpr, unparenthesizedExpr));
+        
+        if (!toFormat && steps != null) 
+        {
+          steps.add("Removed parentheses, new expression: " + operandCopy);
+        }
+        
         operatorCopy = checkOperators(operandCopy);
         // Keep evaluating as long as there is a operator.
         if (operatorCopy != null)
         {
+          if (!toFormat && steps != null) 
+          {
+            steps.add(FURTHER + operatorCopy);
+          }
           result = evaluateFurther(operandCopy, operatorCopy);
         }
         else
@@ -346,6 +534,18 @@ public final class Evaluator
     {
       // Evaluate based off of present operator.
       operatorCopy = checkOperators(operandCopy);
+      
+      if (!toFormat && steps != null)
+      {
+        steps.add("Splitting expression at operator " + operatorCopy + ": " 
+                  +
+                  operandCopy.substring(0, operandCopy.indexOf(operatorCopy)) + SPACE 
+                  + 
+                  operatorCopy + SPACE 
+                  +
+                  operandCopy.substring(operandCopy.indexOf(operatorCopy) + 1));
+      }
+      
       if (toFormat)
       {
         result = evaluate(operandCopy.substring(0, operandCopy.indexOf(operatorCopy)), operatorCopy,
@@ -410,7 +610,7 @@ public final class Evaluator
    */
   private static String getParenthesis(final String num)
   {
-    if (num.contains("("))
+    if (num.contains(OPEN_PARENTHESIS))
     {
       int count = 0;
       for (int i = 0; i < num.length(); i++)
@@ -423,11 +623,11 @@ public final class Evaluator
       String openParen = "";
       for (int j = 0; j < count; j++)
       {
-        openParen = openParen + "(";
+        openParen = openParen + OPEN_PARENTHESIS;
       }
       return openParen;
     }
-    else if (num.contains(")"))
+    else if (num.contains(CLOSED_PARENTHESIS))
     {
       int count = 0;
       for (int i = 0; i < num.length(); i++)
@@ -440,7 +640,7 @@ public final class Evaluator
       String closedParen = "";
       for (int j = 0; j < count; j++)
       {
-        closedParen = closedParen + ")";
+        closedParen = closedParen + CLOSED_PARENTHESIS;
       }
       return closedParen;
     }
@@ -467,45 +667,46 @@ public final class Evaluator
     String result;
     if (checkOperators(leftResult) == null && checkOperators(rightResult) == null)
     {
-      if (getParenthesis(leftResult).contains("(") && getParenthesis(rightResult).contains(")"))
+      if (getParenthesis(leftResult).contains(OPEN_PARENTHESIS)
+          && getParenthesis(rightResult).contains(CLOSED_PARENTHESIS))
       {
         result = getParenthesis(leftResult) + Complex.parse(leftResult).toString() + op
             + Complex.parse(rightResult).toString() + getParenthesis(rightResult);
       }
-      else if (getParenthesis(leftResult).contains("(")
-          && getParenthesis(rightResult).contains("("))
+      else if (getParenthesis(leftResult).contains(OPEN_PARENTHESIS)
+          && getParenthesis(rightResult).contains(OPEN_PARENTHESIS))
       {
         result = getParenthesis(leftResult) + Complex.parse(leftResult).toString() + op
             + getParenthesis(rightResult) + Complex.parse(rightResult).toString();
       }
-      else if (getParenthesis(leftResult).contains(")")
-          && getParenthesis(rightResult).contains("("))
+      else if (getParenthesis(leftResult).contains(CLOSED_PARENTHESIS)
+          && getParenthesis(rightResult).contains(OPEN_PARENTHESIS))
       {
         result = Complex.parse(leftResult).toString() + getParenthesis(leftResult) + op
             + getParenthesis(rightResult) + Complex.parse(rightResult).toString();
       }
-      else if (getParenthesis(leftResult).contains(")")
-          && getParenthesis(rightResult).contains(")"))
+      else if (getParenthesis(leftResult).contains(CLOSED_PARENTHESIS)
+          && getParenthesis(rightResult).contains(CLOSED_PARENTHESIS))
       {
         result = Complex.parse(leftResult).toString() + getParenthesis(leftResult) + op
             + Complex.parse(rightResult).toString() + getParenthesis(rightResult);
       }
-      else if (getParenthesis(leftResult).contains(")"))
+      else if (getParenthesis(leftResult).contains(CLOSED_PARENTHESIS))
       {
         result = Complex.parse(leftResult).toString() + getParenthesis(leftResult) + op
             + Complex.parse(rightResult).toString();
       }
-      else if (getParenthesis(leftResult).contains("("))
+      else if (getParenthesis(leftResult).contains(OPEN_PARENTHESIS))
       {
         result = getParenthesis(leftResult) + Complex.parse(leftResult).toString() + op
             + Complex.parse(rightResult).toString();
       }
-      else if (getParenthesis(rightResult).contains(")"))
+      else if (getParenthesis(rightResult).contains(CLOSED_PARENTHESIS))
       {
         result = Complex.parse(leftResult).toString() + op + Complex.parse(rightResult).toString()
             + getParenthesis(rightResult);
       }
-      else if (getParenthesis(rightResult).contains("("))
+      else if (getParenthesis(rightResult).contains(OPEN_PARENTHESIS))
       {
         result = Complex.parse(leftResult).toString() + op + getParenthesis(rightResult)
             + Complex.parse(rightResult).toString();
@@ -518,12 +719,12 @@ public final class Evaluator
     }
     else if (checkOperators(leftResult) != null && checkOperators(rightResult) == null)
     {
-      if (getParenthesis(rightResult).contains("("))
+      if (getParenthesis(rightResult).contains(OPEN_PARENTHESIS))
       {
         result = leftResult + op + getParenthesis(rightResult)
             + Complex.parse(rightResult).toString();
       }
-      else if (getParenthesis(rightResult).contains(")"))
+      else if (getParenthesis(rightResult).contains(CLOSED_PARENTHESIS))
       {
         result = leftResult + op + Complex.parse(rightResult).toString()
             + getParenthesis(rightResult);
@@ -535,12 +736,12 @@ public final class Evaluator
     }
     else if (checkOperators(leftResult) == null && checkOperators(rightResult) != null)
     {
-      if (getParenthesis(leftResult).contains("("))
+      if (getParenthesis(leftResult).contains(OPEN_PARENTHESIS))
       {
         result = getParenthesis(leftResult) + Complex.parse(leftResult).toString() + op
             + rightResult;
       }
-      else if (getParenthesis(leftResult).contains(")"))
+      else if (getParenthesis(leftResult).contains(CLOSED_PARENTHESIS))
       {
         result = Complex.parse(leftResult).toString() + getParenthesis(leftResult) + op
             + rightResult;
@@ -571,5 +772,25 @@ public final class Evaluator
       return true;
     }
     return false;
+  }
+  
+  /**
+   * Original evaluation method preserved for backward compatibility.
+   * 
+   * @param expression
+   *          The full expression to evaluate.
+   * @return The final result as a string.
+   */
+  public static String evaluate(final String expression)
+  {
+    toFormat = false;
+    String operator = checkOperators(expression);
+    if (operator != null) 
+    {
+      return evaluateFurther(expression, operator);
+    } else 
+    {
+      return Complex.parse(expression).toString();
+    }
   }
 }

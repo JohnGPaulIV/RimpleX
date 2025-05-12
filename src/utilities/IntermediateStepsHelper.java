@@ -1,20 +1,19 @@
 package utilities;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+/**
+ * Helper class for the intermediate steps handling.
+ *
+ * @author John Paul
+ * @version 1
+ */
 public class IntermediateStepsHelper
 {
   private static JTextArea IntermediateBox;
   private static StringBuilder historyContent = new StringBuilder();
-  private static int numOp = 1;
   
   private IntermediateStepsHelper()
   {
@@ -27,6 +26,7 @@ public class IntermediateStepsHelper
   public static void setLabel(final JTextArea label)
   {
     IntermediateBox = label;
+    IntermediateBox.setTabSize(4);
     historyContent.setLength(0);
     SwingUtilities.invokeLater(() -> IntermediateBox.setText(""));
     
@@ -43,6 +43,7 @@ public class IntermediateStepsHelper
       historyContent.append(calculation).append("\n");
       String html = historyContent.toString();
       SwingUtilities.invokeLater(() -> IntermediateBox.setText(html));
+      System.out.println("added");
     }
   }
 }

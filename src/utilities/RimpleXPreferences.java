@@ -498,7 +498,6 @@ public final class RimpleXPreferences
   {
     try
     {
-      PreferencesManager pm = new PreferencesManager(preferencesFilePath);
       FileInputStream prefInput = new FileInputStream(preferencesFilePath);
       Properties preferences = new Properties();
       preferences.load(prefInput);

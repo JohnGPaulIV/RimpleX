@@ -40,7 +40,8 @@ public abstract class DropoutWindow extends JFrame
    * @param orientation either "right" or "left" of the calculator.
    * @param offsetX the physical place it will stay relative to the main window.
    */
-  public DropoutWindow(final RimpleXWindow mainWindow, final JTextArea contents, final String orientation, final int offsetX)
+  public DropoutWindow(final RimpleXWindow mainWindow, final JTextArea contents,
+      final String orientation, final int offsetX)
   {
     this.setUndecorated(true);
     this.setFocusableWindowState(false);
@@ -67,14 +68,16 @@ public abstract class DropoutWindow extends JFrame
       dropoutBar.setBounds(233, 2, 25, 395);
       display.setBounds(10, 10, 220, 380);
     }
-    else if (orientation.equals("left")) {
+    else if (orientation.equals("left")) 
+    {
       this.targetX = offsetX - slideRange;
       this.closedIcon = "<";
       this.openIcon = ">";  
       dropoutBar.setBounds(2, 2, 25, 395);
       display.setBounds(35, 10, 220, 380);
     }
-    else {
+    else 
+    {
       throw new UnsupportedOperationException("window must be either 'left' or 'right'");
     }
     
@@ -91,7 +94,8 @@ public abstract class DropoutWindow extends JFrame
    */
   private void setupAnimationTimer()
   {
-    animationTimer = new Timer(ANIMATION_DURATION / ANIMATION_STEPS, e -> {
+    animationTimer = new Timer(ANIMATION_DURATION / ANIMATION_STEPS, e ->
+    {
       int stepSize = (targetX - offsetX) / ANIMATION_STEPS;
       int currentX = getX();
       int newX;
@@ -101,8 +105,8 @@ public abstract class DropoutWindow extends JFrame
       {
         // Animate back to original position
         newX = currentX - stepSize;
-        if ((isRightOriented && newX <= mainWindow.getX() + offsetX) || 
-            (!isRightOriented && newX >= mainWindow.getX() + offsetX))
+        if ((isRightOriented && newX <= mainWindow.getX() + offsetX)
+            || (!isRightOriented && newX >= mainWindow.getX() + offsetX))
         {
           newX = mainWindow.getX() + offsetX;
           isExpanded = false;
@@ -114,8 +118,8 @@ public abstract class DropoutWindow extends JFrame
       {
         // Animate to target position
         newX = currentX + stepSize;
-        if ((isRightOriented && newX >= mainWindow.getX() + targetX) || 
-            (!isRightOriented && newX <= mainWindow.getX() + targetX))
+        if ((isRightOriented && newX >= mainWindow.getX() + targetX)
+            || (!isRightOriented && newX <= mainWindow.getX() + targetX))
         {
           newX = mainWindow.getX() + targetX;
           isExpanded = true;
@@ -136,7 +140,7 @@ public abstract class DropoutWindow extends JFrame
     mainWindow.addComponentListener(new ComponentAdapter()
     {
       @Override
-      public void componentMoved(ComponentEvent e)
+      public void componentMoved(final ComponentEvent e)
       {
         updateLocation();
         mainWindow.toFront();

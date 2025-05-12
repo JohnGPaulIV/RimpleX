@@ -7,14 +7,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
-import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 /**
  * Helper class for the Session History.
  *
- * @author John Paul
+ * @author John Paul, Sofia Miller
  * @version 1
  */
 public class SessionHistory
@@ -77,6 +76,8 @@ public class SessionHistory
       String html = historyContent.toString();
       SwingUtilities.invokeLater(() -> historyBox.setText(html));
     }
+    
+    RecordingManager.recordCalculation(numOp - 1 + ". " + calculation);
   }
   
 }

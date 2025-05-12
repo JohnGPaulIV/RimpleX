@@ -13,11 +13,12 @@ public class DropoutWindowController implements ActionListener
   private final DropoutWindow dropoutWindow;
   
   /**
-   * Constructs the controller to control appropriate windows
+   * Constructs the controller to control appropriate windows.
    * 
    * @param dropoutWindow The SessionHistoryWindow to be controlled.
    */
-  public DropoutWindowController(DropoutWindow dropoutWindow) {
+  public DropoutWindowController(final DropoutWindow dropoutWindow)
+  {
     this.dropoutWindow = dropoutWindow;
   }
 
@@ -28,7 +29,8 @@ public class DropoutWindowController implements ActionListener
   public void actionPerformed(final ActionEvent e)
   {
     String ac = e.getActionCommand();    
-    switch (ac) {
+    switch (ac) 
+    {
       case "DROPOUT":
         dropoutWindow.toggleAnimation();
         break;

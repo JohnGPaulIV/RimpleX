@@ -4,7 +4,6 @@ import java.awt.Font;
 import java.awt.Insets;
 
 import javax.swing.JButton;
-import javax.swing.SwingConstants;
 
 /**
  * Represents a button on the RimpleX application with a set text, action command, and bounds.
@@ -17,6 +16,7 @@ public class RimpleXButton extends JButton
 {
 
   private static final long serialVersionUID = 1L;
+  private final String sans = "Sans-Serif";
 
   /**
    * Explicit RimpleXButton constructor.
@@ -31,7 +31,7 @@ public class RimpleXButton extends JButton
    *          The absolute position of the button on the x-axis.
    * @param yPos
    *          The absolute position of the button on the y-axis.
-   * @param widthArial
+   * @param width
    *          The width of the button.
    * @param height
    *          The height of the button.
@@ -45,30 +45,37 @@ public class RimpleXButton extends JButton
     this.setMargin(new Insets(2, 2, 2, 2));  // Smaller than default
     
     // nSystem.out.println(text);
-    if (text.length() < 3) {
-      this.setFont(new Font("Sans-Serif", Font.PLAIN, 24));
+    if (text.length() < 3) 
+    {
+      this.setFont(new Font(sans, Font.PLAIN, 24));
     } 
-    else {
-      this.setFont(new Font("Sans-Serif", Font.PLAIN, 14));
+    else 
+    {
+      this.setFont(new Font(sans, Font.PLAIN, 14));
     }
     
     // parse multiple phrases, if too long
-   if (text.length() > 10) {
+    if (text.length() > 10) 
+    {
       String[] phrases = text.split(" ");
-      if (phrases.length > 1) {
+      if (phrases.length > 1) 
+      {
         String buttonText = new String();
         buttonText = buttonText + "<html><div style='text-align: center;'>";
-        for (String phrase : phrases) {
+        for (String phrase : phrases) 
+        {
           buttonText = buttonText + phrase + "<br>";
         }
         buttonText = buttonText + "</div></html>";
         this.setText(buttonText);
       }
-      else {
+      else 
+      {
         this.setText(text);
       }
     }
-    else {
+    else 
+    {
       this.setText(text);
     }
 

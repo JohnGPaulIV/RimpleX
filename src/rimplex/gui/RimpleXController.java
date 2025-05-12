@@ -3,31 +3,22 @@ package rimplex.gui;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.StringTokenizer;
-import java.util.prefs.Preferences;
 
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import rimplex.RimpleX;
 import utilities.Complex;
 import utilities.Evaluator;
+import utilities.IntermediateStepsHelper;
 import utilities.PrintHelper;
 import utilities.RecordingManager;
 import utilities.SessionHistory;
@@ -50,6 +41,8 @@ import static rimplex.RimpleX.*;
  */
 public class RimpleXController implements ActionListener
 {
+  
+  
   private static final String ADD = "+";
   private static final String SUBTRACTION = "—";
   private static final String MULTIPLICATION = "×";
@@ -65,10 +58,38 @@ public class RimpleXController implements ActionListener
   private static final String DECIMAL = ".";
   private static final String GREATER_THAN = "≥";
   private static final String LESSER_THAN = "≤";
+  private static final String ERROR = "Error";
+  private static final String HELP_FILE_PATH = "Help_File_Path";
+  private static final String EQUATION = "Equation ";
+  private static final String SPACE_OPEN_PAREN = " (";
+  private static final String COLON_CLOSED_PAREN = "):";
+  private static final String COLON = ":";
+  private static final String TAB = "\t";
+  private static final String STEP = "Step ";
+  private static final String INV = "Inv(";
+  private static final String SONE = "Step 1: Find the inverse of ";
+  private static final String STWO = "Step 2: Final Answer: ";
+  private static final String INVSAND = "(Inv(";
+  private static final String DOUBLEPAREN = "))";
+  private static final String IM = "IM";
+  private static final String IMSONE = "Step 1: Find the Imaginary Part of ";
+  private static final String RE = "RE";
+  private static final String RESONE = "Step 1: Find the Real Part of ";
+  private static final String POLAR = "Plr";
+  private static final String PLRSONE = "Step 1: Find the Polar Form of ";
+  private static final String CONJUGATE = "Conj";
+  private static final String CONJSONE = "Step 1: Find the Conjugate of ";
+  private static final String SQRT = "Sqrt";
+  private static final String SQRTONE = "Step 1: Find the Square Root of ";
+  private static final String LOG = "Log";
+  private static final String LOGONE = "Step 1: Find the Logarithm of ";
+  private static final String DOTPROPERTIES = ".properties";
+  
+  FileNameExtensionFilter filter = new FileNameExtensionFilter("Preferences", "properties");
 
   private RimpleXRelationalOperation relationalWindow = new RimpleXRelationalOperation();
   private RimpleXPreferencesWindow prefWindow = new RimpleXPreferencesWindow();
-  FileNameExtensionFilter filter = new FileNameExtensionFilter("Preferences", "properties");
+  
   private RimpleXWindow window;
   private JLabel topDisplay;
   private JLabel bottomDisplay;
@@ -77,6 +98,8 @@ public class RimpleXController implements ActionListener
   private boolean equalsPresent = false;
   private boolean relationalOpPresent = false;
   private boolean runningCalc = true;
+  private int eqNum = 1;
+  private int eqNumNoReset = 1;
 
   private int openParenCount = 0;
   private int closedParenCount = 0;
@@ -113,14 +136,6 @@ public class RimpleXController implements ActionListener
       "SessionHistory_ru_RU.png",
   };
 
-
-  private boolean isRecording = false;
-  private boolean isPaused = false;
-  // private BufferedWriter recordingWriter;
-  private String recordingPath;
-
-  private StringBuilder currentInput = new StringBuilder();
-
   /**
    * Constructor for a RimpleXController.
    */
@@ -142,7 +157,7 @@ public class RimpleXController implements ActionListener
     // General structure: if (ac.equals(NAME_OF_BUTTON)) { do stuff... }.
     // For testing if buttons are linked with actions.
     // System.out.println(ac + " was pressed.");
-    if (bottomDisplay.getText().equals("Error"))
+    if (bottomDisplay.getText().equals(ERROR))
     {
       bottomDisplay.setText("");
       topDisplay.setText("");
@@ -320,6 +335,7 @@ public class RimpleXController implements ActionListener
         relationalOpPresent = false;
         openParenCount = 0;
         closedParenCount = 0;
+        eqNumNoReset = 1;
         break;
       case "SIGN":
         // This is a HYPHEN, not a DASH
@@ -378,38 +394,45 @@ public class RimpleXController implements ActionListener
         System.exit(0);
         break;
       case "ACTION_HELP":
-        try {
-            // Create a temporary directory
-            Path tempDir = Files.createTempDirectory("rimplex_help");
-            tempDir.toFile().deleteOnExit();
-            
-            // Get the base resource path
-            String basePath = rb.getString("Help_File_Path");
-            System.out.println(rb.getString("Help_File_Path"));
-            basePath = basePath.substring(0, basePath.lastIndexOf('/') + 1);
-            
-            // Copy all files
-            for (String file : tempFileResources) {
-                try (InputStream in = getClass().getResourceAsStream(basePath + file)) {
-                    if (in != null) {
-                        Path targetFile = tempDir.resolve(file);
-                        Files.createDirectories(targetFile.getParent());
-                        Files.copy(in, targetFile, StandardCopyOption.REPLACE_EXISTING);
-                        System.out.println(targetFile);
-                    }
-                }
+        try 
+        {
+          // Create a temporary directory
+          Path tempDir = Files.createTempDirectory("rimplex_help");
+          tempDir.toFile().deleteOnExit();
+          
+          // Get the base resource path
+          String basePath = rb.getString(HELP_FILE_PATH);
+          System.out.println(rb.getString(HELP_FILE_PATH));
+          basePath = basePath.substring(0, basePath.lastIndexOf('/') + 1);
+          
+          // Copy all files
+          for (String file : tempFileResources)
+          {
+            try (InputStream in = getClass().getResourceAsStream(basePath + file))
+            {
+              if (in != null) 
+              {
+                Path targetFile = tempDir.resolve(file);
+                Files.createDirectories(targetFile.getParent());
+                Files.copy(in, targetFile, StandardCopyOption.REPLACE_EXISTING);
+                System.out.println(targetFile);
+              }
             }
+          }
             
-            // Open main help file
-            Path mainHelpFile = tempDir.resolve(rb.getString("Help_File"));
-            System.out.println(tempFileResources[0]);
-            try {
-                Desktop.getDesktop().browse(mainHelpFile.toUri());
-            } catch (UnsupportedOperationException e) {
-                Runtime.getRuntime().exec(new String[] {"xdg-open", mainHelpFile.toString()});
-            }
-        } catch (IOException e) {
-            System.err.println("Error loading help files: " + e.getMessage());
+          // Open main help file
+          Path mainHelpFile = tempDir.resolve(rb.getString("Help_File"));
+          System.out.println(tempFileResources[0]);
+          try 
+          {
+            Desktop.getDesktop().browse(mainHelpFile.toUri());
+          } catch (UnsupportedOperationException e) 
+          {
+            Runtime.getRuntime().exec(new String[] {"xdg-open", mainHelpFile.toString()});
+          }
+        } catch (IOException e) 
+        {
+          System.err.println("Error loading help files: " + e.getMessage());
         }
         break;
       case "ACTION_ABOUT":
@@ -491,13 +514,10 @@ public class RimpleXController implements ActionListener
           // System.out.println("operator: " + operator);
           // System.out.println("rightOperand: " + rightOperand);
 
-          String evaluation = Evaluator.evaluate(leftOperand, operator, rightOperand, false);
-          if (!relationalOpPresent)
+          //String evaluation = Evaluator.evaluate(leftOperand, operator, rightOperand, false);
+          if (relationalOpPresent)
           {
-            result = Complex.parse(evaluation);
-          }
-          else
-          {
+            String evaluation = Evaluator.evaluate(leftOperand, operator, rightOperand, false);
             relationalWindow.setResult(Evaluator.evaluate(leftOperand, "", "", true) + SPACE
                 + operator + SPACE + Evaluator.evaluate(rightOperand, "", "", true) + SPACE + EQUALS
                 + SPACE + rb.getString(evaluation));
@@ -514,6 +534,17 @@ public class RimpleXController implements ActionListener
             closedParenCount = 0;
             break;
           }
+          String eq = leftOperand + operator + rightOperand;
+          List<String> evalSteps = Evaluator.evaluateWithSteps(eq);
+          String last = evalSteps.get(evalSteps.size() - 1);
+          System.out.println(last);
+          String evaluation = last.substring(last.indexOf(EQUALS) + 1);
+          evaluation = evaluation.substring(evaluation.indexOf(COLON) + 1);
+          if (!relationalOpPresent)
+          {
+            result = Complex.parse(evaluation);
+          }
+          
 
           topDisplay.setText(
               leftOperand + operator + SPACE + rightOperand + SPACE + EQUALS + SPACE + evaluation);
@@ -521,6 +552,14 @@ public class RimpleXController implements ActionListener
               + SPACE + Evaluator.evaluate(rightOperand, "", "", true) + SPACE + EQUALS + SPACE
               + evaluation);
           SessionHistory.add(topDisplay.getText());
+          IntermediateStepsHelper.add(EQUATION + eqNum + SPACE_OPEN_PAREN
+              + leftOperand + operator + rightOperand + COLON_CLOSED_PAREN);
+          for (int i = 0; i < evalSteps.size(); i++)
+          {
+            IntermediateStepsHelper.add(TAB + STEP + (i + 1) + COLON + SPACE +  evalSteps.get(i));
+          }
+          eqNum++;
+          eqNumNoReset++;
           if (polarFormEnabled)
           {
             Complex evaluated = Complex.parse(evaluation);
@@ -556,9 +595,18 @@ public class RimpleXController implements ActionListener
         {
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Invert", "", false);
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + evaluated);
-          SessionHistory.add("Inv("
-              + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1) + ")"
-              + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+          SessionHistory.add(INV
+              + topDisplay.getText().substring(0,
+                  topDisplay.getText().indexOf(EQUALS) - 1) + CLOSED_PAREN
+              + SPACE + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+          IntermediateStepsHelper.add(EQUATION + eqNum
+              + INVSAND + bottomDisplay.getText() + DOUBLEPAREN);
+          IntermediateStepsHelper.add(TAB + SONE
+              + bottomDisplay.getText());
+          IntermediateStepsHelper.add(TAB + STWO + evaluated);
+          eqNum++;
+          eqNumNoReset++;
+          
           bottomDisplay.setText("");
           bracketClosed = false;
           equalsPresent = true;
@@ -582,9 +630,20 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + polarizedComplex.getPolarForm());
-            SessionHistory.add("Inv("
-                + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1) + ")"
-                + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            SessionHistory.add(INV
+                + topDisplay.getText().substring(0,
+                    topDisplay.getText().indexOf(EQUALS) - 1) + CLOSED_PAREN
+                + SPACE + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            IntermediateStepsHelper.add(EQUATION+ eqNum
+                + INVSAND + topDisplay.getText().substring(0,
+                topDisplay.getText().indexOf(EQUALS) - 1) + DOUBLEPAREN);
+            IntermediateStepsHelper.add(TAB 
+                + SONE + topDisplay.getText().substring(0,
+                    topDisplay.getText().indexOf(EQUALS) - 1));
+            IntermediateStepsHelper.add(TAB
+                + STWO + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+            eqNum++;
+						eqNumNoReset++;
 
           }
           else
@@ -592,10 +651,19 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + complexNum.toString());
-            SessionHistory.add("Inv("
-                + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1) + ")"
-                + " " + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
-
+            SessionHistory.add(INV
+                + topDisplay.getText().substring(0,
+                    topDisplay.getText().indexOf(EQUALS) - 1) + CLOSED_PAREN
+                + SPACE + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            IntermediateStepsHelper.add(EQUATION + eqNum
+                + INVSAND + topDisplay.getText().substring(0,
+                    topDisplay.getText().indexOf(EQUALS) - 1) + DOUBLEPAREN);
+            IntermediateStepsHelper.add(TAB + SONE
+                + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1));
+            IntermediateStepsHelper.add(TAB + STWO
+                + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+            eqNum++;
+						eqNumNoReset++;
           }
         }
         break;
@@ -609,10 +677,18 @@ public class RimpleXController implements ActionListener
           Complex imaginary = new Complex(0.0, Complex.parse(evaluated).getImaginary());
           topDisplay
               .setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + imaginary.toString());
-          top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-              + ")";
-          SessionHistory.add("IM" + top + " "
+          top = OPEN_PAREN
+              + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+              + CLOSED_PAREN;
+          SessionHistory.add(IM + top + SPACE
               + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+          IntermediateStepsHelper.add(EQUATION + eqNum + OPEN_PAREN
+              + IM + OPEN_PAREN + top + DOUBLEPAREN);
+          IntermediateStepsHelper.add(TAB + IMSONE + top);
+          IntermediateStepsHelper.add(TAB + STWO
+              + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+          eqNum++;
+          eqNumNoReset++;
           bottomDisplay.setText("");
           bracketClosed = false;
           equalsPresent = true;
@@ -636,20 +712,35 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + polarizedComplex.toString());
-            top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-                + ")";
-            SessionHistory.add("IM" + top + " "
+            top = OPEN_PAREN
+                + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+                + CLOSED_PAREN;
+            SessionHistory.add(IM + top + SPACE
                 + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            IntermediateStepsHelper.add(EQUATION + eqNum + OPEN_PAREN
+                + IM + OPEN_PAREN + top + DOUBLEPAREN);
+            IntermediateStepsHelper.add(TAB + IMSONE + top);
+            IntermediateStepsHelper.add(TAB + STWO
+                + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+            eqNum++;
+            eqNumNoReset++;
           }
           else
           {
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + imaginary.toString());
-            top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-                + ")";
-            SessionHistory.add("IM" + top + " "
+            top = OPEN_PAREN
+                + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+                + CLOSED_PAREN;
+            SessionHistory.add(IM + top + SPACE
                 + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            IntermediateStepsHelper.add(EQUATION + eqNum + "(IM(" + top + DOUBLEPAREN);
+            IntermediateStepsHelper.add(TAB + IMSONE + top);
+            IntermediateStepsHelper.add(TAB + STWO
+                + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+            eqNum++;
+            eqNumNoReset++;
           }
         }
         break;
@@ -660,10 +751,18 @@ public class RimpleXController implements ActionListener
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "", "", false);
           Complex real = new Complex(Complex.parse(evaluated).getReal(), 0.0);
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + real.toString());
-          top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-              + ")";
-          SessionHistory.add("RE" + top + " "
+          top = OPEN_PAREN
+              + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+              + CLOSED_PAREN;
+          SessionHistory.add(RE + top + SPACE
               + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+          IntermediateStepsHelper.add(EQUATION + eqNum + OPEN_PAREN
+              + RE + OPEN_PAREN + top + DOUBLEPAREN);
+          IntermediateStepsHelper.add(TAB + RESONE + top);
+          IntermediateStepsHelper.add(TAB + STWO
+              + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+          eqNum++;
+          eqNumNoReset++;
           bottomDisplay.setText("");
           bracketClosed = false;
           equalsPresent = true;
@@ -687,20 +786,35 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + polarizedComplex.toString());
-            top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-                + ")";
-            SessionHistory.add("RE" + top + " "
+            top = OPEN_PAREN
+                + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+                + CLOSED_PAREN;
+            SessionHistory.add(RE + top + SPACE
                 + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            IntermediateStepsHelper.add(EQUATION + eqNum + OPEN_PAREN
+                + RE + OPEN_PAREN + top + DOUBLEPAREN);
+            IntermediateStepsHelper.add(TAB + RESONE + top);
+            IntermediateStepsHelper.add(TAB + STWO
+                + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+            eqNum++;
+            eqNumNoReset++;
           }
           else
           {
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + real.toString());
-            top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-                + ")";
-            SessionHistory.add("RE" + top + " "
+            top = OPEN_PAREN 
+                + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+                + CLOSED_PAREN;
+            SessionHistory.add(RE + top + SPACE
                 + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            IntermediateStepsHelper.add(EQUATION + eqNum + "(RE(" + top + DOUBLEPAREN);
+            IntermediateStepsHelper.add(TAB + RESONE + top);
+            IntermediateStepsHelper.add(TAB + STWO
+                + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+            eqNum++;
+            eqNumNoReset++;
           }
         }
         break;
@@ -714,10 +828,18 @@ public class RimpleXController implements ActionListener
             polarizedComplex = Complex.parse(evaluated);
             topDisplay.setText(
                 bottomDisplay.getText() + SPACE + EQUALS + SPACE + polarizedComplex.getPolarForm());
-            top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-                + ")";
-            SessionHistory.add("Plr" + top + " "
+            top = OPEN_PAREN
+                + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+                + CLOSED_PAREN;
+            SessionHistory.add(POLAR + top + SPACE
                 + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            IntermediateStepsHelper.add(EQUATION + eqNum + OPEN_PAREN + POLAR
+                + OPEN_PAREN  + top + DOUBLEPAREN);
+            IntermediateStepsHelper.add(TAB + PLRSONE + top);
+            IntermediateStepsHelper.add(TAB + STWO
+                + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+            eqNum++;
+            eqNumNoReset++;
             bottomDisplay.setText("");
             bracketClosed = false;
             equalsPresent = true;
@@ -734,10 +856,18 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + polarForm);
-            top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-                + ")";
-            SessionHistory.add("Plr" + top + " "
+            top = OPEN_PAREN
+                + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+                + CLOSED_PAREN;
+            SessionHistory.add(POLAR + top + SPACE
                 + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            IntermediateStepsHelper.add(EQUATION + eqNum + OPEN_PAREN + POLAR
+                + OPEN_PAREN  + top + DOUBLEPAREN);
+            IntermediateStepsHelper.add(TAB + PLRSONE + top);
+            IntermediateStepsHelper.add(TAB + STWO
+                + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+            eqNum++;
+            eqNumNoReset++;
             polarFormEnabled = true;
           }
           else
@@ -745,10 +875,17 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + polarizedComplex.toString());
-            top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-                + ")";
-            SessionHistory.add("Plr" + top + " "
+            top = OPEN_PAREN
+                + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+                + CLOSED_PAREN;
+            SessionHistory.add(POLAR + top + SPACE
                 + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            IntermediateStepsHelper.add(EQUATION + eqNum + "(Plr(" + top + DOUBLEPAREN);
+            IntermediateStepsHelper.add(TAB + PLRSONE + top);
+            IntermediateStepsHelper.add(TAB + STWO
+                + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+            eqNum++;
+            eqNumNoReset++;
             polarFormEnabled = false;
           }
         }
@@ -759,10 +896,18 @@ public class RimpleXController implements ActionListener
         {
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Conjugate", "", false);
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + evaluated);
-          top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-              + ")";
-          SessionHistory.add("Conj" + top + " "
+          top = OPEN_PAREN 
+              + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+              + CLOSED_PAREN;
+          SessionHistory.add(CONJUGATE + top + SPACE
               + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+          IntermediateStepsHelper.add(EQUATION + eqNum + OPEN_PAREN + CONJUGATE
+              + OPEN_PAREN + top + DOUBLEPAREN);
+          IntermediateStepsHelper.add(TAB + CONJSONE + top);
+          IntermediateStepsHelper.add(TAB + STWO
+              + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+          eqNum++;
+          eqNumNoReset++;
           bottomDisplay.setText("");
           bracketClosed = false;
           equalsPresent = true;
@@ -786,20 +931,35 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + polarizedComplex.getPolarForm());
-            top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-                + ")";
-            SessionHistory.add("Conj" + top + " "
+            top = OPEN_PAREN
+                + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+                + CLOSED_PAREN;
+            SessionHistory.add(CONJUGATE + top + SPACE
                 + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            IntermediateStepsHelper.add(EQUATION + eqNum + OPEN_PAREN
+                + CONJUGATE + OPEN_PAREN + top + DOUBLEPAREN);
+            IntermediateStepsHelper.add(TAB + CONJSONE + top);
+            IntermediateStepsHelper.add(TAB + STWO
+                + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+            eqNum++;
+            eqNumNoReset++;
           }
           else
           {
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + complexNum.toString());
-            top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-                + ")";
-            SessionHistory.add("Conj" + top + " "
+            top = OPEN_PAREN 
+                + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+                + CLOSED_PAREN;
+            SessionHistory.add(CONJUGATE + top + SPACE
                 + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            IntermediateStepsHelper.add(EQUATION + eqNum + "(Conj(" + top + DOUBLEPAREN);
+            IntermediateStepsHelper.add(TAB + CONJSONE + top);
+            IntermediateStepsHelper.add(TAB + STWO 
+                + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+            eqNum++;
+            eqNumNoReset++;
           }
         }
         break;
@@ -810,10 +970,18 @@ public class RimpleXController implements ActionListener
         {
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Square root", "", false);
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + evaluated);
-          top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-              + ")";
-          SessionHistory.add("Sqrt" + top + " "
+          top = OPEN_PAREN
+              + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+              + CLOSED_PAREN;
+          SessionHistory.add(SQRT + top + SPACE
               + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+          IntermediateStepsHelper.add(EQUATION + eqNum + OPEN_PAREN + SQRT 
+              + OPEN_PAREN + top + DOUBLEPAREN);
+          IntermediateStepsHelper.add(TAB + SQRTONE + top);
+          IntermediateStepsHelper.add(TAB + STWO
+              + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+          eqNum++;
+          eqNumNoReset++;
           bottomDisplay.setText("");
           bracketClosed = false;
           equalsPresent = true;
@@ -837,20 +1005,35 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + polarizedComplex.getPolarForm());
-            top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-                + ")";
-            SessionHistory.add("Sqrt" + top + " "
+            top = OPEN_PAREN
+                + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+                + CLOSED_PAREN;
+            SessionHistory.add(SQRT + top + SPACE
                 + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            IntermediateStepsHelper.add(EQUATION + eqNum + OPEN_PAREN + SQRT
+                + OPEN_PAREN + top + DOUBLEPAREN);
+            IntermediateStepsHelper.add(TAB + SQRTONE + top);
+            IntermediateStepsHelper.add(TAB + STWO
+                + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+            eqNum++;
+            eqNumNoReset++;
           }
           else
           {
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + complexNum.toString());
-            top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-                + ")";
-            SessionHistory.add("Sqrt" + top + " "
+            top = OPEN_PAREN
+                + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+                + CLOSED_PAREN;
+            SessionHistory.add(SQRT + top + SPACE
                 + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            IntermediateStepsHelper.add(EQUATION + eqNum + "(Sqrt(" + top + DOUBLEPAREN);
+            IntermediateStepsHelper.add(TAB + SQRTONE + top);
+            IntermediateStepsHelper.add(TAB + STWO
+                + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+            eqNum++;
+            eqNumNoReset++;
           }
         }
         break;
@@ -864,12 +1047,20 @@ public class RimpleXController implements ActionListener
         if (bracketClosed
             || (!bracketPresent && !bracketClosed && !bottomDisplay.getText().isEmpty()))
         {
-          String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "Log", "", false);
+          String evaluated = Evaluator.evaluate(bottomDisplay.getText(), LOG, "", false);
           topDisplay.setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + evaluated);
-          top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-              + ")";
-          SessionHistory.add("Log" + top + " "
+          top = OPEN_PAREN
+              + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+              + CLOSED_PAREN;
+          SessionHistory.add(LOG + top + SPACE
               + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+          IntermediateStepsHelper.add(EQUATION + eqNum + OPEN_PAREN + LOG
+              + OPEN_PAREN  + top + DOUBLEPAREN);
+          IntermediateStepsHelper.add(TAB + LOGONE + top);
+          IntermediateStepsHelper.add(TAB + STWO
+              + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+          eqNum++;
+          eqNumNoReset++;
           bottomDisplay.setText("");
           bracketClosed = false;
           equalsPresent = true;
@@ -893,20 +1084,35 @@ public class RimpleXController implements ActionListener
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + polarizedComplex.getPolarForm());
-            top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-                + ")";
-            SessionHistory.add("Log" + top + " "
+            top = OPEN_PAREN
+                + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+                + CLOSED_PAREN;
+            SessionHistory.add(LOG + top + SPACE
                 + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            IntermediateStepsHelper.add(EQUATION + eqNum + OPEN_PAREN + LOG
+                + OPEN_PAREN + top + DOUBLEPAREN);
+            IntermediateStepsHelper.add(TAB + LOGONE + top);
+            IntermediateStepsHelper.add(TAB + STWO
+                + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+            eqNum++;
+            eqNumNoReset++;
           }
           else
           {
             topDisplay
                 .setText(topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2)
                     + SPACE + EQUALS + SPACE + complexNum.toString());
-            top = "(" + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
-                + ")";
-            SessionHistory.add("Log" + top + " "
+            top = OPEN_PAREN
+                + topDisplay.getText().substring(0, topDisplay.getText().indexOf(EQUALS) - 1)
+                + CLOSED_PAREN;
+            SessionHistory.add(LOG + top + SPACE
                 + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS)));
+            IntermediateStepsHelper.add(EQUATION + eqNum + "(Log(" + top + DOUBLEPAREN);
+            IntermediateStepsHelper.add(TAB + LOGONE + top);
+            IntermediateStepsHelper.add(TAB + STWO
+                + topDisplay.getText().substring(topDisplay.getText().indexOf(EQUALS) + 2));
+            eqNum++;
+            eqNumNoReset++;
           }
         }
         break;
@@ -971,9 +1177,9 @@ public class RimpleXController implements ActionListener
           File fileToSave = fileSaver.getSelectedFile();
           String fileToSavePath = fileToSave.getAbsolutePath();
 
-          if (!fileToSavePath.toLowerCase().endsWith(".properties"))
+          if (!fileToSavePath.toLowerCase().endsWith(DOTPROPERTIES))
           {
-            fileToSavePath += ".properties";
+            fileToSavePath += DOTPROPERTIES;
             fileToSave = new File(fileToSavePath);
           }
           RimpleXPreferences.setPreferencesFile(fileToSavePath);
@@ -1018,7 +1224,7 @@ public class RimpleXController implements ActionListener
         else
         {
           JOptionPane.showMessageDialog(null, rb.getString("No_Result_To_Display"),
-              rb.getString("Error"), JOptionPane.ERROR_MESSAGE);
+              rb.getString(ERROR), JOptionPane.ERROR_MESSAGE);
         }
         break;
       case "RECORDING_START":
@@ -1029,6 +1235,7 @@ public class RimpleXController implements ActionListener
         break;
       case "RECORDING_RESUME":
         RecordingManager.resumeRecording();
+        break;
       case "RECORDING_STOP":
         RecordingManager.pauseRecording();
         RimpleXRecordingWindow.getInstance(this).dispose();
@@ -1175,8 +1382,12 @@ public class RimpleXController implements ActionListener
           String prevOperator = upperDisplay.getText()
               .substring(upperDisplay.getText().length() - 1);
           String rightOperand = display.getText();
-
-          String evaluation = Evaluator.evaluate(leftOperand, prevOperator, rightOperand, false);
+          String eq = leftOperand + prevOperator + rightOperand;
+          List<String> evalSteps = Evaluator.evaluateWithSteps(eq);
+          String last = evalSteps.get(evalSteps.size() - 1);
+          System.out.println(last);
+          String evaluation = last.substring(last.indexOf(EQUALS) + 1);
+          evaluation = evaluation.substring(evaluation.indexOf(COLON) + 1);
           if (polarFormEnabled)
           {
             Complex evaluated = Complex.parse(evaluation);
@@ -1184,17 +1395,50 @@ public class RimpleXController implements ActionListener
             upperDisplay.setText(polarForm + SPACE + op);
             if (!display.getText().isBlank())
             {
-              SessionHistory.add(topDisplayValue + " " + display.getText() + " = " + evaluation);
-              //System.out.println()
+              int opindx = eq.indexOf(prevOperator);
+              if (eq.charAt(opindx + 1) == prevOperator.charAt(0))
+              {
+                eq = eq.substring(0, opindx + 1) + rightOperand;// eq.substring(opindx + 3);
+              }
+              SessionHistory.add(topDisplayValue + SPACE + display.getText() + SPACE + EQUALS
+                  + SPACE + evaluation);
+              
+              IntermediateStepsHelper.add(EQUATION + eqNum
+                  + SPACE_OPEN_PAREN + eq + COLON_CLOSED_PAREN);
+              for (int i = 0; i < evalSteps.size(); i++)
+              {
+                IntermediateStepsHelper.add(TAB + STEP + (i + 1)
+                    + COLON + SPACE + evalSteps.get(i));
+              }
+              eqNum++;
+              eqNumNoReset++;
+              
             }
             polarizedComplex = evaluated;
           }
           else
           {
             upperDisplay.setText(evaluation + SPACE + op);
+            int opindx = eq.indexOf(prevOperator);
+            if (eq.charAt(opindx + 1) == prevOperator.charAt(0))
+            {
+              eq = eq.substring(0, opindx + 1) + rightOperand;// eq.substring(opindx + 3);
+            }
             if (!display.getText().isBlank())
             {
-              SessionHistory.add(topDisplayValue + " " + display.getText() + " = " + evaluation);
+              SessionHistory.add(topDisplayValue + SPACE + display.getText() + SPACE + EQUALS
+                  + SPACE + evaluation);
+              
+              IntermediateStepsHelper.add(EQUATION + eqNum
+                  + SPACE_OPEN_PAREN + eq + COLON_CLOSED_PAREN);
+              for (int i = 0; i < evalSteps.size(); i++)
+              {
+                IntermediateStepsHelper.add(TAB + STEP + (i + 1) + COLON
+                    + SPACE + evalSteps.get(i));
+              }
+              eqNum++;
+              eqNumNoReset++;
+
             }
           }
         }
@@ -1217,6 +1461,8 @@ public class RimpleXController implements ActionListener
 
   /**
    * Update the display when digit is entered.
+   *
+   * @return checks if digit can be updated.
    */
   private boolean updateDisplayingDigit()
   {
@@ -1261,9 +1507,20 @@ public class RimpleXController implements ActionListener
     }
     else if (equalsPresent)
     {
-      upperDisplay.setText(
-          Evaluator.evaluate(topDisplayValue.substring(topDisplayValue.indexOf(EQUALS) + 2), "", "",
-              true) + SPACE + op);
+      
+      List<String> evaluation = Evaluator.evaluateWithSteps(
+          topDisplayValue.substring(topDisplayValue.indexOf(EQUALS) + 2));
+      upperDisplay.setText(evaluation + SPACE + op);
+      IntermediateStepsHelper.add(EQUATION + eqNum
+          + SPACE_OPEN_PAREN
+          + topDisplayValue.substring(topDisplayValue.indexOf(EQUALS) + 2) + COLON_CLOSED_PAREN);
+      for (int i = 0; i < evaluation.size(); i++)
+      {
+        IntermediateStepsHelper.add(TAB + STEP + (i + 1) + COLON 
+            + SPACE + evaluation.get(i));
+      }
+      eqNum++;
+      eqNumNoReset++;
       equalsPresent = false;
     }
     else if (!relationalOpPresent && !bracketPresent)
@@ -1284,8 +1541,11 @@ public class RimpleXController implements ActionListener
 
         String prevOperator = upperDisplay.getText().substring(upperDisplay.getText().length() - 1);
         String rightOperand = display.getText();
-
-        String evaluation = Evaluator.evaluate(leftOperand, prevOperator, rightOperand, false);
+        
+        String eq = leftOperand + prevOperator + rightOperand;
+        List<String> evalSteps = Evaluator.evaluateWithSteps(eq);
+        String last = evalSteps.get(evalSteps.size() - 1);
+        String evaluation = last.substring(last.indexOf(EQUALS) + 1);
         if (polarFormEnabled)
         {
           Complex evaluated = Complex.parse(evaluation);
@@ -1293,7 +1553,24 @@ public class RimpleXController implements ActionListener
           upperDisplay.setText(polarForm + SPACE + op);
           if (!display.getText().isBlank())
           {
-            SessionHistory.add(topDisplayValue + " " + display.getText() + " = " + evaluation);
+            SessionHistory.add(topDisplayValue + SPACE + display.getText() + SPACE + EQUALS
+                + SPACE + evaluation);
+            if (eqNumNoReset != 1)
+            {
+              IntermediateStepsHelper.add(EQUATION + eqNum
+                  + SPACE_OPEN_PAREN + leftOperand + rightOperand + COLON_CLOSED_PAREN);
+            } else
+            {
+              IntermediateStepsHelper.add(EQUATION + eqNum
+                  + SPACE_OPEN_PAREN + eq + COLON_CLOSED_PAREN);
+            }
+            for (int i = 0; i < evalSteps.size(); i++)
+            {
+              IntermediateStepsHelper.add(TAB + STEP + (i + 1) + COLON
+                  + SPACE + evalSteps.get(i));
+            }
+            eqNum++;
+            eqNumNoReset++;
           }
           polarizedComplex = evaluated;
         }
@@ -1302,7 +1579,23 @@ public class RimpleXController implements ActionListener
           upperDisplay.setText(evaluation + SPACE + op);
           if (!display.getText().isBlank())
           {
-            SessionHistory.add(topDisplayValue + " " + display.getText() + " = " + evaluation);
+            SessionHistory.add(topDisplayValue + SPACE + display.getText() + SPACE + EQUALS 
+                + SPACE + evaluation);
+            if (eqNumNoReset != 1)
+            {
+              IntermediateStepsHelper.add(EQUATION + eqNum
+                  + SPACE_OPEN_PAREN + leftOperand + rightOperand + COLON_CLOSED_PAREN);
+            } else
+            {
+              IntermediateStepsHelper.add(EQUATION + eqNum + SPACE_OPEN_PAREN
+                  + eq + COLON_CLOSED_PAREN);
+            }
+            for (int i = 0; i < evalSteps.size(); i++)
+            {
+              IntermediateStepsHelper.add(TAB + STEP + (i + 1) + ": " + evalSteps.get(i));
+            }
+            eqNum++;
+            eqNumNoReset++;
           }
         }
       }
@@ -1325,39 +1618,45 @@ public class RimpleXController implements ActionListener
   /**
    * Sets the session history window to be controlled.
    * 
-   * @param window
+   * @param w Window
    */
-  public void setSessionHistoryWindow(SessionHistoryWindow window)
+  public void setSessionHistoryWindow(final SessionHistoryWindow w)
   {
-    this.sessionHistoryWindow = window;
+    this.sessionHistoryWindow = w;
   }
 
-  public void parseAndApplyCalculation(String line)
+  /**
+   * Calculation Parser.
+   *
+   * @param line Line to parse
+   */
+  public void parseAndApplyCalculation(final String line)
   {
+    String l = line;
     System.out.println("parseAndApplyCalculation received: " + line);
-    if (line.contains("="))
+    if (l.contains(EQUALS))
     {
-      line = line.replaceFirst("^\\d+\\.\\s*", "");
-      String[] parts = line.split("=");
+      l = line.replaceFirst("^\\d+\\.\\s*", "");
+      String[] parts = l.split(EQUALS);
       if (parts.length == 2)
       {
         String equation = parts[0].trim();
-        String result = parts[1].trim();
+        String r = parts[1].trim();
 
         topDisplay.setText(equation + " =");
-        bottomDisplay.setText(result);
+        bottomDisplay.setText(r);
         topDisplay.repaint();
         bottomDisplay.repaint();
-        System.out.println("Displayed playback equation: " + equation + " = " + result);
+        System.out.println("Displayed playback equation: " + equation + " = " + r);
       }
       else
       {
-        System.err.println("Invalid playback format: " + line);
+        System.err.println("Invalid playback format: " + l);
       }
     }
     else
     {
-      System.err.println("Playback entry does not contain '=': " + line);
+      System.err.println("Playback entry does not contain '=': " + l);
     }
   }
 

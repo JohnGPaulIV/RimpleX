@@ -14,7 +14,7 @@ public class IntermediateStepsProcessor
   {
     List<String> steps = new ArrayList<>();
     int stepCount = 0;
-    String counter = "Step " + stepCount++ + ": ";
+    String counter = "Step " + ++stepCount + ": ";
 
     // addition
     if (equation.contains("+"))
