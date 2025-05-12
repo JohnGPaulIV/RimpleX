@@ -3,11 +3,15 @@ package rimplex.gui;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +28,7 @@ import rimplex.RimpleX;
 import utilities.Complex;
 import utilities.Evaluator;
 import utilities.PrintHelper;
+import utilities.RecordingManager;
 import utilities.SessionHistory;
 import utilities.RimpleXPreferences;
 
@@ -81,6 +86,13 @@ public class RimpleXController implements ActionListener
   private Complex polarizedComplex;
 
   private SessionHistoryWindow sessionHistoryWindow;
+
+  private boolean isRecording = false;
+  private boolean isPaused = false;
+  // private BufferedWriter recordingWriter;
+  private String recordingPath;
+
+  private StringBuilder currentInput = new StringBuilder();
 
   /**
    * Constructor for a RimpleXController.
@@ -373,20 +385,33 @@ public class RimpleXController implements ActionListener
         }
         break;
       case "OPEN_RECORDING":
-        // Close recording window if open
-        if (RimpleXRecordingWindow.isWindowVisible())
+        JFileChooser openFileChooser = new JFileChooser();
+        openFileChooser.setDialogTitle("Open Recording File");
+
+        int openResult = openFileChooser.showOpenDialog(null);
+        if (openResult == JFileChooser.APPROVE_OPTION)
         {
-          RimpleXRecordingWindow.getInstance(this).dispose();
+          String selectedFilePath = openFileChooser.getSelectedFile().getAbsolutePath();
+          System.out.println("Selected recording file: " + selectedFilePath);
+
+          RecordingManager.setFilePath(selectedFilePath, false);
+
+          // Close recording window if open
+          if (RimpleXRecordingWindow.isWindowVisible())
+          {
+            RimpleXRecordingWindow.getInstance(this).dispose();
+          }
+          RimpleXPlaybackWindow playbackWindow = RimpleXPlaybackWindow.getInstance(this,
+              selectedFilePath);
+          playbackWindow.setVisible(true);
         }
-        RimpleXPlaybackWindow playbackWindow = RimpleXPlaybackWindow.getInstance(this);
-        playbackWindow.setVisible(true);
         break;
       case "SAVE_RECORDING":
         // Close playback window if open
-//        if (RimpleXPlaybackWindow.isWindowVisible())
-//        {
-//          RimpleXPlaybackWindow.getInstance(this).dispose();
-//        }
+        // if (RimpleXPlaybackWindow.isWindowVisible())
+        // {
+        // RimpleXPlaybackWindow.getInstance(this).dispose();
+        // }
 
         JFileChooser saveFileChooser = new JFileChooser();
         saveFileChooser.setDialogTitle("Select Recording Save Location");
@@ -399,6 +424,8 @@ public class RimpleXController implements ActionListener
         if (userSelection == JFileChooser.APPROVE_OPTION)
         {
           String filePath = saveFileChooser.getSelectedFile().getAbsolutePath();
+
+          RecordingManager.setFilePath(filePath, true);
 
           RimpleXRecordingWindow recordingWindow = RimpleXRecordingWindow.getInstance(this,
               filePath);
@@ -447,6 +474,7 @@ public class RimpleXController implements ActionListener
             closedParenCount = 0;
             break;
           }
+
           topDisplay.setText(
               leftOperand + operator + SPACE + rightOperand + SPACE + EQUALS + SPACE + evaluation);
           SessionHistory.add(topDisplay.getText());
@@ -916,11 +944,11 @@ public class RimpleXController implements ActionListener
               e.printStackTrace();
             }
           }
-//<<<<<<< HEAD
-//
-//=======
-//          RimpleXPreferences.savePreferencesFilePath(fileToSavePath);
-//>>>>>>> branch 'main' of https://github.com/bernstdh/s25team2b
+          // <<<<<<< HEAD
+          //
+          // =======
+          // RimpleXPreferences.savePreferencesFilePath(fileToSavePath);
+          // >>>>>>> branch 'main' of https://github.com/bernstdh/s25team2b
           RimpleXPreferences.savePreferences();
         }
         break;
@@ -947,6 +975,35 @@ public class RimpleXController implements ActionListener
         {
           JOptionPane.showMessageDialog(null, rb.getString("No_Result_To_Display"),
               rb.getString("Error"), JOptionPane.ERROR_MESSAGE);
+        }
+        break;
+      case "RECORDING_START":
+        RecordingManager.startRecording();
+        break;
+      case "RECORDING_PAUSE":
+        RecordingManager.pauseRecording();
+        break;
+      case "RECORDING_RESUME":
+        RecordingManager.resumeRecording();
+      case "RECORDING_STOP":
+        RecordingManager.pauseRecording();
+        RimpleXRecordingWindow.getInstance(this).dispose();
+        break;
+      case "RECORDING_PLAY":
+        String filePath = RecordingManager.getFilePath();
+        System.out.println("Playback triggered for file: " + filePath);
+
+        if (filePath != null && !filePath.isEmpty())
+        {
+          RimpleXPlaybackWindow playbackWindow = RimpleXPlaybackWindow.getInstance(this, filePath);
+          int sliderValue = playbackWindow.getSliderValue();
+
+          int delayMillis = 4100 - sliderValue;
+          RecordingManager.playFromFile(filePath, this, delayMillis);
+        }
+        else
+        {
+          System.err.println("Error: No recording file selected for playback");
         }
         break;
       default:
@@ -1227,4 +1284,34 @@ public class RimpleXController implements ActionListener
   {
     this.sessionHistoryWindow = window;
   }
+
+  public void parseAndApplyCalculation(String line)
+  {
+    System.out.println("parseAndApplyCalculation received: " + line);
+    if (line.contains("="))
+    {
+      line = line.replaceFirst("^\\d+\\.\\s*", "");
+      String[] parts = line.split("=");
+      if (parts.length == 2)
+      {
+        String equation = parts[0].trim();
+        String result = parts[1].trim();
+
+        topDisplay.setText(equation + " =");
+        bottomDisplay.setText(result);
+        topDisplay.repaint();
+        bottomDisplay.repaint();
+        System.out.println("Displayed playback equation: " + equation + " = " + result);
+      }
+      else
+      {
+        System.err.println("Invalid playback format: " + line);
+      }
+    }
+    else
+    {
+      System.err.println("Playback entry does not contain '=': " + line);
+    }
+  }
+
 }
