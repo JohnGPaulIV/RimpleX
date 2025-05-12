@@ -1185,6 +1185,7 @@ public class RimpleXController implements ActionListener
             if (!display.getText().isBlank())
             {
               SessionHistory.add(topDisplayValue + " " + display.getText() + " = " + evaluation);
+              //System.out.println()
             }
             polarizedComplex = evaluated;
           }

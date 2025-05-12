@@ -463,7 +463,8 @@ public class RimpleXWindow extends JFrame implements KeyListener
   public void setupSessionHistoryDisplay()
   {
 
-    sessionHistory = new NumberOnlyTextArea();
+    sessionHistory = new JTextArea("Session History:");
+    //sessionHistory.getHighlighter()
     sessionHistory.setEditable(false);
     sessionHistory.setFocusable(true);
 
