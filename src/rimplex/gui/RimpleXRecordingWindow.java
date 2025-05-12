@@ -2,29 +2,32 @@ package rimplex.gui;
 
 import java.awt.Color;
 import java.awt.Font;
-
 import javax.swing.JFrame;
 
 /**
  * Represents the recording controller window.
- * 
+ *
  * @author Benjamin Bonnell
- * 
+ *
  *         This work complies with JMU Honor Code.
  */
 public class RimpleXRecordingWindow extends JFrame
 {
   private static RimpleXRecordingWindow instance;
+  private static final String RECORDING_TO = "Recording to: ";
   private String filePath;
 
   /**
    * Gets the instance of the window for to ensure no duplicates.
-   * 
+   *
    * @param controller
+   *          The control button
    * @param filePath
-   * @return
+   *          The file path.
+   * @return Returns window
    */
-  public static RimpleXRecordingWindow getInstance(RimpleXController controller, String filePath)
+  public static RimpleXRecordingWindow getInstance(final RimpleXController controller,
+      final String filePath)
   {
     if (instance == null)
     {
@@ -37,31 +40,40 @@ public class RimpleXRecordingWindow extends JFrame
     return instance;
   }
 
-  public static RimpleXRecordingWindow getInstance(RimpleXController controller)
+  /**
+   * Creates instance of a new recording window.
+   *
+   * @param controller
+   *          The control button.
+   * @return Returns a new recording window
+   */
+  public static RimpleXRecordingWindow getInstance(final RimpleXController controller)
   {
     return getInstance(controller, null);
   }
 
   /**
+   * Creates new recording window.
+   *
    * @param controller
+   *          The control button.
    * @param filePath
+   *          The file path.
    */
-  private RimpleXRecordingWindow(RimpleXController controller, String filePath)
+  private RimpleXRecordingWindow(final RimpleXController controller, final String filePath)
   {
     this.filePath = filePath;
     initializeWindow(controller);
   }
 
-  private void initializeWindow(RimpleXController controller)
+  private void initializeWindow(final RimpleXController controller)
   {
-    setTitle("Recording to: " + filePath);
+    setTitle(RECORDING_TO + filePath);
     setSize(350, 100);
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
     setLocationRelativeTo(null);
     setLayout(null);
     setResizable(false);
-
     RimpleXButton record = new RimpleXButton("RECORDING_START", "⏺", controller, 10, 10, 45, 45);
     record.setForeground(new Color(163, 0, 0));
     record.setFont(new Font("Sans-Serif", Font.PLAIN, 42));
@@ -72,10 +84,16 @@ public class RimpleXRecordingWindow extends JFrame
     add(stop);
   }
 
-  public void updateFilePath(String newPath)
+  /**
+   * Changes the file path of the window.
+   *
+   * @param newPath
+   *          the new file path.
+   */
+  public void updateFilePath(final String newPath)
   {
     this.filePath = newPath;
-    setTitle("Recording to: " + newPath);
+    setTitle(RECORDING_TO + newPath);
   }
 
   @Override
@@ -85,6 +103,11 @@ public class RimpleXRecordingWindow extends JFrame
     instance = null;
   }
 
+  /**
+   * Checks if window is visible.
+   *
+   * @return If window is visible.
+   */
   public static boolean isWindowVisible()
   {
     return instance != null && instance.isVisible();
