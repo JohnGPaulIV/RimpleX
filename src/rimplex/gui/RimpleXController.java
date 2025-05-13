@@ -1,5 +1,4 @@
 package rimplex.gui;
-
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+
 import utilities.Complex;
 import utilities.Evaluator;
 import utilities.IntermediateStepsHelper;
@@ -23,25 +23,22 @@ import utilities.PrintHelper;
 import utilities.RecordingManager;
 import utilities.SessionHistory;
 import utilities.RimpleXPreferences;
-
 import static rimplex.RimpleX.*;
-
 /**
- * The observer of all GUI components of the RimpleX application.
- *
- * General structure taken from Dr. Bernstein's Serialization Lab:
- * (https://w3.cs.jmu.edu/bernstdh/web/common/labs/experience_serialization/tempz/index.php)
- *
- * @author Joseph Pogoretskiy, Benjamin Bonnell, Kalani Johnson, John Paul, Sofia Miller
- *
- *         This work complies with JMU Honor Code.
- */
+* The observer of all GUI components of the RimpleX application.
+*
+* General structure taken from Dr. Bernstein's Serialization Lab:
+* (https://w3.cs.jmu.edu/bernstdh/web/common/labs/experience_serialization/tempz/index.php)
+*
+* @author Joseph Pogoretskiy, Benjamin Bonnell, Kalani Johnson, John Paul, Sofia Miller
+*
+*         This work complies with JMU Honor Code.
+*/
 /**
- * 
- */
+*
+*/
 public class RimpleXController implements ActionListener
-{
-  
+{  
   
   private static final String ADD = "+";
   private static final String SUBTRACTION = "—";
@@ -115,7 +112,7 @@ public class RimpleXController implements ActionListener
       "help_es_ES.html",
       "help_ru_RU.html",
       
-      "ComplexPlaneWindow_en_US.png",
+      "ComplexPlane_en_US.png",
       "Equals_en_US.png",
       "IntermediateSteps_en_US.png",
       "NumberEntry_en_US.png",
@@ -125,7 +122,7 @@ public class RimpleXController implements ActionListener
       "Recording_en_US.png",
       "SessionHistory_en_US.png",
 
-      "ComplexPlaneWindow_ru_RU.png",
+      "ComplexPlane_ru_RU.png",
       "Equals_ru_RU.png",
       "IntermediateSteps_ru_RU.png",
       "NumberEntry_ru_RU.png",
@@ -232,45 +229,28 @@ public class RimpleXController implements ActionListener
             bottomDisplay.setText(
                 bottomDisplay.getText().substring(0, bottomDisplay.getText().length() - 2));
           }
-          else if (bracketClosed)
+          bottomDisplay.setText(
+               bottomDisplay.getText().substring(0, bottomDisplay.getText().length() - 1));
+          if (bottomDisplay.getText().length() == 0 && bracketPresent)
           {
-            bottomDisplay.setText(OPEN_PAREN
-                + bottomDisplay.getText().substring(0, bottomDisplay.getText().length()));
-            bracketClosed = false;
-          }
-          else
-          {
-            if (bottomDisplay.getText().endsWith(CLOSED_PAREN))
-            {
-              closedParenCount--;
-            }
-            if (bottomDisplay.getText().endsWith(OPEN_PAREN))
-            {
-              openParenCount--;
-            }
-
-            bottomDisplay.setText(
-                bottomDisplay.getText().substring(0, bottomDisplay.getText().length() - 1));
-            if (bottomDisplay.getText().length() == 0 && bracketPresent)
-            {
-              bracketPresent = false;
-            }
+            bracketPresent = false;
           }
         }
+ 
         break;
       case "DECIMAL":
-        // This is a temporary solution since this won't work when operators are in the
-        // current
-        // expression.
+         // This is a temporary solution since this won't work when operators are in the
+         // current
+         // expression.
         boolean canPlace = !(bottomDisplay.getText().length() == 0) && Character
-            .isDigit(bottomDisplay.getText().charAt(bottomDisplay.getText().length() - 1));
+             .isDigit(bottomDisplay.getText().charAt(bottomDisplay.getText().length() - 1));
         if (canPlace)
         {
-          // Remove the parentheses so as not to set the parser off.
+           // Remove the parentheses so as not to set the parser off.
           String displayText = new String(bottomDisplay.getText());
           displayText = displayText.replace(OPEN_PAREN, "").replace(CLOSED_PAREN, "")
-              .replace(ADD, SPACE).replace(NEGATIVE, SPACE).replace(MULTIPLICATION, SPACE)
-              .replace(DIVIDE, SPACE);
+               .replace(ADD, SPACE).replace(NEGATIVE, SPACE).replace(MULTIPLICATION, SPACE)
+               .replace(DIVIDE, SPACE);
           String[] operands = displayText.split(SPACE);
           String lastOperand = operands[operands.length - 1];
           try
@@ -675,6 +655,7 @@ public class RimpleXController implements ActionListener
           String evaluated = Evaluator.evaluate(bottomDisplay.getText(), "", "", false);
 
           Complex imaginary = new Complex(0.0, Complex.parse(evaluated).getImaginary());
+
           topDisplay
               .setText(bottomDisplay.getText() + SPACE + EQUALS + SPACE + imaginary.toString());
           top = OPEN_PAREN
@@ -694,6 +675,7 @@ public class RimpleXController implements ActionListener
           equalsPresent = true;
         }
         else if (equalsPresent)
+
         {
           Complex complexNum;
           if (polarFormEnabled)
@@ -1358,7 +1340,7 @@ public class RimpleXController implements ActionListener
     {
       upperDisplay.setText(
           Evaluator.evaluate(topDisplayValue.substring(topDisplayValue.indexOf(EQUALS) + 2), "", "",
-              true) + SPACE + op);
+            true) + SPACE + op);
       equalsPresent = false;
     }
     else
@@ -1378,9 +1360,8 @@ public class RimpleXController implements ActionListener
             leftOperand = upperDisplay.getText().replace(SPACE, "").substring(0,
                 upperDisplay.getText().length() - 2);
           }
-
           String prevOperator = upperDisplay.getText()
-              .substring(upperDisplay.getText().length() - 1);
+               .substring(upperDisplay.getText().length() - 1);
           String rightOperand = display.getText();
           String eq = leftOperand + prevOperator + rightOperand;
           List<String> evalSteps = Evaluator.evaluateWithSteps(eq);
@@ -1400,19 +1381,18 @@ public class RimpleXController implements ActionListener
               {
                 eq = eq.substring(0, opindx + 1) + rightOperand;// eq.substring(opindx + 3);
               }
-              SessionHistory.add(topDisplayValue + SPACE + display.getText() + SPACE + EQUALS
-                  + SPACE + evaluation);
-              
+              SessionHistory
+                  .add(topDisplayValue + SPACE + display.getText() + EQUALS + evaluation);
+
               IntermediateStepsHelper.add(EQUATION + eqNum
-                  + SPACE_OPEN_PAREN + eq + COLON_CLOSED_PAREN);
+                   + SPACE_OPEN_PAREN + eq + COLON_CLOSED_PAREN);
               for (int i = 0; i < evalSteps.size(); i++)
               {
                 IntermediateStepsHelper.add(TAB + STEP + (i + 1)
-                    + COLON + SPACE + evalSteps.get(i));
+                     + COLON + SPACE + evalSteps.get(i));
               }
               eqNum++;
               eqNumNoReset++;
-              
             }
             polarizedComplex = evaluated;
           }
@@ -1426,19 +1406,17 @@ public class RimpleXController implements ActionListener
             }
             if (!display.getText().isBlank())
             {
-              SessionHistory.add(topDisplayValue + SPACE + display.getText() + SPACE + EQUALS
-                  + SPACE + evaluation);
-              
+              SessionHistory
+                  .add(topDisplayValue + SPACE + display.getText() + EQUALS + evaluation);
               IntermediateStepsHelper.add(EQUATION + eqNum
-                  + SPACE_OPEN_PAREN + eq + COLON_CLOSED_PAREN);
+                   + SPACE_OPEN_PAREN + eq + COLON_CLOSED_PAREN);
               for (int i = 0; i < evalSteps.size(); i++)
               {
                 IntermediateStepsHelper.add(TAB + STEP + (i + 1) + COLON
-                    + SPACE + evalSteps.get(i));
+                     + SPACE + evalSteps.get(i));
               }
               eqNum++;
               eqNumNoReset++;
-
             }
           }
         }
@@ -1458,6 +1436,12 @@ public class RimpleXController implements ActionListener
       }
     }
   }
+  /**
+   * Update the display when digit is entered.
+   *
+   * @return if the display is updated.
+   */
+  
 
   /**
    * Update the display when digit is entered.
@@ -1551,6 +1535,7 @@ public class RimpleXController implements ActionListener
           Complex evaluated = Complex.parse(evaluation);
           String polarForm = evaluated.getPolarForm();
           upperDisplay.setText(polarForm + SPACE + op);
+
           if (!display.getText().isBlank())
           {
             SessionHistory.add(topDisplayValue + SPACE + display.getText() + SPACE + EQUALS
@@ -1659,5 +1644,5 @@ public class RimpleXController implements ActionListener
       System.err.println("Playback entry does not contain '=': " + l);
     }
   }
-
 }
+

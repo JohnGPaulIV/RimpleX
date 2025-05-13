@@ -37,7 +37,7 @@ public final class RimpleXPreferences
   private static final String DISPLAY_SEPARATORS = "Thousands_Separators";
 
   private static final String PREF_FILE_PATH = "PREFERENCE_FILE_PATH";
-  private static final String PREF_FILE_PATH_CONFIG = "src/rimplex/preferenceFilePath.properties";
+  private static final String PREF_FILE_PATH_CONFIG = "preferenceFilePath.properties";
 
   // Preferences
   private static int numOfDecimals = 3;

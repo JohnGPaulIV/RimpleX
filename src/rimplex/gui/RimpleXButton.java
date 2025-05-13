@@ -2,25 +2,23 @@ package rimplex.gui;
 
 import java.awt.Font;
 import java.awt.Insets;
-
 import javax.swing.JButton;
 
 /**
  * Represents a button on the RimpleX application with a set text, action command, and bounds.
- * 
+ *
  * @author Joseph Pogoretskiy, Benjamin Bonnell
- * 
- * This work complies with JMU Honor Code.
+ *
+ *         This work complies with JMU Honor Code.
  */
 public class RimpleXButton extends JButton
 {
-
   private static final long serialVersionUID = 1L;
   private final String sans = "Sans-Serif";
 
   /**
    * Explicit RimpleXButton constructor.
-   * 
+   *
    * @param name
    *          The name of the button. Also the ActionCommand name.
    * @param text
@@ -42,44 +40,45 @@ public class RimpleXButton extends JButton
     this.setActionCommand(name);
     this.addActionListener(controller);
     this.setBounds(xPos, yPos, width, height);
-    this.setMargin(new Insets(2, 2, 2, 2));  // Smaller than default
-    
+    this.setMargin(new Insets(2, 2, 2, 2)); // Smaller than default
+
     // nSystem.out.println(text);
-    if (text.length() < 3) 
+
+    if (text.length() < 3)
     {
       this.setFont(new Font(sans, Font.PLAIN, 24));
-    } 
-    else 
+    }
+    else
     {
       this.setFont(new Font(sans, Font.PLAIN, 14));
     }
-    
+
     // parse multiple phrases, if too long
-    if (text.length() > 10) 
+
+    if (text.length() > 10)
     {
       String[] phrases = text.split(" ");
-      if (phrases.length > 1) 
+      if (phrases.length > 1)
       {
         String buttonText = new String();
         buttonText = buttonText + "<html><div style='text-align: center;'>";
-        for (String phrase : phrases) 
+
+        for (String phrase : phrases)
         {
           buttonText = buttonText + phrase + "<br>";
         }
         buttonText = buttonText + "</div></html>";
         this.setText(buttonText);
       }
-      else 
+      else
       {
         this.setText(text);
       }
     }
-    else 
+    else
     {
       this.setText(text);
     }
-
-    
 
   }
 

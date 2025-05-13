@@ -17,6 +17,14 @@ public class Complex
   private static final String IMAGINARY_UNIT = "𝑖";
   private static final String SUBTRACTION = "—";
   private static final String NEGATIVE = "-";
+  private static final String CLOSED_PAREN = ")";
+  private static final String COMMA = ",";
+  private static final String PERIOD = ".";
+  private static final String HASH = "#";
+  private static final String BLANK = "";
+  private static final String SPACE = " ";
+  private static final String PERCENT = "%";
+  private static final String F = "f";
   private double real;
 
   private double imaginary;
@@ -53,7 +61,8 @@ public class Complex
 
   /**
    * Calculate whether one complex number is greater than the other.
-   * 
+   *
+   * @param other comparator for this object
    * @return Return whether the complex number is greater than the other.
    */
   public boolean greaterThan(final Complex other)
@@ -83,7 +92,8 @@ public class Complex
 
   /**
    * Calculate whether one complex number is less than the other.
-   * 
+   *
+   * @param other comparator for this object
    * @return Return whether the complex number is less than the other.
    */
   public boolean lessThan(final Complex other)
@@ -275,7 +285,7 @@ public class Complex
       {
         argument = "3π/2";
       }
-      result = String.format(getDecimalFormat(modulus), modulus) + "(cos(" + argument + ")"
+      result = String.format(getDecimalFormat(modulus), modulus) + "(cos(" + argument + CLOSED_PAREN
           + " + i sin(" + argument + doubleClosed;
     }
     return result;
@@ -355,19 +365,19 @@ public class Complex
     // If in complex form.
     Locale locale = Locale.getDefault();
     String copy;
-    if (locale.getLanguage() == "es")
+    if (locale.getLanguage().equals("es"))
     {
-      copy = new String(input).replace(",", "#").replace(".", "").replace("#", ".");
+      copy = new String(input).replace(COMMA, HASH).replace(PERIOD, BLANK).replace(HASH, PERIOD);
     }
-    else if (locale.getLanguage() == "ru")
+    else if (locale.getLanguage().equals("ru"))
     {
-      copy = new String(input).replace(" ", "").replace(",", ".");
+      copy = new String(input).replace(SPACE, BLANK).replace(COMMA, PERIOD);
     }
     else
     {
-      copy = new String(input).replace(",", "");
+      copy = new String(input).replace(COMMA, BLANK);
     }
-    copy = copy.replace("(", "").replace(")", "");
+    copy = copy.replace("(", "").replace(CLOSED_PAREN, BLANK);
     Complex result;
     if (copy.contains(ADDITION))
     {
@@ -516,7 +526,8 @@ public class Complex
 
   /**
    * Get the decimal format based on current preferences.
-   * 
+   *
+   * @param num number to format
    * @return The decimal format string for String formatting.
    */
   private String getDecimalFormat(final double num)
@@ -524,15 +535,15 @@ public class Complex
     String format;
     if (num % 1 == 0)
     {
-      format = "%." + String.valueOf(RimpleXPreferences.getTrailingZeroes()) + "f";
+      format = PERCENT + PERIOD + String.valueOf(RimpleXPreferences.getTrailingZeroes()) + F;
     }
     else
     {
-      format = "%." + String.valueOf(RimpleXPreferences.getNumOfDecimals()) + "f";
+      format = "%." + String.valueOf(RimpleXPreferences.getNumOfDecimals()) + F;
     }
     if (RimpleXPreferences.getDisplaySeparators())
     {
-      format = format.substring(0, 1) + "," + format.substring(1, format.length());
+      format = format.substring(0, 1) + COMMA + format.substring(1, format.length());
       System.out.println(format);
     }
     return format;

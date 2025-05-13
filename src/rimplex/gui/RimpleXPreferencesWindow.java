@@ -46,6 +46,7 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
   private static JTextField saveRecordingField;
   private static JTextField editPreferencesField;
   private static JTextField savePreferencesField;
+  private static String COLON = ":";
 
   /**
    * Constructs "About" Window for Rimplex.
@@ -224,10 +225,10 @@ public class RimpleXPreferencesWindow extends JDialog implements ItemListener, C
   {
     JLabel openRecordingLabel = new JLabel(rb.getString("Open_Recording"));
     JLabel saveRecordingLabel = new JLabel(rb.getString("Save_Recording"));
-    JLabel printSessionLabel = new JLabel(rb.getString("Print_Session") + ":");
-    JLabel newCalcLabel = new JLabel(rb.getString("New_Calculator") + ":");
-    JLabel aboutLabel = new JLabel(rb.getString("About") + ":");
-    JLabel helpLabel = new JLabel(rb.getString("Help") + ":");
+    JLabel printSessionLabel = new JLabel(rb.getString("Print_Session") + COLON);
+    JLabel newCalcLabel = new JLabel(rb.getString("New_Calculator") + COLON);
+    JLabel aboutLabel = new JLabel(rb.getString("About") + COLON);
+    JLabel helpLabel = new JLabel(rb.getString("Help") + COLON);
     JLabel complexPlaneLabel = new JLabel(rb.getString("Complex_Plane_Hotkey"));
     JLabel editPreferencesLabel = new JLabel(rb.getString("Edit_Preferences"));
     JLabel savePreferencesLabel = new JLabel(rb.getString("Save_Preferences"));
