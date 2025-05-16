@@ -97,7 +97,7 @@ public class RimpleXWindow extends JFrame implements KeyListener
   
   private Color displayBackgroundColor = new Color(230, 230, 230);
   private Color displayTextColor = new Color(0, 0, 0);
-  private Color backgroundCalcColor = new Color(200, 0, 132);
+  private Color backgroundCalcColor = new Color(200, 200, 132);
   private Color buttonBackgroundColor = new Color(170, 182, 119);
 
 
